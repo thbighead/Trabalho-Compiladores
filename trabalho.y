@@ -209,6 +209,11 @@ F : _CTE_STRING   { $$ = $1; $$.t = String; }
 
 #include "lex.yy.c"
 
+void erro( string st ) {
+  yyerror( st.c_str() );
+  exit( 1 );
+}
+
 void yyerror( const char* st )
 {
    if( strlen( yytext ) == 0 )

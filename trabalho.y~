@@ -64,6 +64,16 @@ int toInt( string valor ) {
   return aux;
 }
 
+
+void busca_tipo_da_variavel( Atributo& ss, const Atributo& s1 ) {
+  if( ts.find( s1.v ) == ts.end() )
+        erro( "Variável não declarada: " + s1.v );
+  else {
+    ss.t = ts[ s1.v ];
+    ss.v = s1.v;
+  }
+}
+
 %}
 
 %token _ID _IF _ELSE _HTPL _COMPARACAO _BARRAHTPL _CTE_FLOAT _MAIOR _MENOR _BLOCK _BARRABLOCK _MAISMAIS
@@ -188,11 +198,11 @@ E : E '+' E
   | F
   ;
   
-F : _CTE_STRING  
-  | _CTE_FLOAT  
-  | _CTE_INTEGER  
-  | _ID  
-  | '('E')'
+F : _CTE_STRING   { $$ = $1; $$.t = String; }
+  | _CTE_FLOAT    { $$ = $1; $$.t = Float; }
+  | _CTE_INTEGER  { $$ = $1; $$.t = Integer; }
+  | _ID           { busca_tipo_da_variavel( $$, $1 );  }
+  | '('E')'       { $$ = $2; }
   ;     
  
 %%
