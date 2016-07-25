@@ -43,6 +43,7 @@ CTE_INTEGER 	{DIGITO}+
 {BLOCKINIT}	{ trata_folha(); return _BLOCK; }
 {BLOCKEND}	{ trata_folha(); return _BARRABLOCK; }
 {DOUBLE}	{ trata_folha(); return _DOUBLE; }
+{BOOL}		{ trata_folha(); return _BOOL; }
 {CHAR}		{ trata_folha(); return _CHAR; }
 {STRING} 	{ trata_folha(); return _STRING; }
 {IF} 		{ trata_folha(); return _IF; }
