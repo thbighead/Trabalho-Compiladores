@@ -85,7 +85,7 @@ S : MIOLOS ABRE PRINCIPAL FECHA
   { cout << "#include <stdlib.h>\n"
                 "#include <string.h>\n" 
                 "#include <stdio.h>\n\n"<< $1.c << "int main (){\n" <<$3.c<<"}"<<endl;
-       }
+  }
   ;
    
 ABRE : _HTPL            
