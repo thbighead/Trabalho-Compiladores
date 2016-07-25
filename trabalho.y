@@ -3,18 +3,66 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <map>
+#include <vector>
 
 using namespace std;
 
-struct Atributo {
-  string v, t, c;
+struct Range { 
+  int inicio, fim;
 };
+
+struct Tipo {
+  string nome;  // O nome na sua linguagem
+  string decl;  // A declaração correspondente em c-assembly
+  string fmt;   // O formato para "printf"
+  vector< Range > dim; // Dimensões (se não for array, fica vazio)
+};
+
+Tipo Integer = { "integer", "int", "d" };
+Tipo Real =    { "real", "float", "f" };
+Tipo Double =  { "double", "double", "lf" };
+Tipo Boolean = { "boolean", "int", "d" };
+Tipo String =  { "string", "char", "s" };
+Tipo Char =    { "char", "char", "c" };
+
+struct Atributo {
+  string v, c;
+  Tipo t;
+  vector<string> lst;
+}; 
 
 #define YYSTYPE Atributo
 
 int yylex();
 int yyparse();
 void yyerror(const char *);
+void erro( string );
+
+map<string,Tipo> ts;
+map< string, map< string, Tipo > > tro; // tipo_resultado_operacao;
+
+// contadores para variáveis temporariras
+map< string, int > temp_global;
+map< string, int > temp_local;
+map< string, int > nlabel;
+bool escopo_local = false;
+
+string toString( int n ) {
+  char buf[256] = "";
+  
+  sprintf( buf, "%d", n );
+  
+  return buf;
+}
+
+int toInt( string valor ) {
+  int aux = 0;
+  
+  sscanf( valor.c_str(), "%d", &aux );
+  
+  return aux;
+}
 
 %}
 
