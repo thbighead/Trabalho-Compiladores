@@ -8,15 +8,10 @@
 
 using namespace std;
 
-struct Range { 
-  int inicio, fim;
-};
-
 struct Tipo {
   string nome;  // O nome na sua linguagem
   string decl;  // A declaração correspondente em c-assembly
   string fmt;   // O formato para "printf"
-  vector< Range > dim; // Dimensões (se não for array, fica vazio)
 };
 
 Tipo Integer = { "integer", "int", "d" };
@@ -29,6 +24,7 @@ struct Atributo {
   string v, c;
   Tipo t;
   vector<string> lst;
+  vector< int > dim;
 }; 
 
 #define YYSTYPE Atributo
@@ -64,13 +60,11 @@ int toInt( string valor ) {
 }
 
 
-string trata_dimensoes_decl_var( Tipo t ) {
+void trata_dimensoes_decl_var(Atributo& ss, const Atributo& s3 ) {
   string aux;
-  
-  for( int i = 0; i < t.dim.size(); i++ )
-    aux += "[" + toString( t.dim[i].fim - t.dim[i].inicio + 1 )+ "]";
-           
-  return aux;         
+  for( int i = 0; i < s3.dim.size(); i++ )
+    aux += "[" + toString( s3.dim[i] )+ "]";
+  ss.c = ss.c+aux ;     
 }
 
 // 'Atributo&': o '&' significa passar por referência (modifica).
@@ -82,8 +76,7 @@ void declara_variavel( Atributo& ss,
       erro( "Variável já declarada: " + s2.lst[i] );
     else {
       ts[ s2.lst[i] ] = s1.t; 
-      ss.c += s1.t.decl + " " + s2.lst[i] 
-              + trata_dimensoes_decl_var( s1.t ) + ";\n"; 
+      ss.c += s1.t.decl + " " + s2.lst[i] ; 
     }  
   }
 }
@@ -128,8 +121,8 @@ ABRE : _HTPL
 FECHA: _BARRAHTPL
      ;
    
-MIOLOS : MIOLO MIOLOS 
-       | 
+MIOLOS : MIOLO MIOLOS {$$.c = $1.c + $2.c;}
+       | {$$.c="";}
        ;
        
 MIOLO : DECLS
@@ -139,10 +132,10 @@ MIOLO : DECLS
 DECLS: DECL ';'
      ;
 
-DECL: TIPO ID                   { declara_variavel( $$, $1, $2 ); }
+DECL: TIPO ID                   { declara_variavel( $$, $1, $2 ); $$.c = $$.c+";\n"; }
     | TIPO ID '=' _CTE_INTEGER 
     | TIPO ID '=' _CTE_FLOAT
-    | TIPO ID VETOR 
+    | TIPO ID VETOR { declara_variavel( $$, $1, $2 ); trata_dimensoes_decl_var($$,$3); $$.c=$$.c+";\n";}
     ;
 
 
@@ -188,7 +181,7 @@ CMD_ATRIB : ID '=' E
 VETOR: '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
      | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
      | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
-     | '[' _CTE_INTEGER ']'
+     | '[' _CTE_INTEGER ']' {$$.dim.push_back(toInt($2.v));}
      ;
 
 CONDICAO: E '>' E

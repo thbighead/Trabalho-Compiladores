@@ -36,7 +36,7 @@ Gramática
    16     | _CHAR
    17     | _STRING
 
-   18 ID: _ID ',' ID
+   18 ID: ID ',' _ID
    19   | _ID
 
    20 FUNCTION: '<' _FUNCTION _ID '(' ARGS ')' '>' CMD '<' '/' _FUNCTION '>'
@@ -388,10 +388,7 @@ Estado 19
 
 Estado 20
 
-   18 ID: _ID . ',' ID
-   19   | _ID .
-
-    ','  deslocar, e ir ao estado 34
+   19 ID: _ID .
 
     $padrão  reduzir usando a regra 19 (ID)
 
@@ -402,8 +399,10 @@ Estado 21
    10     | TIPO ID . '=' _CTE_INTEGER
    11     | TIPO ID . '=' _CTE_FLOAT
    12     | TIPO ID . VETOR
+   18 ID: ID . ',' _ID
 
-    '='  deslocar, e ir ao estado 35
+    '='  deslocar, e ir ao estado 34
+    ','  deslocar, e ir ao estado 35
     '['  deslocar, e ir ao estado 36
 
     $padrão  reduzir usando a regra 9 (DECL)
@@ -455,9 +454,11 @@ Estado 24
 
 Estado 25
 
+   18 ID: ID . ',' _ID
    33 CMD_ATRIB: ID . '=' E
 
     '='  deslocar, e ir ao estado 43
+    ','  deslocar, e ir ao estado 35
 
 
 Estado 26
@@ -533,20 +534,18 @@ Estado 33
 
 Estado 34
 
-   18 ID: _ID ',' . ID
+   10 DECL: TIPO ID '=' . _CTE_INTEGER
+   11     | TIPO ID '=' . _CTE_FLOAT
 
-    _ID  deslocar, e ir ao estado 20
-
-    ID  ir ao estado 49
+    _CTE_FLOAT    deslocar, e ir ao estado 49
+    _CTE_INTEGER  deslocar, e ir ao estado 50
 
 
 Estado 35
 
-   10 DECL: TIPO ID '=' . _CTE_INTEGER
-   11     | TIPO ID '=' . _CTE_FLOAT
+   18 ID: ID ',' . _ID
 
-    _CTE_FLOAT    deslocar, e ir ao estado 50
-    _CTE_INTEGER  deslocar, e ir ao estado 51
+    _ID  deslocar, e ir ao estado 51
 
 
 Estado 36
@@ -669,23 +668,23 @@ Estado 48
 
 Estado 49
 
-   18 ID: _ID ',' ID .
-
-    $padrão  reduzir usando a regra 18 (ID)
-
-
-Estado 50
-
    11 DECL: TIPO ID '=' _CTE_FLOAT .
 
     $padrão  reduzir usando a regra 11 (DECL)
 
 
-Estado 51
+Estado 50
 
    10 DECL: TIPO ID '=' _CTE_INTEGER .
 
     $padrão  reduzir usando a regra 10 (DECL)
+
+
+Estado 51
+
+   18 ID: ID ',' _ID .
+
+    $padrão  reduzir usando a regra 18 (ID)
 
 
 Estado 52
