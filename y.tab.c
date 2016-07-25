@@ -532,13 +532,13 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    84,    84,    88,    91,    94,    95,    98,    99,   102,
-     105,   106,   107,   108,   112,   113,   114,   115,   116,   117,
-     120,   121,   124,   127,   128,   131,   132,   135,   138,   139,
-     142,   143,   144,   145,   146,   149,   152,   153,   154,   155,
-     158,   159,   160,   163,   166,   169,   170,   173,   174,   175,
-     176,   179,   180,   181,   182,   183,   184,   185,   188,   189,
-     190,   191,   192
+       0,    84,    84,    91,    94,    97,    98,   101,   102,   105,
+     108,   109,   110,   111,   115,   116,   117,   118,   119,   120,
+     123,   124,   127,   130,   131,   134,   135,   138,   141,   142,
+     145,   146,   147,   148,   149,   152,   155,   156,   157,   158,
+     161,   162,   163,   166,   169,   172,   173,   176,   177,   178,
+     179,   182,   183,   184,   185,   186,   187,   188,   191,   192,
+     193,   194,   195
 };
 #endif
 
@@ -1404,12 +1404,15 @@ yyreduce:
     {
         case 2:
 #line 85 "trabalho.y" /* yacc.c:1646  */
-    { cout << "Aceito" << endl; }
-#line 1409 "y.tab.c" /* yacc.c:1646  */
+    { cout << "#include <stdlib.h>\n"
+                "#include <string.h>\n" 
+                "#include <stdio.h>\n\n" << "int main (){\n" <<(yyvsp[-2]).c<<"}"<<endl;
+       }
+#line 1412 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1413 "y.tab.c" /* yacc.c:1646  */
+#line 1416 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1637,7 +1640,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 195 "trabalho.y" /* yacc.c:1906  */
+#line 198 "trabalho.y" /* yacc.c:1906  */
 
 
 #include "lex.yy.c"

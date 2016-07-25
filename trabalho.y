@@ -82,7 +82,10 @@ int toInt( string valor ) {
 %%
 
 S : MIOLOS ABRE PRINCIPAL FECHA
-  { cout << "Aceito" << endl; }
+  { cout << "#include <stdlib.h>\n"
+                "#include <string.h>\n" 
+                "#include <stdio.h>\n\n" << "int main (){\n" <<$2.c<<"}"<<endl;
+       }
   ;
    
 ABRE : _HTPL            
