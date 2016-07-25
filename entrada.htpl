@@ -1,8 +1,12 @@
 int a,c =1;
 int g[1234];
 float b=3.5;
-<function foo(x)>
-x=x+3;
+<function foo(int x)>
+<BLOCK>
+x = x+3;
+A=32423423;
+A=3+4+5;
+</BLOCK>
 </function>
 <htpl>
 a=3;

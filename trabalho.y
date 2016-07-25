@@ -146,7 +146,7 @@ CMD : SAIDA';'
     | CMD_ATRIB';'
     ;
     
-CMD_ATRIB : IDS '=' E
+CMD_ATRIB : ID '=' E
           ;
 
 VETOR: '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
