@@ -153,8 +153,8 @@ TIPO: _INT      { $$.t = Integer; }
     | _STRING   { $$.t = String; }
     ;
 
-ID: _ID ',' ID
-  | _ID
+ID: _ID ',' ID { $$.lst = $1.lst; $$.lst.push_back( $3.v ); }
+  | _ID  { $$.lst.push_back( $1.v ); }
   ;
 
 FUNCTION: '<'_FUNCTION _ID'('ARGS')''>' CMD '<''/'_FUNCTION'>'
@@ -165,7 +165,7 @@ ARGS: IDS
     ;
      
 IDS : TIPO _ID ',' IDS
-    | TIPO _ID
+    | TIPO _ID  
     ;      
    
 PRINCIPAL : CMDS 
