@@ -1406,7 +1406,7 @@ yyreduce:
 #line 85 "trabalho.y" /* yacc.c:1646  */
     { cout << "#include <stdlib.h>\n"
                 "#include <string.h>\n" 
-                "#include <stdio.h>\n\n" << "int main (){\n" <<(yyvsp[-2]).c<<"}"<<endl;
+                "#include <stdio.h>\n\n"<< (yyvsp[-3]).c << "int main (){\n" <<(yyvsp[-1]).c<<"}"<<endl;
        }
 #line 1412 "y.tab.c" /* yacc.c:1646  */
     break;
