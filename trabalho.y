@@ -155,19 +155,19 @@ VETOR: '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTE
      | '[' _CTE_INTEGER ']'
      ;
 
-CONDICAO: E _MAIOR E
-        | E _MENOR E
+CONDICAO: E '>' E
+        | E '<' E
         | E _COMPARACAO E
 	;       
     
-CMD_FOR : '<'_FOR _ID '=' E ';' CONDICAO ';' E '>' CMD '<''/'_FOR'>'
+CMD_FOR : '<'_FOR '('_ID '=' E ';' CONDICAO ';' E ')''>' CMD '<''/'_FOR'>'
         ;
     
 BLOCO : _BLOCK CMDS _BARRABLOCK
       ;    
     
-CMD_IF : '<'_IF CONDICAO '>' CMD '<''/'_IF '>'
-       | '<'_IF CONDICAO '>' CMD '<'_ELSE'>' CMD  '<''/'_IF '>'
+CMD_IF : '<'_IF '('CONDICAO')' '>' CMD '<''/'_IF '>'
+       | '<'_IF '('CONDICAO')' '>' CMD '<'_ELSE'>' CMD  '<''/'_IF '>'
        ;    
     
 SAIDA : '<'_PRINT _CTE_STRING '>'

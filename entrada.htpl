@@ -10,8 +10,8 @@ A=3+4+5;
 </function>
 <htpl>
 a=3;
-<for i=0; i menor 10; i++>
-< if a MENOR b>
+<for (i=0; i < 10; i++)>
+< if (a < b)>
 <block>
 x=2+3;
 asasdsa=3.4;
