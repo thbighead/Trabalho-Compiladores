@@ -75,15 +75,15 @@ string trata_dimensoes_decl_var( Tipo t ) {
 
 // 'Atributo&': o '&' significa passar por referência (modifica).
 void declara_variavel( Atributo& ss, 
-                       const Atributo& s1, const Atributo& s3 ) {
+                       const Atributo& s1, const Atributo& s2 ) {
   ss.c = "";
-  for( int i = 0; i < s1.lst.size(); i++ ) {
-    if( ts.find( s1.lst[i] ) != ts.end() ) 
-      erro( "Variável já declarada: " + s1.lst[i] );
+  for( int i = 0; i < s2.lst.size(); i++ ) {
+    if( ts.find( s2.lst[i] ) != ts.end() ) 
+      erro( "Variável já declarada: " + s2.lst[i] );
     else {
-      ts[ s1.lst[i] ] = s3.t; 
-      ss.c += s3.t.decl + " " + s1.lst[i] 
-              + trata_dimensoes_decl_var( s3.t ) + ";\n"; 
+      ts[ s2.lst[i] ] = s1.t; 
+      ss.c += s1.t.decl + " " + s2.lst[i] 
+              + trata_dimensoes_decl_var( s1.t ) + ";\n"; 
     }  
   }
 }
@@ -139,7 +139,7 @@ MIOLO : DECLS
 DECLS: DECL ';'
      ;
 
-DECL: TIPO ID                   { declara_variavel( $$, $1, $3 ); }
+DECL: TIPO ID                   { declara_variavel( $$, $1, $2 ); }
     | TIPO ID '=' _CTE_INTEGER 
     | TIPO ID '=' _CTE_FLOAT
     | TIPO ID VETOR 

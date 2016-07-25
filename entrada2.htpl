@@ -1,3 +1,5 @@
+int x;
+
 <htpl>
 x = x + 3;
 </htpl>
