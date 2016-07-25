@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.4"
+#define YYBISON_VERSION "3.0.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -130,7 +130,17 @@ int toInt( string valor ) {
 }
 
 
-#line 134 "y.tab.c" /* yacc.c:339  */
+void busca_tipo_da_variavel( Atributo& ss, const Atributo& s1 ) {
+  if( ts.find( s1.v ) == ts.end() )
+        erro( "Variável não declarada: " + s1.v );
+  else {
+    ss.t = ts[ s1.v ];
+    ss.v = s1.v;
+  }
+}
+
+
+#line 144 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -232,7 +242,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 236 "y.tab.c" /* yacc.c:358  */
+#line 246 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -532,13 +542,13 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    84,    84,    91,    94,    97,    98,   101,   102,   105,
-     108,   109,   110,   111,   115,   116,   117,   118,   119,   120,
-     123,   124,   127,   130,   131,   134,   135,   138,   141,   142,
-     145,   146,   147,   148,   149,   152,   155,   156,   157,   158,
-     161,   162,   163,   166,   169,   172,   173,   176,   177,   178,
-     179,   182,   183,   184,   185,   186,   187,   188,   191,   192,
-     193,   194,   195
+       0,    94,    94,   101,   104,   107,   108,   111,   112,   115,
+     118,   119,   120,   121,   125,   126,   127,   128,   129,   130,
+     133,   134,   137,   140,   141,   144,   145,   148,   151,   152,
+     155,   156,   157,   158,   159,   162,   165,   166,   167,   168,
+     171,   172,   173,   176,   179,   182,   183,   186,   187,   188,
+     189,   192,   193,   194,   195,   196,   197,   198,   201,   202,
+     203,   204,   205
 };
 #endif
 
@@ -1403,16 +1413,46 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 85 "trabalho.y" /* yacc.c:1646  */
+#line 95 "trabalho.y" /* yacc.c:1646  */
     { cout << "#include <stdlib.h>\n"
                 "#include <string.h>\n" 
                 "#include <stdio.h>\n\n"<< (yyvsp[-3]).c << "int main (){\n" <<(yyvsp[-1]).c<<"}"<<endl;
-       }
-#line 1412 "y.tab.c" /* yacc.c:1646  */
+  }
+#line 1422 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 58:
+#line 201 "trabalho.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); (yyval).t = String; }
+#line 1428 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 59:
+#line 202 "trabalho.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); (yyval).t = Float; }
+#line 1434 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 60:
+#line 203 "trabalho.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[0]); (yyval).t = Integer; }
+#line 1440 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 61:
+#line 204 "trabalho.y" /* yacc.c:1646  */
+    { busca_tipo_da_variavel( (yyval), (yyvsp[0]) );  }
+#line 1446 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 62:
+#line 205 "trabalho.y" /* yacc.c:1646  */
+    { (yyval) = (yyvsp[-1]); }
+#line 1452 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1416 "y.tab.c" /* yacc.c:1646  */
+#line 1456 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1640,10 +1680,15 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 198 "trabalho.y" /* yacc.c:1906  */
+#line 208 "trabalho.y" /* yacc.c:1906  */
 
 
 #include "lex.yy.c"
+
+void erro( string st ) {
+  yyerror( st.c_str() );
+  exit( 1 );
+}
 
 void yyerror( const char* st )
 {

@@ -22,7 +22,6 @@ struct Tipo {
 Tipo Integer = { "integer", "int", "d" };
 Tipo Float =    { "real", "float", "f" };
 Tipo Double =  { "double", "double", "lf" };
-Tipo Boolean = { "boolean", "int", "d" };
 Tipo String =  { "string", "char", "s" };
 Tipo Char =    { "char", "char", "c" };
 
@@ -122,12 +121,11 @@ DECL: TIPO ID
     ;
 
 
-TIPO: _INT
-    | _FLOAT
-    | _DOUBLE
-    | _BOOL
-    | _CHAR
-    | _STRING
+TIPO: _INT      { $$.t = Integer; }
+    | _FLOAT    { $$.t = Float; }
+    | _DOUBLE   { $$.t = Double; }
+    | _CHAR     { $$.t = Char; }
+    | _STRING   { $$.t = String; }
     ;
 
 ID: _ID ',' ID
@@ -208,6 +206,11 @@ F : _CTE_STRING   { $$ = $1; $$.t = String; }
 %%
 
 #include "lex.yy.c"
+
+void erro( string st ) {
+  yyerror( st.c_str() );
+  exit( 1 );
+}
 
 void yyerror( const char* st )
 {

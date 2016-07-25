@@ -22,7 +22,6 @@ struct Tipo {
 Tipo Integer = { "integer", "int", "d" };
 Tipo Float =    { "real", "float", "f" };
 Tipo Double =  { "double", "double", "lf" };
-Tipo Boolean = { "boolean", "int", "d" };
 Tipo String =  { "string", "char", "s" };
 Tipo Char =    { "char", "char", "c" };
 
@@ -62,6 +61,31 @@ int toInt( string valor ) {
   sscanf( valor.c_str(), "%d", &aux );
   
   return aux;
+}
+
+
+string trata_dimensoes_decl_var( Tipo t ) {
+  string aux;
+  
+  for( int i = 0; i < t.dim.size(); i++ )
+    aux += "[" + toString( t.dim[i].fim - t.dim[i].inicio + 1 )+ "]";
+           
+  return aux;         
+}
+
+// 'Atributo&': o '&' significa passar por referência (modifica).
+void declara_variavel( Atributo& ss, 
+                       const Atributo& s1, const Atributo& s3 ) {
+  ss.c = "";
+  for( int i = 0; i < s1.lst.size(); i++ ) {
+    if( ts.find( s1.lst[i] ) != ts.end() ) 
+      erro( "Variável já declarada: " + s1.lst[i] );
+    else {
+      ts[ s1.lst[i] ] = s3.t; 
+      ss.c += s3.t.decl + " " + s1.lst[i] 
+              + trata_dimensoes_decl_var( s3.t ) + ";\n"; 
+    }  
+  }
 }
 
 
@@ -115,19 +139,18 @@ MIOLO : DECLS
 DECLS: DECL ';'
      ;
 
-DECL: TIPO ID 
+DECL: TIPO ID                   { declara_variavel( $$, $1, $3 ); }
     | TIPO ID '=' _CTE_INTEGER 
     | TIPO ID '=' _CTE_FLOAT
     | TIPO ID VETOR 
     ;
 
 
-TIPO: _INT
-    | _FLOAT
-    | _DOUBLE
-    | _BOOL
-    | _CHAR
-    | _STRING
+TIPO: _INT      { $$.t = Integer; }
+    | _FLOAT    { $$.t = Float; }
+    | _DOUBLE   { $$.t = Double; }
+    | _CHAR     { $$.t = Char; }
+    | _STRING   { $$.t = String; }
     ;
 
 ID: _ID ',' ID
