@@ -1,4 +1,5 @@
 int a,c =1;
+int g[1234];
 float b=3.5;
 <function foo(x)>
 x=x+3;

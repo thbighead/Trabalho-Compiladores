@@ -1927,8 +1927,11 @@ void yyfree (void * ptr )
 
 void trata_folha() {
   yylval.v = yytext;
-  yylval.t = "";
+  yylval.t.nome = "";
+  yylval.t.decl = "";
+  yylval.t.fmt = "";
   yylval.c = "";
+  yylval.lst.clear();
   
   yyrowno += strlen( yytext ); 
 }

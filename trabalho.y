@@ -107,7 +107,7 @@ DECL: DECLA
     | DECLA '=' _CTE_FLOAT
     ;
 
-DECLA: TIPO ID
+DECLA: TIPO ID VETOR
      ; 
 
 TIPO: _INT
@@ -144,13 +144,13 @@ CMD : SAIDA';'
     ;
     
 CMD_ATRIB : IDS '=' E
-	  | IDS '=' VETOR
           ;
 
 VETOR: '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
      | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
      | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
      | '[' _CTE_INTEGER ']'
+     |
      ;
 
 CONDICAO: E _MAIOR E
