@@ -8,7 +8,7 @@
 
 using namespace std;
 
-struct Range {
+struct Range { 
   int inicio, fim;
 };
 
@@ -20,7 +20,7 @@ struct Tipo {
 };
 
 Tipo Integer = { "integer", "int", "d" };
-Tipo Real =    { "real", "float", "f" };
+Tipo Float =    { "real", "float", "f" };
 Tipo Double =  { "double", "double", "lf" };
 Tipo Boolean = { "boolean", "int", "d" };
 Tipo String =  { "string", "char", "s" };
@@ -30,7 +30,7 @@ struct Atributo {
   string v, c;
   Tipo t;
   vector<string> lst;
-};
+}; 
 
 #define YYSTYPE Atributo
 
@@ -50,17 +50,17 @@ bool escopo_local = false;
 
 string toString( int n ) {
   char buf[256] = "";
-
+  
   sprintf( buf, "%d", n );
-
+  
   return buf;
 }
 
 int toInt( string valor ) {
   int aux = 0;
-
+  
   sscanf( valor.c_str(), "%d", &aux );
-
+  
   return aux;
 }
 
@@ -84,33 +84,37 @@ int toInt( string valor ) {
 S : MIOLOS ABRE PRINCIPAL FECHA
   { cout << "Aceito" << endl; }
   ;
-
-ABRE : _HTPL
-     ;
+   
+ABRE : _HTPL            
+     ;  
 
 FECHA: _BARRAHTPL
      ;
-
-MIOLOS : MIOLO MIOLOS
-       |
+   
+MIOLOS : MIOLO MIOLOS 
+       | 
        ;
-
+       
 MIOLO : DECLS
       | FUNCTION
-      ;
+      ;     
 
 DECLS: DECL ';'
      ;
 
-DECL: TIPO ID
-    | TIPO ID '=' _CTE_INTEGER
+DECL: TIPO ID 
+    | TIPO ID '=' _CTE_INTEGER 
     | TIPO ID '=' _CTE_FLOAT
-    | TIPO ID VETOR
+    | TIPO ID VETOR 
     ;
 
 
 TIPO: _INT
     | _FLOAT
+    | _DOUBLE
+    | _BOOL
+    | _CHAR
+    | _STRING
     ;
 
 ID: _ID ',' ID
@@ -120,28 +124,28 @@ ID: _ID ',' ID
 FUNCTION: '<'_FUNCTION _ID'('ARGS')''>' CMD '<''/'_FUNCTION'>'
 	;
 
-ARGS: IDS
+ARGS: IDS 
     |
     ;
-
-IDS : _ID ',' IDS
-    | _ID
-    ;
-
-PRINCIPAL : CMDS
+     
+IDS : TIPO _ID ',' IDS
+    | TIPO _ID
+    ;      
+   
+PRINCIPAL : CMDS 
           ;
-
-CMDS : CMD  CMDS
-     |
-     ;
-
+          
+CMDS : CMD  CMDS 
+     | 
+     ;                   
+ 
 CMD : SAIDA';'
     | CMD_IF
     | CMD_FOR
     | BLOCO
     | CMD_ATRIB';'
     ;
-
+    
 CMD_ATRIB : IDS '=' E
           ;
 
@@ -154,24 +158,24 @@ VETOR: '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTE
 CONDICAO: E _MAIOR E
         | E _MENOR E
         | E _COMPARACAO E
-	;
-
+	;       
+    
 CMD_FOR : '<'_FOR _ID '=' E ';' CONDICAO ';' E '>' CMD '<''/'_FOR'>'
         ;
-
+    
 BLOCO : _BLOCK CMDS _BARRABLOCK
-      ;
-
+      ;    
+    
 CMD_IF : '<'_IF CONDICAO '>' CMD '<''/'_IF '>'
        | '<'_IF CONDICAO '>' CMD '<'_ELSE'>' CMD  '<''/'_IF '>'
-       ;
-
+       ;    
+    
 SAIDA : '<'_PRINT _CTE_STRING '>'
       | '<'_PRINT _ID '>'
       | '<'_PRINT _CTE_INTEGER '>'
       | '<'_PRINT _CTE_FLOAT '>'
       ;
-
+   
 E : E '+' E
   | E '-' E
   | E '*' E
@@ -180,14 +184,14 @@ E : E '+' E
   | E _MAISMAIS
   | F
   ;
-
-F : _CTE_STRING
-  | _CTE_FLOAT
-  | _CTE_INTEGER
-  | _ID
+  
+F : _CTE_STRING  
+  | _CTE_FLOAT  
+  | _CTE_INTEGER  
+  | _ID  
   | '('E')'
-  ;
-
+  ;     
+ 
 %%
 
 #include "lex.yy.c"
@@ -196,8 +200,8 @@ void yyerror( const char* st )
 {
    if( strlen( yytext ) == 0 )
      printf( "%s\nNo final do arquivo\n", st );
-   else
-     printf( "%s\nProximo a: %s\nlinha/coluna: %d/%d\n", st,
+   else  
+     printf( "%s\nProximo a: %s\nlinha/coluna: %d/%d\n", st, 
              yytext, yylineno, yyrowno - (int) strlen( yytext ) );
 }
 
