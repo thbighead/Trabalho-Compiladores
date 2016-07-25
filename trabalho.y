@@ -67,7 +67,7 @@ int toInt( string valor ) {
 %}
 
 %token _ID _IF _ELSE _HTPL _COMPARACAO _BARRAHTPL _CTE_FLOAT _MAIOR _MENOR _BLOCK _BARRABLOCK _MAISMAIS
-%token _FOR _ATRIB _FUNCTION _PRINT _INT _FLOAT
+%token _FOR _ATRIB _FUNCTION _PRINT _INT _FLOAT _BOOL _DOUBLE _CHAR
 %token _INTEGER _STRING
 
 %token _CTE_STRING _CTE_INTEGER
@@ -149,7 +149,6 @@ VETOR: '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTE
      | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
      | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
      | '[' _CTE_INTEGER ']'
-     |
      ;
 
 CONDICAO: E _MAIOR E
