@@ -1,3 +1,6 @@
+int x;
+int a[2];
+
 <htpl>
 x = x + 3;
 </htpl>
