@@ -153,7 +153,7 @@ TIPO: _INT      { $$.t = Integer; }
     | _STRING   { $$.t = String; }
     ;
 
-ID: _ID ',' ID { $$.lst = $1.lst; $$.lst.push_back( $3.v ); }
+ID: ID ',' _ID { $$.lst = $1.lst; $$.lst.push_back( $3.v ); }
   | _ID  { $$.lst.push_back( $1.v ); }
   ;
 
