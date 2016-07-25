@@ -102,13 +102,12 @@ MIOLO : DECLS
 DECLS: DECL ';'
      ;
 
-DECL: DECLA
-    | DECLA '=' _CTE_INTEGER 
-    | DECLA '=' _CTE_FLOAT
+DECL: TIPO ID 
+    | TIPO ID '=' _CTE_INTEGER 
+    | TIPO ID '=' _CTE_FLOAT
+    | TIPO ID VETOR 
     ;
 
-DECLA: TIPO ID VETOR
-     ; 
 
 TIPO: _INT
     | _FLOAT
