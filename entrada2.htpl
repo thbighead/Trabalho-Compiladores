@@ -1,5 +1,5 @@
 int x,y;
-int a[2];
+int a,b[2][3];
 
 <htpl>
 x = x + 3;

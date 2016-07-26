@@ -59,24 +59,29 @@ int toInt( string valor ) {
   return aux;
 }
 
-
-void trata_dimensoes_decl_var(Atributo& ss, const Atributo& s3 ) {
+/*string trata_dimensoes_decl_var( const Atributo& s3 ) {
   string aux;
-  for( int i = 0; i < s3.dim.size(); i++ )
-    aux += "[" + toString( s3.dim[i] )+ "]";
-  ss.c = ss.c+aux ;     
+  if(s3 == NULL){
+    for( int i = 0; i < s3.dim.size(); i++ )
+      aux += "[" + toString( s3.dim[i] )+ "]";
+    return aux;
+  }
+  else{
+    return "";
+  }    
 }
+*/
 
 // 'Atributo&': o '&' significa passar por referência (modifica).
 void declara_variavel( Atributo& ss, 
-                       const Atributo& s1, const Atributo& s2 ) {
+                       const Atributo& s1, const Atributo& s2, const string s3 ) {
   ss.c = "";
   for( int i = 0; i < s2.lst.size(); i++ ) {
     if( ts.find( s2.lst[i] ) != ts.end() ) 
       erro( "Variável já declarada: " + s2.lst[i] );
     else {
       ts[ s2.lst[i] ] = s1.t; 
-      ss.c += s1.t.decl + " " + s2.lst[i] ; 
+      ss.c += s1.t.decl + " " + s2.lst[i] + s3 + ";\n"; 
     }  
   }
 }
@@ -132,10 +137,10 @@ MIOLO : DECLS
 DECLS: DECL ';'
      ;
 
-DECL: TIPO ID                   { declara_variavel( $$, $1, $2 ); $$.c = $$.c+";\n"; }
+DECL: TIPO ID                   { declara_variavel( $$, $1, $2,"" ); }
     | TIPO ID '=' _CTE_INTEGER 
     | TIPO ID '=' _CTE_FLOAT
-    | TIPO ID VETOR { declara_variavel( $$, $1, $2 ); trata_dimensoes_decl_var($$,$3); $$.c=$$.c+";\n";}
+    | TIPO ID VETOR { declara_variavel( $$, $1, $2,$3.c); }
     ;
 
 
@@ -179,9 +184,13 @@ CMD_ATRIB : ID '=' E
           ;
 
 VETOR: '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
+        {$$.c = '['+$2.v +']'+ '[' +$5.v+']'+'[' +$8.v+']'+'[' +$11.v+']';}
      | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
-     | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
-     | '[' _CTE_INTEGER ']' {$$.dim.push_back(toInt($2.v));}
+        {$$.c = '['+$2.v +']'+ '[' +$5.v+']'+'[' +$8.v+']';}
+     | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']' 
+        {$$.c = '['+$2.v+']'+'[' + $5.v+']';}
+     | '[' _CTE_INTEGER ']' 
+        {$$.c = '['+$2.v+']';}
      ;
 
 CONDICAO: E '>' E

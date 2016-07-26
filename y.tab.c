@@ -124,24 +124,29 @@ int toInt( string valor ) {
   return aux;
 }
 
-
-void trata_dimensoes_decl_var(Atributo& ss, const Atributo& s3 ) {
+/*string trata_dimensoes_decl_var( const Atributo& s3 ) {
   string aux;
-  for( int i = 0; i < s3.dim.size(); i++ )
-    aux += "[" + toString( s3.dim[i] )+ "]";
-  ss.c = ss.c+aux ;     
+  if(s3 == NULL){
+    for( int i = 0; i < s3.dim.size(); i++ )
+      aux += "[" + toString( s3.dim[i] )+ "]";
+    return aux;
+  }
+  else{
+    return "";
+  }    
 }
+*/
 
 // 'Atributo&': o '&' significa passar por referência (modifica).
 void declara_variavel( Atributo& ss, 
-                       const Atributo& s1, const Atributo& s2 ) {
+                       const Atributo& s1, const Atributo& s2, const string s3 ) {
   ss.c = "";
   for( int i = 0; i < s2.lst.size(); i++ ) {
     if( ts.find( s2.lst[i] ) != ts.end() ) 
       erro( "Variável já declarada: " + s2.lst[i] );
     else {
       ts[ s2.lst[i] ] = s1.t; 
-      ss.c += s1.t.decl + " " + s2.lst[i] ; 
+      ss.c += s1.t.decl + " " + s2.lst[i] + s3 + ";\n"; 
     }  
   }
 }
@@ -157,7 +162,7 @@ void busca_tipo_da_variavel( Atributo& ss, const Atributo& s1 ) {
 }
 
 
-#line 161 "y.tab.c" /* yacc.c:339  */
+#line 166 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -259,7 +264,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 263 "y.tab.c" /* yacc.c:358  */
+#line 268 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -559,13 +564,13 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,   111,   111,   118,   121,   124,   125,   128,   129,   132,
-     135,   136,   137,   138,   142,   143,   144,   145,   146,   149,
-     150,   153,   156,   157,   160,   161,   164,   167,   168,   171,
-     172,   173,   174,   175,   178,   181,   182,   183,   184,   187,
-     188,   189,   192,   195,   198,   199,   202,   203,   204,   205,
-     208,   209,   210,   211,   212,   213,   214,   217,   218,   219,
-     220,   221
+       0,   116,   116,   123,   126,   129,   130,   133,   134,   137,
+     140,   141,   142,   143,   147,   148,   149,   150,   151,   154,
+     155,   158,   161,   162,   165,   166,   169,   172,   173,   176,
+     177,   178,   179,   180,   183,   186,   188,   190,   192,   196,
+     197,   198,   201,   204,   207,   208,   211,   212,   213,   214,
+     217,   218,   219,   220,   221,   222,   223,   226,   227,   228,
+     229,   230
 };
 #endif
 
@@ -1430,118 +1435,136 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 112 "trabalho.y" /* yacc.c:1646  */
+#line 117 "trabalho.y" /* yacc.c:1646  */
     { cout << "#include <stdlib.h>\n"
                 "#include <string.h>\n" 
                 "#include <stdio.h>\n\n"<< (yyvsp[-3]).c << "int main (){\n" <<(yyvsp[-1]).c<<"}"<<endl;
   }
-#line 1439 "y.tab.c" /* yacc.c:1646  */
+#line 1444 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 124 "trabalho.y" /* yacc.c:1646  */
+#line 129 "trabalho.y" /* yacc.c:1646  */
     {(yyval).c = (yyvsp[-1]).c + (yyvsp[0]).c;}
-#line 1445 "y.tab.c" /* yacc.c:1646  */
+#line 1450 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 125 "trabalho.y" /* yacc.c:1646  */
+#line 130 "trabalho.y" /* yacc.c:1646  */
     {(yyval).c="";}
-#line 1451 "y.tab.c" /* yacc.c:1646  */
+#line 1456 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 135 "trabalho.y" /* yacc.c:1646  */
-    { declara_variavel( (yyval), (yyvsp[-1]), (yyvsp[0]) ); (yyval).c = (yyval).c+";\n"; }
-#line 1457 "y.tab.c" /* yacc.c:1646  */
+#line 140 "trabalho.y" /* yacc.c:1646  */
+    { declara_variavel( (yyval), (yyvsp[-1]), (yyvsp[0]),"" ); }
+#line 1462 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 138 "trabalho.y" /* yacc.c:1646  */
-    { declara_variavel( (yyval), (yyvsp[-2]), (yyvsp[-1]) ); trata_dimensoes_decl_var((yyval),(yyvsp[0])); (yyval).c=(yyval).c+";\n";}
-#line 1463 "y.tab.c" /* yacc.c:1646  */
+#line 143 "trabalho.y" /* yacc.c:1646  */
+    { declara_variavel( (yyval), (yyvsp[-2]), (yyvsp[-1]),(yyvsp[0]).c); }
+#line 1468 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 142 "trabalho.y" /* yacc.c:1646  */
+#line 147 "trabalho.y" /* yacc.c:1646  */
     { (yyval).t = Integer; }
-#line 1469 "y.tab.c" /* yacc.c:1646  */
+#line 1474 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 143 "trabalho.y" /* yacc.c:1646  */
+#line 148 "trabalho.y" /* yacc.c:1646  */
     { (yyval).t = Float; }
-#line 1475 "y.tab.c" /* yacc.c:1646  */
+#line 1480 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 144 "trabalho.y" /* yacc.c:1646  */
+#line 149 "trabalho.y" /* yacc.c:1646  */
     { (yyval).t = Double; }
-#line 1481 "y.tab.c" /* yacc.c:1646  */
+#line 1486 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 145 "trabalho.y" /* yacc.c:1646  */
+#line 150 "trabalho.y" /* yacc.c:1646  */
     { (yyval).t = Char; }
-#line 1487 "y.tab.c" /* yacc.c:1646  */
+#line 1492 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 146 "trabalho.y" /* yacc.c:1646  */
+#line 151 "trabalho.y" /* yacc.c:1646  */
     { (yyval).t = String; }
-#line 1493 "y.tab.c" /* yacc.c:1646  */
+#line 1498 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 149 "trabalho.y" /* yacc.c:1646  */
+#line 154 "trabalho.y" /* yacc.c:1646  */
     { (yyval).lst = (yyvsp[-2]).lst; (yyval).lst.push_back( (yyvsp[0]).v ); }
-#line 1499 "y.tab.c" /* yacc.c:1646  */
+#line 1504 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 150 "trabalho.y" /* yacc.c:1646  */
+#line 155 "trabalho.y" /* yacc.c:1646  */
     { (yyval).lst.push_back( (yyvsp[0]).v ); }
-#line 1505 "y.tab.c" /* yacc.c:1646  */
+#line 1510 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 35:
+#line 187 "trabalho.y" /* yacc.c:1646  */
+    {(yyval).c = '['+(yyvsp[-10]).v +']'+ '[' +(yyvsp[-7]).v+']'+'[' +(yyvsp[-4]).v+']'+'[' +(yyvsp[-1]).v+']';}
+#line 1516 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 36:
+#line 189 "trabalho.y" /* yacc.c:1646  */
+    {(yyval).c = '['+(yyvsp[-7]).v +']'+ '[' +(yyvsp[-4]).v+']'+'[' +(yyvsp[-1]).v+']';}
+#line 1522 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 37:
+#line 191 "trabalho.y" /* yacc.c:1646  */
+    {(yyval).c = '['+(yyvsp[-4]).v+']'+'[' + (yyvsp[-1]).v+']';}
+#line 1528 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 184 "trabalho.y" /* yacc.c:1646  */
-    {(yyval).dim.push_back(toInt((yyvsp[-1]).v));}
-#line 1511 "y.tab.c" /* yacc.c:1646  */
+#line 193 "trabalho.y" /* yacc.c:1646  */
+    {(yyval).c = '['+(yyvsp[-1]).v+']';}
+#line 1534 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 217 "trabalho.y" /* yacc.c:1646  */
+#line 226 "trabalho.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); (yyval).t = String; }
-#line 1517 "y.tab.c" /* yacc.c:1646  */
+#line 1540 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 218 "trabalho.y" /* yacc.c:1646  */
+#line 227 "trabalho.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); (yyval).t = Float; }
-#line 1523 "y.tab.c" /* yacc.c:1646  */
+#line 1546 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 219 "trabalho.y" /* yacc.c:1646  */
+#line 228 "trabalho.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); (yyval).t = Integer; }
-#line 1529 "y.tab.c" /* yacc.c:1646  */
+#line 1552 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 220 "trabalho.y" /* yacc.c:1646  */
+#line 229 "trabalho.y" /* yacc.c:1646  */
     { busca_tipo_da_variavel( (yyval), (yyvsp[0]) );  }
-#line 1535 "y.tab.c" /* yacc.c:1646  */
+#line 1558 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 221 "trabalho.y" /* yacc.c:1646  */
+#line 230 "trabalho.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[-1]); }
-#line 1541 "y.tab.c" /* yacc.c:1646  */
+#line 1564 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1545 "y.tab.c" /* yacc.c:1646  */
+#line 1568 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1769,7 +1792,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 224 "trabalho.y" /* yacc.c:1906  */
+#line 233 "trabalho.y" /* yacc.c:1906  */
 
 
 #include "lex.yy.c"
