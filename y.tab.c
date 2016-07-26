@@ -1523,7 +1523,7 @@ yyreduce:
 
   case 37:
 #line 191 "trabalho.y" /* yacc.c:1646  */
-    {(yyval).c = '['+(yyvsp[-4]).v+']'+'[' + (yyvsp[-1]).v+']';}
+    {(yyval).c = '['+toString(toInt((yyvsp[-4]).v) *toInt((yyvsp[-1]).v))+']';(yyval).dim.push_back(toInt((yyvsp[-4]).v));(yyval).dim.push_back(toInt((yyvsp[-1]).v));	}
 #line 1528 "y.tab.c" /* yacc.c:1646  */
     break;
 

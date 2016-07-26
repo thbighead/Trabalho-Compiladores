@@ -188,7 +188,7 @@ VETOR: '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTE
      | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
         {$$.c = '['+$2.v +']'+ '[' +$5.v+']'+'[' +$8.v+']';}
      | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']' 
-        {$$.c = '['+$2.v+']'+'[' + $5.v+']';}
+        {$$.c = '['+toString(toInt($2.v) *toInt($5.v))+']';$$.dim.push_back(toInt($2.v));$$.dim.push_back(toInt($5.v));	}
      | '[' _CTE_INTEGER ']' 
         {$$.c = '['+$2.v+']';}
      ;
