@@ -2,5 +2,7 @@ int x,y;
 int a,b[2][3];
 
 <htpl>
+x=2+3;
+Print(x);
 Print ("Hello, World!\n");
 </htpl>

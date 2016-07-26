@@ -2,5 +2,6 @@ int x,y;
 int a,b[2][3];
 
 <htpl>
-x = x + 3;
+Print(2+3);
+Print ("Hello, World!\n");
 </htpl>

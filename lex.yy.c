@@ -368,8 +368,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 26
-#define YY_END_OF_BUFFER 27
+#define YY_NUM_RULES 27
+#define YY_END_OF_BUFFER 28
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -379,16 +379,16 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[98] =
     {   0,
-        0,    0,   27,   25,    2,    1,   25,   25,   20,   25,
-       25,   22,   22,   22,   22,   22,   22,   22,   22,   22,
-        0,   19,    0,   24,    0,   20,    0,    0,    0,   23,
-       22,   22,   22,   22,   22,   22,   22,   14,   22,   22,
-       22,   22,   22,   21,    0,    0,    0,    0,   22,   22,
-       22,   22,   16,   22,    7,   22,   22,   22,   22,    0,
-        0,    0,    0,   12,   22,   15,   22,   22,   22,   22,
-       22,   22,    0,    0,    0,    0,   22,    8,   22,    5,
-        6,   18,   22,    0,    0,    0,    3,   11,   22,   13,
-        0,    4,    9,   22,   10,   17,    0
+        0,    0,   28,   26,    2,    1,   26,   26,   21,   26,
+       26,   23,   23,   23,   23,   23,   23,   23,   23,   23,
+        0,   20,    0,   25,    0,   21,    5,    0,    0,   24,
+       23,   23,   23,   23,   23,   23,   23,   15,   23,   23,
+       23,   23,   23,   22,    0,    0,    0,    0,   23,   23,
+       23,   23,   17,   23,    8,   23,   23,   23,   23,    0,
+        0,    0,    0,   13,   23,   16,   23,   23,   23,   23,
+       23,   23,    0,    0,    0,    0,   23,    9,   23,    6,
+        7,   19,   23,    0,    0,    0,    3,   12,   23,   14,
+        0,    4,   10,   23,   11,   18,    0
 
     } ;
 
@@ -710,7 +710,7 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 33 "trabalho.lex"
+#line 34 "trabalho.lex"
 
 #line 716 "lex.yy.c"
 
@@ -798,135 +798,140 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 34 "trabalho.lex"
+#line 35 "trabalho.lex"
 { yylineno++; yyrowno = 1; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 35 "trabalho.lex"
+#line 36 "trabalho.lex"
 { yyrowno += 1; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 37 "trabalho.lex"
+#line 38 "trabalho.lex"
 { trata_folha(); return _HTPL; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 38 "trabalho.lex"
+#line 39 "trabalho.lex"
 { trata_folha(); return _BARRAHTPL; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 39 "trabalho.lex"
-{ trata_folha(); return _MAIOR; }
+#line 40 "trabalho.lex"
+{ trata_folha(); return _END; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 40 "trabalho.lex"
-{ trata_folha(); return _MENOR; }
+#line 41 "trabalho.lex"
+{ trata_folha(); return _MAIOR; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 41 "trabalho.lex"
-{ trata_folha(); return _INT; }
+#line 42 "trabalho.lex"
+{ trata_folha(); return _MENOR; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 42 "trabalho.lex"
-{ trata_folha(); return _FLOAT; }
+#line 43 "trabalho.lex"
+{ trata_folha(); return _INT; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 43 "trabalho.lex"
-{ trata_folha(); return _BLOCK; }
+#line 44 "trabalho.lex"
+{ trata_folha(); return _FLOAT; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 44 "trabalho.lex"
-{ trata_folha(); return _BARRABLOCK; }
+#line 45 "trabalho.lex"
+{ trata_folha(); return _BLOCK; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 45 "trabalho.lex"
-{ trata_folha(); return _DOUBLE; }
+#line 46 "trabalho.lex"
+{ trata_folha(); return _BARRABLOCK; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 46 "trabalho.lex"
-{ trata_folha(); return _CHAR; }
+#line 47 "trabalho.lex"
+{ trata_folha(); return _DOUBLE; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 47 "trabalho.lex"
-{ trata_folha(); return _STRING; }
+#line 48 "trabalho.lex"
+{ trata_folha(); return _CHAR; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 48 "trabalho.lex"
-{ trata_folha(); return _IF; }
+#line 49 "trabalho.lex"
+{ trata_folha(); return _STRING; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 49 "trabalho.lex"
-{ trata_folha(); return _ELSE; }
+#line 50 "trabalho.lex"
+{ trata_folha(); return _IF; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 50 "trabalho.lex"
-{ trata_folha(); return _FOR; }
+#line 51 "trabalho.lex"
+{ trata_folha(); return _ELSE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 51 "trabalho.lex"
-{ trata_folha(); return _FUNCTION; }
+#line 52 "trabalho.lex"
+{ trata_folha(); return _FOR; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 52 "trabalho.lex"
-{ trata_folha(); return _PRINT; }
+#line 53 "trabalho.lex"
+{ trata_folha(); return _FUNCTION; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 54 "trabalho.lex"
-{ trata_aspas_simples(); return _CTE_STRING; }
+{ trata_folha(); return _PRINT; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 55 "trabalho.lex"
-{ trata_folha(); return _CTE_INTEGER; }	
+#line 56 "trabalho.lex"
+{ trata_aspas_simples(); return _CTE_STRING; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 56 "trabalho.lex"
-{ trata_folha(); return _CTE_FLOAT; }	
+#line 57 "trabalho.lex"
+{ trata_folha(); return _CTE_INTEGER; }	
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 58 "trabalho.lex"
-{ trata_folha(); return _ID; }
+{ trata_folha(); return _CTE_FLOAT; }	
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 60 "trabalho.lex"
-{ trata_folha(); return _COMPARACAO; }
+{ trata_folha(); return _ID; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 61 "trabalho.lex"
-{ trata_folha(); return _MAISMAIS; }
+#line 62 "trabalho.lex"
+{ trata_folha(); return _COMPARACAO; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 63 "trabalho.lex"
-{ trata_folha(); return yytext[0]; }
+{ trata_folha(); return _MAISMAIS; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 65 "trabalho.lex"
+{ trata_folha(); return yytext[0]; }
+	YY_BREAK
+case 27:
+YY_RULE_SETUP
+#line 67 "trabalho.lex"
 ECHO;
 	YY_BREAK
-#line 930 "lex.yy.c"
+#line 935 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1924,7 +1929,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 65 "trabalho.lex"
+#line 67 "trabalho.lex"
 
 
 

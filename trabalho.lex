@@ -12,6 +12,7 @@ INICIO		"<"[Hh][Tt][Pp][Ll]">"
 FIM		"</"[Hh][Tt][Pp][Ll]">"
 BLOCKINIT	"<"[Bb][Ll][Oo][Cc][Kk]">"
 BLOCKEND	"</"[Bb][Ll][Oo][Cc][Kk]">"
+END             "</"
 MAIOR		[Mm][Aa][Ii][Oo][Rr]
 MENOR		[Mm][Ee][Nn][Oo][Rr]
 INT		[Ii][Nn][Tt]
@@ -36,6 +37,7 @@ CTE_INTEGER 	{DIGITO}+
 
 {INICIO} 	{ trata_folha(); return _HTPL; }
 {FIM} 		{ trata_folha(); return _BARRAHTPL; }
+{END}           { trata_folha(); return _END; }
 {MAIOR}		{ trata_folha(); return _MAIOR; }
 {MENOR}		{ trata_folha(); return _MENOR; }
 {INT}		{ trata_folha(); return _INT; }
