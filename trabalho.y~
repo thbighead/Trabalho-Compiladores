@@ -8,15 +8,10 @@
 
 using namespace std;
 
-struct Range { 
-  int inicio, fim;
-};
-
 struct Tipo {
   string nome;  // O nome na sua linguagem
   string decl;  // A declaração correspondente em c-assembly
   string fmt;   // O formato para "printf"
-  vector< Range > dim; // Dimensões (se não for array, fica vazio)
 };
 
 Tipo Integer = { "integer", "int", "d" };
@@ -29,6 +24,7 @@ struct Atributo {
   string v, c;
   Tipo t;
   vector<string> lst;
+  vector< int > dim;
 }; 
 
 #define YYSTYPE Atributo
@@ -63,27 +59,29 @@ int toInt( string valor ) {
   return aux;
 }
 
-
-string trata_dimensoes_decl_var( Tipo t ) {
+/*string trata_dimensoes_decl_var( const Atributo& s3 ) {
   string aux;
-  
-  for( int i = 0; i < t.dim.size(); i++ )
-    aux += "[" + toString( t.dim[i].fim - t.dim[i].inicio + 1 )+ "]";
-           
-  return aux;         
+  if(s3 == NULL){
+    for( int i = 0; i < s3.dim.size(); i++ )
+      aux += "[" + toString( s3.dim[i] )+ "]";
+    return aux;
+  }
+  else{
+    return "";
+  }    
 }
+*/
 
 // 'Atributo&': o '&' significa passar por referência (modifica).
 void declara_variavel( Atributo& ss, 
-                       const Atributo& s1, const Atributo& s2 ) {
+                       const Atributo& s1, const Atributo& s2, const string s3 ) {
   ss.c = "";
   for( int i = 0; i < s2.lst.size(); i++ ) {
     if( ts.find( s2.lst[i] ) != ts.end() ) 
       erro( "Variável já declarada: " + s2.lst[i] );
     else {
       ts[ s2.lst[i] ] = s1.t; 
-      ss.c += s1.t.decl + " " + s2.lst[i] 
-              + trata_dimensoes_decl_var( s1.t ) + ";\n"; 
+      ss.c += s1.t.decl + " " + s2.lst[i] + s3 + ";\n"; 
     }  
   }
 }
@@ -101,7 +99,7 @@ void busca_tipo_da_variavel( Atributo& ss, const Atributo& s1 ) {
 %}
 
 %token _ID _IF _ELSE _HTPL _COMPARACAO _BARRAHTPL _CTE_FLOAT _MAIOR _MENOR _BLOCK _BARRABLOCK _MAISMAIS
-%token _FOR _ATRIB _FUNCTION _PRINT _INT _FLOAT _BOOL _DOUBLE _CHAR
+%token _FOR _ATRIB _FUNCTION _PRINT _INT _FLOAT _DOUBLE _CHAR
 %token _INTEGER _STRING
 
 %token _CTE_STRING _CTE_INTEGER
@@ -128,8 +126,8 @@ ABRE : _HTPL
 FECHA: _BARRAHTPL
      ;
    
-MIOLOS : MIOLO MIOLOS 
-       | 
+MIOLOS : MIOLO MIOLOS {$$.c = $1.c + $2.c;}
+       | {$$.c="";}
        ;
        
 MIOLO : DECLS
@@ -139,10 +137,10 @@ MIOLO : DECLS
 DECLS: DECL ';'
      ;
 
-DECL: TIPO ID                   { declara_variavel( $$, $1, $2 ); }
+DECL: TIPO ID                   { declara_variavel( $$, $1, $2,"" ); }
     | TIPO ID '=' _CTE_INTEGER 
     | TIPO ID '=' _CTE_FLOAT
-    | TIPO ID VETOR 
+    | TIPO ID VETOR { declara_variavel( $$, $1, $2,$3.c); }
     ;
 
 
@@ -153,8 +151,8 @@ TIPO: _INT      { $$.t = Integer; }
     | _STRING   { $$.t = String; }
     ;
 
-ID: _ID ',' ID
-  | _ID
+ID: ID ',' _ID { $$.lst = $1.lst; $$.lst.push_back( $3.v ); }
+  | _ID  { $$.lst.push_back( $1.v ); }
   ;
 
 FUNCTION: '<'_FUNCTION _ID'('ARGS')''>' CMD '<''/'_FUNCTION'>'
@@ -165,7 +163,7 @@ ARGS: IDS
     ;
      
 IDS : TIPO _ID ',' IDS
-    | TIPO _ID
+    | TIPO _ID  
     ;      
    
 PRINCIPAL : CMDS 
@@ -175,7 +173,7 @@ CMDS : CMD  CMDS
      | 
      ;                   
  
-CMD : SAIDA';'
+CMD : SAIDA
     | CMD_IF
     | CMD_FOR
     | BLOCO
@@ -186,9 +184,13 @@ CMD_ATRIB : ID '=' E
           ;
 
 VETOR: '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
+        {$$.c = '['+$2.v +']'+ '[' +$5.v+']'+'[' +$8.v+']'+'[' +$11.v+']';}
      | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
-     | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'
-     | '[' _CTE_INTEGER ']'
+        {$$.c = '['+$2.v +']'+ '[' +$5.v+']'+'[' +$8.v+']';}
+     | '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']' 
+        {$$.c = '['+toString(toInt($2.v) *toInt($5.v))+']';$$.dim.push_back(toInt($2.v));$$.dim.push_back(toInt($5.v));	}
+     | '[' _CTE_INTEGER ']' 
+        {$$.c = '['+$2.v+']';}
      ;
 
 CONDICAO: E '>' E
@@ -206,10 +208,7 @@ CMD_IF : '<'_IF '('CONDICAO')' '>' CMD '<''/'_IF '>'
        | '<'_IF '('CONDICAO')' '>' CMD '<'_ELSE'>' CMD  '<''/'_IF '>'
        ;    
     
-SAIDA : '<'_PRINT _CTE_STRING '>'
-      | '<'_PRINT _ID '>'
-      | '<'_PRINT _CTE_INTEGER '>'
-      | '<'_PRINT _CTE_FLOAT '>'
+SAIDA : _PRINT '(' E ')'        { $$.c = "  printf( \"%"+ $3.t.fmt + "\", " + $3.v + " );\n"; }
       ;
    
 E : E '+' E

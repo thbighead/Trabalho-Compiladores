@@ -99,7 +99,7 @@ void busca_tipo_da_variavel( Atributo& ss, const Atributo& s1 ) {
 %}
 
 %token _ID _IF _ELSE _HTPL _COMPARACAO _BARRAHTPL _CTE_FLOAT _MAIOR _MENOR _BLOCK _BARRABLOCK _MAISMAIS
-%token _FOR _ATRIB _FUNCTION _PRINT _INT _FLOAT _BOOL _DOUBLE _CHAR
+%token _FOR _ATRIB _FUNCTION _PRINT _INT _FLOAT _DOUBLE _CHAR
 %token _INTEGER _STRING
 
 %token _CTE_STRING _CTE_INTEGER
@@ -208,10 +208,7 @@ CMD_IF : '<'_IF '('CONDICAO')' '>' CMD '<''/'_IF '>'
        | '<'_IF '('CONDICAO')' '>' CMD '<'_ELSE'>' CMD  '<''/'_IF '>'
        ;    
     
-SAIDA : '<'_PRINT _CTE_STRING '>'
-      | '<'_PRINT _ID '>'
-      | '<'_PRINT _CTE_INTEGER '>'
-      | '<'_PRINT _CTE_FLOAT '>'
+SAIDA : _PRINT '(' E ')'        { $$.c = "  printf( \"%"+ $3.t.fmt + "\", " + $3.v + " );\n"; }
       ;
    
 E : E '+' E
