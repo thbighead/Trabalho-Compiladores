@@ -51,11 +51,12 @@ string toString( int n ) {
 }
 
 int toInt( string valor ) {
-  int aux = 0;
+  int aux = 0,i=0;
+
   
-  sscanf( valor.c_str(), "%d", &aux );
-  
-  return aux;
+  i=sscanf( valor.c_str(), "%d", &aux );
+  if(i==0) return -1;
+  else return aux;
 }
 
 string gera_nome_var( Tipo t ) {
@@ -159,15 +160,32 @@ void gera_codigo_operador( Atributo& ss,
 }
 
 void gera_codigo_vetor(Atributo& ss, const Atributo& s1, const Atributo& s3, const Atributo& s6, const Atributo& s9){
-  if( ts.find( s1.v ) == ts.end() )
+ string aux1, aux2; 
+ if( ts.find( s1.v ) == ts.end() )
         erro( "Variável não declarada: " + s1.v );
   else if( s1.t.nome == s9.t.nome ){
       if((ts[s1.v].dim[0]-1)<toInt(s3.v) || (ts[s1.v].dim[1]-1)<toInt(s6.v)){
         erro("Segmentation Fault \n");
       }
-      else{
-      ss.c = s1.c + s3.c + "  " + s1.v + '[' + toString((toInt(s3.v)*ts[s1.v].dim[1])+toInt(s6.v)) + ']' + " = " + s9.v + ";\n";
+      else if(toInt(s3.v)==-1&&toInt(s6.v)!=-1){
+      aux1="  "+gera_nome_var( Integer );
+      ss.c=ss.c+aux1+'='+ s3.v + '*' + toString(ts[s1.v].dim[1])+";\n";
+      aux2="  "+gera_nome_var( Integer );
+      ss.c=ss.c+aux2+'='+ aux1 +'+'+ s6.v+";\n";
+      ss.c =ss.c+ s1.c + s3.c + "  " + s1.v + '[' + aux2 + ']' + " = " + s9.v + ";\n";
       }
+      else if(ts.find(s3.v)!=ts.end()&&ts.find(s6.v)==ts.end()){
+      ss.c = s1.c + s3.c + "  " + s1.v + '[' + toString((toInt(s3.c)*ts[s1.v].dim[1])+toInt(s6.v)) + ']' + " = " + s9.v + ";\n";
+      }
+      else if(ts.find(s3.v)!=ts.end()&&ts.find(s6.v)!=ts.end()){
+        ss.c = s1.c + s3.c + "  " + s1.v + '[' + toString((toInt(s3.c)*ts[s1.v].dim[1])+toInt(s6.c)) + ']' + " = " + s9.v + ";\n";
+      }
+      else if(ts.find(s3.v)==ts.end()&&ts.find(s6.v)==ts.end()){
+        ss.c = s1.c + s3.c + "  " + s1.v + '[' + toString((toInt(s3.v)*ts[s1.v].dim[1])+toInt(s6.v)) + ']' + " = " + s9.v + ";\n";
+      }
+  }
+  else{
+    erro("Tipo errado na atribuição");
   }
 }
 
