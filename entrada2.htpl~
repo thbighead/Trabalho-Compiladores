@@ -1,7 +1,8 @@
 int x,y;
 int a,b[2][3];
+int c[5];
 
 <htpl>
-Print(2+3);
-Print ("Hello, World!\n");
+x=2<=3;
+println(x);
 </htpl>

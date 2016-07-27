@@ -22,6 +22,7 @@ FOR		    [Ff][Oo][Rr]
 FUNCTION	[Ff][Uu][Nn][Cc][Tt][Ii][Oo][Nn]
 PRINT		[Pp][Rr][Ii][Nn][Tt]
 PRINTLN		[Pp][Rr][Ii][Nn][Tt][Ll][Nn]
+INPUT       [Ii][Nn][Pp][Uu][Tt]
 
 CTE_STRING	"\""([^'\n]|"''")*"\""
 CTE_FLOAT	({DIGITO}+)"."{DIGITO}+
@@ -45,6 +46,7 @@ CTE_INTEGER {DIGITO}+
 {FUNCTION}  { trata_folha(); return _FUNCTION; }
 {PRINT}		{ trata_folha(); return _PRINT; }
 {PRINTLN}	{ trata_folha(); return _PRINTLN; }
+{INPUT}	{ trata_folha(); return _INPUT; }
 
 {CTE_STRING} 	{ trata_aspas_simples(); return _CTE_STRING; }
 {CTE_INTEGER} 	{ trata_folha(); return _CTE_INTEGER; }	

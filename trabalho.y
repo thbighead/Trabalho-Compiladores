@@ -231,15 +231,15 @@ void gera_codigo_atomico(Atributo& ss,const Atributo& s1, const Atributo& s2){
 	ss.c= ss.c + "  " + s1.v + " = " + aux + " + 1; \n";
 }
 
-void gera_cmd_input (Atributo& ss, const Atributo& s3){		//CMD_INPUT : LVALUE '=' _INPUT '(' _CTE_STRING ')' ';'
-	ss.c = "scanf(\"" + " %" + s3.t.fmt + "\\n\", &" + s3.v + ");" ;
+void gera_cmd_input (Atributo& ss, const Atributo& s3){		//CMD_INPUT : _INPUT '(' LVALUE ')' ';'
+	ss.c = "scanf(\"" + " %" + s3.t.fmt + "\\n\", &" + s3.v + ");\n" ;
 }
 
 %}
 
 %token _ID _IF _ELSE _HTPL _IGUALDADE _BARRAHTPL _CTE_FLOAT _MAISMAIS _DIFERENTE
 %token _FOR _FUNCTION _PRINT _INT _FLOAT _DOUBLE _CHAR _END _MENOSMENOS _MAIORIGUAL
-%token _STRING _MENORIGUAL _PRINTLN
+%token _STRING _MENORIGUAL _PRINTLN _INPUT
 
 %token _CTE_STRING _CTE_INTEGER
 
@@ -319,6 +319,7 @@ CMD : SAIDA';'     		{$$=$1;}
     | CMD_FOR      		{$$=$1;}
     | CMD_ATRIB';'    {$$=$1;}
     | CMD_ATOM';' 		{$$=$1;}
+    | CMD_INPUT';'
     ;
     
 CMD_ATRIB : LVALUE '=' E 								{gera_codigo_atribuicao($$, $1, $3); }
@@ -337,7 +338,7 @@ CMD_FOR : '<'_FOR '('CMD_ATRIB';' E ';' CMD_ATOM ')''>' CMDS _END _FOR'>' {gera_
 				| '<'_FOR '('CMD_ATRIB';' E ';' CMD_ATRIB ')''>' CMDS _END _FOR'>' {gera_cmd_for($$,$4,$6,$8,$11);}
         ;    
 
-CMD_INPUT : _INPUT '(' LVALUE ')' ';'		{ gera_cmd_input($$, $3) ; }
+CMD_INPUT : _INPUT '(' LVALUE ')'		{ gera_cmd_input($$, $3) ; }
 					;
 
 CMD_IF : '<'_IF '('E')' '>' CMDS _END _IF '>'             {gera_cmd_if( $$, $4, $7, "");}

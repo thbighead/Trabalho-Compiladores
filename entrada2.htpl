@@ -3,6 +3,8 @@ int a,b[2][3];
 int c[5];
 
 <htpl>
-x=2>=3;
+x=2<=3;
+println("Digite o valor de y: ");
+input(y);
 println(x);
 </htpl>
