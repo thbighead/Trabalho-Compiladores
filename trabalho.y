@@ -141,12 +141,10 @@ string par( Tipo a, Tipo b ) {
   return a.nome + "," + b.nome;  
 }
 
-void gera_codigo_operador( Atributo& ss, 
-                           const Atributo& s1, 
-                           const Atributo& s2, 
-                           const Atributo& s3 ) {
+void gera_codigo_operador( Atributo& ss, const Atributo& s1, const Atributo& s2, const Atributo& s3) {
   if( tro.find( s2.v ) != tro.end() ) {
     if( tro[s2.v].find( par( s1.t, s3.t ) ) != tro[s2.v].end() ) {
+    	if(s2.v)
       ss.t = tro[s2.v][par( s1.t, s3.t )];
       ss.v = gera_nome_var( ss.t );      
       ss.c = s1.c + s3.c + "  " + ss.v + " = " + s1.v + s2.v + s3.v 
@@ -159,45 +157,89 @@ void gera_codigo_operador( Atributo& ss,
     erro( "Operador '" + s2.v + "' não definido." );
 }
 
-void gera_codigo_vetor(Atributo& ss, const Atributo& s1, const Atributo& s3, const Atributo& s6, const Atributo& s9){
- string aux1, aux2; 
- if( ts.find( s1.v ) == ts.end() )
-        erro( "Variável não declarada: " + s1.v );
+void gera_codigo_matrix(Atributo& ss, const Atributo& s1, const Atributo& s3, const Atributo& s6, const Atributo& s9){
+	string aux1, aux2, aux3, axu4; 
+  if( ts.find( s1.v ) == ts.end() )
+    erro( "Variável não declarada: " + s1.v );
   else if( s1.t.nome == s9.t.nome ){
-      if((ts[s1.v].dim[0]-1)<toInt(s3.v) || (ts[s1.v].dim[1]-1)<toInt(s6.v)){
-        erro("Segmentation Fault \n");
-      }
-      else if(toInt(s3.v)==-1&&toInt(s6.v)!=-1){
-      aux1="  "+gera_nome_var( Integer );
-      ss.c=ss.c+aux1+'='+ s3.v + '*' + toString(ts[s1.v].dim[1])+";\n";
-      aux2="  "+gera_nome_var( Integer );
-      ss.c=ss.c+aux2+'='+ aux1 +'+'+ s6.v+";\n";
-      ss.c =ss.c+ s1.c + s3.c + "  " + s1.v + '[' + aux2 + ']' + " = " + s9.v + ";\n";
-      }
-      else if(ts.find(s3.v)!=ts.end()&&ts.find(s6.v)==ts.end()){
-      ss.c = s1.c + s3.c + "  " + s1.v + '[' + toString((toInt(s3.c)*ts[s1.v].dim[1])+toInt(s6.v)) + ']' + " = " + s9.v + ";\n";
-      }
-      else if(ts.find(s3.v)!=ts.end()&&ts.find(s6.v)!=ts.end()){
-        ss.c = s1.c + s3.c + "  " + s1.v + '[' + toString((toInt(s3.c)*ts[s1.v].dim[1])+toInt(s6.c)) + ']' + " = " + s9.v + ";\n";
-      }
-      else if(ts.find(s3.v)==ts.end()&&ts.find(s6.v)==ts.end()){
-        ss.c = s1.c + s3.c + "  " + s1.v + '[' + toString((toInt(s3.v)*ts[s1.v].dim[1])+toInt(s6.v)) + ']' + " = " + s9.v + ";\n";
-      }
+    if((ts[s1.v].dim[0]-1)<toInt(s3.v) || (ts[s1.v].dim[1]-1)<toInt(s6.v)){
+      erro("Segmentation Fault \n");
+    }
+    aux1=gera_nome_var( Integer );
+    ss.c=ss.c+"  "+aux1+" = "+ s3.v + '*' + toString(ts[s1.v].dim[1])+";\n";
+    aux2=gera_nome_var( Integer );
+    ss.c=ss.c+"  "+aux2+ " = "+ aux1 +'+'+ s6.v+";\n";
+    ss.c =s1.c + s3.c +ss.c+  "  " + s1.v + '[' + aux2 + ']' + " = " + s9.v + ";\n";    
   }
   else{
     erro("Tipo errado na atribuição");
   }
 }
 
+void gera_codigo_vetor(Atributo& ss, const Atributo& s1, const Atributo& s3, const Atributo& s6){
+  if(ts.find( s1.v ) == ts.end())
+    erro( "Variável não declarada: " + s1.v);
+  else if( s1.t.nome == s6.t.nome ){
+    if((ts[s1.v].dim[0]-1)<toInt(s3.v)){
+      erro("Segmentation Fault \n");
+    }
+    ss.c =s1.c + s3.c +ss.c+  "  " + s1.v + '[' + s3.v + ']' + " = " + s6.v + ";\n";    
+  }
+  else{
+    erro("Tipo errado na atribuição");
+  }
+}
+
+string gera_nome_label( string cmd ) {
+  return "L_" + cmd + "_" + toString( ++nlabel[cmd] );
+}
+
+void gera_cmd_if( Atributo& ss, const Atributo& exp, const Atributo& cmd_then, string cmd_else ) { 
+  string lbl_then = gera_nome_label( "then" );
+  string lbl_end_if = gera_nome_label( "end_if" );
+
+  if( exp.t.nome == String.nome || exp.t.nome == Char.nome)
+    erro( "A expressão do IF deve ser um numero!" );
+    
+  ss.c = exp.c + 
+         "\nif( " + exp.v + " ) goto " + lbl_then + ";\n" +
+         cmd_else + "  goto " + lbl_end_if + ";\n\n" +
+         lbl_then + ":;\n" + 
+         cmd_then.c + "\n" +
+         lbl_end_if + ":;\n"; 
+}
+
+void gera_cmd_for(Atributo& ss, const Atributo& s4, const Atributo& s6, const Atributo& s8, const Atributo& s11){
+	string lbl_inicio_for = gera_nome_label("inicio_for");								
+	string lbl_fim_for = gera_nome_label("fim_for");									
+
+	ss.c =  s4.c + "  " + lbl_inicio_for + ":;\n" + s6.c +
+			"  if (!(" + s6.v + ")) goto " + lbl_fim_for + ";\n" +s11.c +
+			"\n" + s8.c +
+			"\n  goto " + lbl_inicio_for + ";\n  " +
+			lbl_fim_for + ":;\n";
+}
+
+void gera_codigo_atomico(Atributo& ss,const Atributo& s1, const Atributo& s2){
+	string aux;
+	if(s1.t.nome==String.nome||s1.t.nome==Char.nome)
+	{
+		erro("Operação não permitida para esse tipo");
+	}
+	aux=gera_nome_var(s1.t);
+	ss.c= "  " + aux + " = " + s1.v + ";\n";
+	ss.c= ss.c + "  " + s1.v + " = " + aux + " + 1; \n";
+}
+
 %}
 
-%token _ID _IF _ELSE _HTPL _COMPARACAO _BARRAHTPL _CTE_FLOAT _MAIOR _MENOR _BLOCK _BARRABLOCK _MAISMAIS
-%token _FOR _ATRIB _FUNCTION _PRINT _INT _FLOAT _DOUBLE _CHAR _END
-%token _INTEGER _STRING
+%token _ID _IF _ELSE _HTPL _IGUALDADE _BARRAHTPL _CTE_FLOAT _MAISMAIS _DIFERENTE
+%token _FOR _FUNCTION _PRINT _INT _FLOAT _DOUBLE _CHAR _END _MENOSMENOS _MAIORIGUAL
+%token _STRING _MENORIGUAL _PRINTLN
 
 %token _CTE_STRING _CTE_INTEGER
 
-%nonassoc  _COMPARACAO '<' '>' _MAISMAIS
+%nonassoc  _IGUALDADE '<' '>' _MAISMAIS _MENOSMENOS _DIFERENTE _MENORIGUAL _MAIORIGUAL
 %left '='
 %left '+' '-'
 %left '*' '/' '%'
@@ -227,13 +269,15 @@ MIOLO : DECLS
       | FUNCTION 
       ;     
 
-DECLS: DECL ';'
+DECLS: DECL ';'  {$$=$1;}
      ;
 
-DECL: TIPO ID                   { declara_variavel( $$, $1, $2,"" ); }
+DECL: TIPO ID                   
+		{ declara_variavel( $$, $1, $2,"" ); }
     | TIPO ID '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'  
     { declara_variavel( $$, $1, $2,'['+toString(toInt($4.v) *toInt($7.v))+']'); gera2Dim($2, $4, $7);}
-    | TIPO ID '[' _CTE_INTEGER ']'{ declara_variavel( $$, $1, $2,'['+$4.v+']'); gera1Dim($2, $4);}
+    | TIPO ID '[' _CTE_INTEGER ']'
+    { declara_variavel( $$, $1, $2,'['+$4.v+']'); gera1Dim($2, $4);}
     ;
 
 
@@ -248,15 +292,15 @@ ID: ID ',' _ID { $$.lst = $1.lst; $$.lst.push_back( $3.v ); }
   | _ID  { $$.lst.push_back( $1.v ); }
   ;
 
-FUNCTION: '<'_FUNCTION _ID'('ARGS')''>' CMDS _END _FUNCTION'>'
-	;
+FUNCTION: '<'TIPO _FUNCTION _ID'('ARGS')''>' CMDS _END _FUNCTION'>'
+				;
 
 ARGS: IDS 
     |
     ;
      
 IDS : TIPO _ID ',' IDS
-    | TIPO _ID  
+    | TIPO _ID
     ;      
    
 PRINCIPAL : CMDS {$$.c=$1.c;}
@@ -266,39 +310,48 @@ CMDS : CMD  CMDS {$$.c=$1.c+$2.c;}
      | {$$.c="";}
      ;                   
  
-CMD : SAIDA';'
-    | CMD_IF
-    | CMD_FOR
-    | CMD_ATRIB';'
+CMD : SAIDA';'     		{$$=$1;}
+    | CMD_IF       		{$$=$1;}
+    | CMD_FOR      		{$$=$1;}
+    | CMD_ATRIB';'    {$$=$1;}
+    | CMD_ATOM';' 		{$$=$1;}
     ;
     
-CMD_ATRIB : LVALUE '=' E { gera_codigo_atribuicao( $$, $1, $3 ); }
-          | LVALUE '['E']''['E']' '=' E {gera_codigo_vetor($$,$1,$3,$6, $9);}
-          | LVALUE '['E']' '=' E
+CMD_ATRIB : LVALUE '=' E 								{gera_codigo_atribuicao($$, $1, $3); }
+          | LVALUE '['E']''['E']' '=' E {gera_codigo_matrix($$,$1,$3,$6, $9);}
+          | LVALUE '['E']' '=' E 				{gera_codigo_vetor($$,$1,$3,$6);}
           ;  
+
+CMD_ATOM: LVALUE _MAISMAIS   {gera_codigo_atomico($$,$1,$2);}
+				| LVALUE _MENOSMENOS {gera_codigo_atomico($$,$1,$2);}
+				;
 
 LVALUE: _ID { busca_tipo_da_variavel( $$, $1 ); }
       ;    
     
-CMD_FOR : '<'_FOR '('_ID '=' E ';' E ';' E ')''>' CMDS _END _FOR'>'
+CMD_FOR : '<'_FOR '('CMD_ATRIB';' E ';' CMD_ATOM ')''>' CMDS _END _FOR'>' {gera_cmd_for($$,$4,$6,$8,$11);}
+				| '<'_FOR '('CMD_ATRIB';' E ';' CMD_ATRIB ')''>' CMDS _END _FOR'>' {gera_cmd_for($$,$4,$6,$8,$11);}
         ;    
     
-CMD_IF : '<'_IF '('E')' '>' CMD _END _IF '>'
-       | '<'_IF '('E')' '>' CMD '<'_ELSE'>' CMD  _END _IF '>'
+CMD_IF : '<'_IF '('E')' '>' CMDS _END _IF '>'             {gera_cmd_if( $$, $4, $7, "");}
+       | '<'_IF '('E')' '>' CMDS _ELSE CMDS  _END _IF '>' {gera_cmd_if( $$, $4, $7, $9.c);}
        ;    
     
 SAIDA : _PRINT '(' E ')'        { $$.c = "  printf( \"%"+ $3.t.fmt + "\", " + $3.v + " );\n"; }
+			| _PRINTLN '(' E ')'      { $$.c = "  printf( \"%"+ $3.t.fmt + "\\n\", " + $3.v + " );\n"; }
       ;
    
-E : E '+' E     { gera_codigo_operador( $$, $1, $2, $3 ); }
-  | E '-' E     { gera_codigo_operador( $$, $1, $2, $3 ); }
-  | E '*' E     { gera_codigo_operador( $$, $1, $2, $3 ); }
-  | E '/' E     { gera_codigo_operador( $$, $1, $2, $3 ); }
-  | E '%' E     { gera_codigo_operador( $$, $1, $2, $3 ); }
-  | E _MAISMAIS
-  | E '>' E     { gera_codigo_operador( $$, $1, $2, $3 ); }
-  | E '<' E     { gera_codigo_operador( $$, $1, $2, $3 ); }
-  | E _COMPARACAO E { gera_codigo_operador( $$, $1, $2, $3 ); }
+E : E '+' E     		 { gera_codigo_operador( $$, $1, $2, $3 ); }
+  | E '-' E     		 { gera_codigo_operador( $$, $1, $2, $3 ); }
+  | E '*' E     		 { gera_codigo_operador( $$, $1, $2, $3 ); }
+  | E '/' E    			 { gera_codigo_operador( $$, $1, $2, $3 ); }
+  | E '%' E     	   { gera_codigo_operador( $$, $1, $2, $3 ); }
+  | E '>' E     		 { gera_codigo_operador( $$, $1, $2, $3 ); }
+  | E '<' E     		 { gera_codigo_operador( $$, $1, $2, $3 ); }
+  | E _IGUALDADE E   { gera_codigo_operador( $$, $1, $2, $3 ); }
+  | E _DIFERENTE E   { gera_codigo_operador( $$, $1, $2, $3 ); }
+  | E _MAIORIGUAL E  { gera_codigo_operador( $$, $1, $2, $3 ); }
+  | E _MENORIGUAL E  { gera_codigo_operador( $$, $1, $2, $3 ); }
   | F
   ;
   
