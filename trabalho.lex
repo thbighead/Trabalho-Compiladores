@@ -46,7 +46,7 @@ CTE_INTEGER {DIGITO}+
 {FUNCTION}  { trata_folha(); return _FUNCTION; }
 {PRINT}		{ trata_folha(); return _PRINT; }
 {PRINTLN}	{ trata_folha(); return _PRINTLN; }
-{INPUT}	{ trata_folha(); return _INPUT; }
+{INPUT}		{ trata_folha(); return _INPUT; }
 
 {CTE_STRING} 	{ trata_aspas_simples(); return _CTE_STRING; }
 {CTE_INTEGER} 	{ trata_folha(); return _CTE_INTEGER; }	
