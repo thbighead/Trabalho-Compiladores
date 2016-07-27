@@ -2,7 +2,8 @@ int x,y;
 int a,b[2][3];
 
 <htpl>
-x=2+3;
+x=1+1;
+a[0][x]=2;
 Print(x);
 Print ("Hello, World!\n");
 </htpl>

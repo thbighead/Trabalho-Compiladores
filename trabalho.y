@@ -158,6 +158,19 @@ void gera_codigo_operador( Atributo& ss,
     erro( "Operador '" + s2.v + "' não definido." );
 }
 
+void gera_codigo_vetor(Atributo& ss, const Atributo& s1, const Atributo& s3, const Atributo& s6, const Atributo& s9){
+  if( ts.find( s1.v ) == ts.end() )
+        erro( "Variável não declarada: " + s1.v );
+  else if( s1.t.nome == s9.t.nome ){
+      if((ts[s1.v].dim[0]-1)<toInt(s3.v) || (ts[s1.v].dim[1]-1)<toInt(s6.v)){
+        erro("Segmentation Fault \n");
+      }
+      else{
+      ss.c = s1.c + s3.c + "  " + s1.v + '[' + toString((toInt(s3.v)*ts[s1.v].dim[1])+toInt(s6.v)) + ']' + " = " + s9.v + ";\n";
+      }
+  }
+}
+
 %}
 
 %token _ID _IF _ELSE _HTPL _COMPARACAO _BARRAHTPL _CTE_FLOAT _MAIOR _MENOR _BLOCK _BARRABLOCK _MAISMAIS
@@ -242,7 +255,7 @@ CMD : SAIDA';'
     ;
     
 CMD_ATRIB : LVALUE '=' E { gera_codigo_atribuicao( $$, $1, $3 ); }
-          | LVALUE '['E']''['E']' '=' E
+          | LVALUE '['E']''['E']' '=' E {gera_codigo_vetor($$,$1,$3,$6, $9);}
           | LVALUE '['E']' '=' E
           ;  
 
