@@ -231,6 +231,10 @@ void gera_codigo_atomico(Atributo& ss,const Atributo& s1, const Atributo& s2){
 	ss.c= ss.c + "  " + s1.v + " = " + aux + " + 1; \n";
 }
 
+void gera_cmd_input (Atributo& ss, const Atributo& s3){		//CMD_INPUT : LVALUE '=' _INPUT '(' _CTE_STRING ')' ';'
+	ss.c = "scanf(\"" + " %" + s3.t.fmt + "\\n\", &" + s3.v + ");" ;
+}
+
 %}
 
 %token _ID _IF _ELSE _HTPL _IGUALDADE _BARRAHTPL _CTE_FLOAT _MAISMAIS _DIFERENTE
@@ -332,7 +336,10 @@ LVALUE: _ID { busca_tipo_da_variavel( $$, $1 ); }
 CMD_FOR : '<'_FOR '('CMD_ATRIB';' E ';' CMD_ATOM ')''>' CMDS _END _FOR'>' {gera_cmd_for($$,$4,$6,$8,$11);}
 				| '<'_FOR '('CMD_ATRIB';' E ';' CMD_ATRIB ')''>' CMDS _END _FOR'>' {gera_cmd_for($$,$4,$6,$8,$11);}
         ;    
-    
+
+CMD_INPUT : _INPUT '(' LVALUE ')' ';'		{ gera_cmd_input($$, $3) ; }
+					;
+
 CMD_IF : '<'_IF '('E')' '>' CMDS _END _IF '>'             {gera_cmd_if( $$, $4, $7, "");}
        | '<'_IF '('E')' '>' CMDS _ELSE CMDS  _END _IF '>' {gera_cmd_if( $$, $4, $7, $9.c);}
        ;    
