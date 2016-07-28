@@ -9,9 +9,9 @@
 using namespace std;
 
 struct Tipo {
-  string nome;  // O nome na sua linguagem
-  string decl;  // A declaração correspondente em c-assembly
-  string fmt;   // O formato para "printf"
+  string nome;  
+  string decl;  
+  string fmt;   
   vector<int> dim;
 };
 
@@ -117,7 +117,9 @@ string declara_var_temp( map< string, int >& temp ) {
 void gera_codigo_atribuicao( Atributo& ss, 
                              const Atributo& s1, 
                              const Atributo& s3 ) {
-  if( s1.t.nome == s3.t.nome )
+  if( s1.t.nome == s3.t.nome || (s1.t.nome=="integer" && s3.t.nome=="float")|| (s1.t.nome=="float" && s3.t.nome=="double")
+  || (s1.t.nome=="double" && s3.t.nome=="float")|| (s1.t.nome=="float" && s3.t.nome=="integer")|| (s1.t.nome=="integer" && s3.t.nome=="double")
+  || (s1.t.nome=="double" && s3.t.nome=="integer") )
   {
     ss.c = s1.c + s3.c + "  " + s1.v + " = " + s3.v + ";\n";
   }
@@ -315,7 +317,6 @@ void gera_codigo_atomico(Atributo& ss,const Atributo& s1, const Atributo& s2){
 	}
 }
 
-//comment
 void gera_codigo_funcao(Atributo& ss,const Atributo& s2, const Atributo& s4, const Atributo& s7, const Atributo& s10){
 	ss.c=s2.t.decl+" "+s4.v+" ("+ s7.c +"){\n  "+declara_var_temp(temp_local)+"  "+s10.c+"}\n";
 }
@@ -378,18 +379,21 @@ MIOLO : DECL 		{$$=$1;}
 FUNC: FUNC_DECLS CMDS  {$$.c=$1.c + $2.c;}
     ;
 
-FUNC_DECLS: FUNC_DECLS DECL {$$.c = $1.c + $2.c;}
-		 |
-		 ;
+FUNC_DECLS: FUNC_DECLS DECL {$$.c = $1.c + $2.c; }
+		      |
+		      ;
+
+MAIN_DECLS: MAIN_DECLS DECL {$$.c = $1.c + $2.c; }
+		      |
+		      ;
 
 DECL: TIPO ID ';'               
-		{ declara_variavel( $$, $1, $2,"" ); }
+		{ declara_variavel( $$, $1, $2,"" );}
     | TIPO ID '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'  ';'
-    { declara_variavel( $$, $1, $2,'['+toString(toInt($4.v) *toInt($7.v))+']'); gera2Dim($2, $4, $7);}
+    { declara_variavel( $$, $1, $2,'['+toString(toInt($4.v) *toInt($7.v))+']'); gera2Dim($2, $4, $7); }
     | TIPO ID '[' _CTE_INTEGER ']' ';'
     { declara_variavel( $$, $1, $2,'['+$4.v+']'); gera1Dim($2, $4);}
     ;
-
 
 TIPO: _INT      { $$.t = Integer; }
     | _FLOAT    { $$.t = Float; }
@@ -397,6 +401,10 @@ TIPO: _INT      { $$.t = Integer; }
     | _CHAR     { $$.t = Char; }
     | _STRING   { $$.t = String; }
     ;
+
+MAIN_ID: MAIN_ID ',' _ID { $$.lst = $1.lst; $$.lst.push_back( $3.v ); }
+  		 | _ID  { $$.lst.push_back( $1.v ); }
+       ;
 
 ID: ID ',' _ID { $$.lst = $1.lst; $$.lst.push_back( $3.v ); }
   | _ID  { $$.lst.push_back( $1.v ); }
@@ -414,7 +422,7 @@ IDS : TIPO _ID ',' IDS 	{$$.c=$1.t.decl + " " + $2.v+" , "+$4.c;}
     | TIPO _ID 					{$$.c= $1.t.decl + " " + $2.v;}
     ;      
    
-PRINCIPAL : CMDS {$$.c=$1.c;}
+PRINCIPAL : MAIN_DECLS CMDS {$$.c=$1.c + $2.c;}
           ;
           
 CMDS : CMD  CMDS {$$.c=$1.c+$2.c;}
