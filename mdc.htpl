@@ -1,0 +1,24 @@
+int a0, b0, a, b, aux;
+<htpl>
+    print("Digite o primeiro numero: ");
+    input(a0);
+    print("Digite o segundo numero: ");
+    input(b0);
+    a = a0;
+    b = b0;
+
+    <for (aux = 0; a != b; a -= b)>
+        <if (a < b)>
+            aux = a;
+            a = b;
+            b = aux;
+        </if>
+    </for>
+
+    print("O MDC de ");
+    print(a0);
+    print(" e ");
+    print(b0);
+    print(" eh: ");
+    println(a);
+</htpl>
