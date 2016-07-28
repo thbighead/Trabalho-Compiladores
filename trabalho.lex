@@ -24,7 +24,7 @@ PRINT		[Pp][Rr][Ii][Nn][Tt]
 PRINTLN		[Pp][Rr][Ii][Nn][Tt][Ll][Nn]
 INPUT       [Ii][Nn][Pp][Uu][Tt]
 
-CTE_STRING	"\""([^'\n]|"''")*"\""
+CTE_STRING	"\""([^"\n]|"''")*"\""
 CTE_FLOAT	({DIGITO}+)"."{DIGITO}+
 CTE_INTEGER {DIGITO}+
 

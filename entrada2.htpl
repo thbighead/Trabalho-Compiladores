@@ -1,8 +1,50 @@
-
-int y[3][3];
+int i,j;
+int entrada;
+int linhas, colunas;
+int x,y[3][3];
 
 <htpl>
-y[1][1] = 42;
+linhas = 3;
+colunas = 3;
 
-println(y[1][1]);
+<FOR(i = 0; i<linhas ; i++)>
+    <FOR(j = 0; j<colunas ; j++)>
+        print("Digite o valor para X[");
+        PRINT(i);
+        print("][");
+        PRINT(j);
+        print("]: ");
+        input(entrada);
+        x[i][j] = entrada;
+    </FOR>
+</FOR>
+
+
+println("X :");
+
+<FOR(i = 0; i<linhas ; i++)>
+    <FOR(j = 0; j<colunas ; j++)>
+        print(x[i][j]);
+        print(" ");
+    </FOR>
+    println("");
+</FOR>
+
+
+<FOR(i = 0; i<linhas ; i++)>
+    <FOR(j = 0; j<colunas ; j++)>
+        y[i][j] = x[j][i];
+    </FOR>
+</FOR>
+
+
+println("X' :");
+<FOR(i = 0; i<linhas ; i++)>
+    <FOR(j = 0; j<colunas ; j++)>
+        print(y[i][j]);
+        print(" ");
+    </FOR>
+    println("");
+</FOR>
+
 </htpl>
