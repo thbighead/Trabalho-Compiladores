@@ -141,7 +141,7 @@ _CTE_STRING (281) 61
 _CTE_INTEGER (282) 12 13 63
 
 
-Não-terminais com as regras onde eles aparecem
+Não terminais com as regras onde eles aparecem
 
 $accept (42)
     à esquerda: 0
@@ -201,7 +201,7 @@ F (68)
     à esquerda: 61 62 63 64 65 66 67, à direita: 60
 
 
-State 0
+Estado 0
 
     0 $accept: . S $end
 
@@ -222,42 +222,42 @@ State 0
     FUNCTION  ir ao estado 12
 
 
-State 1
+Estado 1
 
    14 TIPO: _INT .
 
     $padrão  reduzir usando a regra 14 (TIPO)
 
 
-State 2
+Estado 2
 
    15 TIPO: _FLOAT .
 
     $padrão  reduzir usando a regra 15 (TIPO)
 
 
-State 3
+Estado 3
 
    16 TIPO: _DOUBLE .
 
     $padrão  reduzir usando a regra 16 (TIPO)
 
 
-State 4
+Estado 4
 
    17 TIPO: _CHAR .
 
     $padrão  reduzir usando a regra 17 (TIPO)
 
 
-State 5
+Estado 5
 
    18 TIPO: _STRING .
 
     $padrão  reduzir usando a regra 18 (TIPO)
 
 
-State 6
+Estado 6
 
    22 FUNCTION: '<' . TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
 
@@ -270,14 +270,14 @@ State 6
     TIPO  ir ao estado 13
 
 
-State 7
+Estado 7
 
     0 $accept: S . $end
 
     $end  deslocar, e ir ao estado 14
 
 
-State 8
+Estado 8
 
     1 S: MIOLOS . ABRE PRINCIPAL FECHA
 
@@ -286,7 +286,7 @@ State 8
     ABRE  ir ao estado 16
 
 
-State 9
+Estado 9
 
     4 MIOLOS: MIOLO . MIOLOS
 
@@ -306,14 +306,14 @@ State 9
     FUNCTION  ir ao estado 12
 
 
-State 10
+Estado 10
 
     6 MIOLO: DECL .
 
     $padrão  reduzir usando a regra 6 (MIOLO)
 
 
-State 11
+Estado 11
 
    11 DECL: TIPO . ID ';'
    12     | TIPO . ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER ']' ';'
@@ -324,35 +324,35 @@ State 11
     ID  ir ao estado 19
 
 
-State 12
+Estado 12
 
     7 MIOLO: FUNCTION .
 
     $padrão  reduzir usando a regra 7 (MIOLO)
 
 
-State 13
+Estado 13
 
    22 FUNCTION: '<' TIPO . _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
 
     _FUNCTION  deslocar, e ir ao estado 20
 
 
-State 14
+Estado 14
 
     0 $accept: S $end .
 
     $padrão  aceitar
 
 
-State 15
+Estado 15
 
     2 ABRE: _HTPL .
 
     $padrão  reduzir usando a regra 2 (ABRE)
 
 
-State 16
+Estado 16
 
     1 S: MIOLOS ABRE . PRINCIPAL FECHA
 
@@ -376,21 +376,21 @@ State 16
     SAIDA      ir ao estado 35
 
 
-State 17
+Estado 17
 
     4 MIOLOS: MIOLO MIOLOS .
 
     $padrão  reduzir usando a regra 4 (MIOLOS)
 
 
-State 18
+Estado 18
 
    20 ID: _ID .
 
     $padrão  reduzir usando a regra 20 (ID)
 
 
-State 19
+Estado 19
 
    11 DECL: TIPO ID . ';'
    12     | TIPO ID . '[' _CTE_INTEGER ']' '[' _CTE_INTEGER ']' ';'
@@ -402,42 +402,42 @@ State 19
     ','  deslocar, e ir ao estado 38
 
 
-State 20
+Estado 20
 
    22 FUNCTION: '<' TIPO _FUNCTION . _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
 
     _ID  deslocar, e ir ao estado 39
 
 
-State 21
+Estado 21
 
    41 LVALUE: _ID .
 
     $padrão  reduzir usando a regra 41 (LVALUE)
 
 
-State 22
+Estado 22
 
    47 SAIDA: _PRINT . '(' E ')'
 
     '('  deslocar, e ir ao estado 40
 
 
-State 23
+Estado 23
 
    48 SAIDA: _PRINTLN . '(' E ')'
 
     '('  deslocar, e ir ao estado 41
 
 
-State 24
+Estado 24
 
    44 CMD_INPUT: _INPUT . '(' LVALUE ')'
 
     '('  deslocar, e ir ao estado 42
 
 
-State 25
+Estado 25
 
    42 CMD_FOR: '<' . _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
    43        | '<' . _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
@@ -448,7 +448,7 @@ State 25
     _FOR  deslocar, e ir ao estado 44
 
 
-State 26
+Estado 26
 
     1 S: MIOLOS ABRE PRINCIPAL . FECHA
 
@@ -457,14 +457,14 @@ State 26
     FECHA  ir ao estado 46
 
 
-State 27
+Estado 27
 
    27 PRINCIPAL: CMDS .
 
     $padrão  reduzir usando a regra 27 (PRINCIPAL)
 
 
-State 28
+Estado 28
 
    28 CMDS: CMD . CMDS
 
@@ -487,21 +487,21 @@ State 28
     SAIDA      ir ao estado 35
 
 
-State 29
+Estado 29
 
    33 CMD: CMD_ATRIB . ';'
 
     ';'  deslocar, e ir ao estado 48
 
 
-State 30
+Estado 30
 
    34 CMD: CMD_ATOM . ';'
 
     ';'  deslocar, e ir ao estado 49
 
 
-State 31
+Estado 31
 
    36 CMD_ATRIB: LVALUE . '=' E
    37          | LVALUE . '[' E ']' '[' E ']' '=' E
@@ -515,42 +515,42 @@ State 31
     '['          deslocar, e ir ao estado 53
 
 
-State 32
+Estado 32
 
    32 CMD: CMD_FOR .
 
     $padrão  reduzir usando a regra 32 (CMD)
 
 
-State 33
+Estado 33
 
    35 CMD: CMD_INPUT . ';'
 
     ';'  deslocar, e ir ao estado 54
 
 
-State 34
+Estado 34
 
    31 CMD: CMD_IF .
 
     $padrão  reduzir usando a regra 31 (CMD)
 
 
-State 35
+Estado 35
 
    30 CMD: SAIDA . ';'
 
     ';'  deslocar, e ir ao estado 55
 
 
-State 36
+Estado 36
 
    11 DECL: TIPO ID ';' .
 
     $padrão  reduzir usando a regra 11 (DECL)
 
 
-State 37
+Estado 37
 
    12 DECL: TIPO ID '[' . _CTE_INTEGER ']' '[' _CTE_INTEGER ']' ';'
    13     | TIPO ID '[' . _CTE_INTEGER ']' ';'
@@ -558,14 +558,14 @@ State 37
     _CTE_INTEGER  deslocar, e ir ao estado 56
 
 
-State 38
+Estado 38
 
    19 ID: ID ',' . _ID
 
     _ID  deslocar, e ir ao estado 57
 
 
-State 39
+Estado 39
 
    22 FUNCTION: '<' TIPO _FUNCTION _ID . $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
 
@@ -574,7 +574,7 @@ State 39
     $@1  ir ao estado 58
 
 
-State 40
+Estado 40
 
    47 SAIDA: _PRINT '(' . E ')'
 
@@ -588,7 +588,7 @@ State 40
     F  ir ao estado 65
 
 
-State 41
+Estado 41
 
    48 SAIDA: _PRINTLN '(' . E ')'
 
@@ -602,7 +602,7 @@ State 41
     F  ir ao estado 65
 
 
-State 42
+Estado 42
 
    44 CMD_INPUT: _INPUT '(' . LVALUE ')'
 
@@ -611,7 +611,7 @@ State 42
     LVALUE  ir ao estado 67
 
 
-State 43
+Estado 43
 
    45 CMD_IF: '<' _IF . '(' E ')' '>' CMDS _END _IF '>'
    46       | '<' _IF . '(' E ')' '>' CMDS _ELSE CMDS _END _IF '>'
@@ -619,7 +619,7 @@ State 43
     '('  deslocar, e ir ao estado 68
 
 
-State 44
+Estado 44
 
    42 CMD_FOR: '<' _FOR . '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
    43        | '<' _FOR . '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
@@ -627,56 +627,56 @@ State 44
     '('  deslocar, e ir ao estado 69
 
 
-State 45
+Estado 45
 
     3 FECHA: _BARRAHTPL .
 
     $padrão  reduzir usando a regra 3 (FECHA)
 
 
-State 46
+Estado 46
 
     1 S: MIOLOS ABRE PRINCIPAL FECHA .
 
     $padrão  reduzir usando a regra 1 (S)
 
 
-State 47
+Estado 47
 
    28 CMDS: CMD CMDS .
 
     $padrão  reduzir usando a regra 28 (CMDS)
 
 
-State 48
+Estado 48
 
    33 CMD: CMD_ATRIB ';' .
 
     $padrão  reduzir usando a regra 33 (CMD)
 
 
-State 49
+Estado 49
 
    34 CMD: CMD_ATOM ';' .
 
     $padrão  reduzir usando a regra 34 (CMD)
 
 
-State 50
+Estado 50
 
    39 CMD_ATOM: LVALUE _MAISMAIS .
 
     $padrão  reduzir usando a regra 39 (CMD_ATOM)
 
 
-State 51
+Estado 51
 
    40 CMD_ATOM: LVALUE _MENOSMENOS .
 
     $padrão  reduzir usando a regra 40 (CMD_ATOM)
 
 
-State 52
+Estado 52
 
    36 CMD_ATRIB: LVALUE '=' . E
 
@@ -690,7 +690,7 @@ State 52
     F  ir ao estado 65
 
 
-State 53
+Estado 53
 
    37 CMD_ATRIB: LVALUE '[' . E ']' '[' E ']' '=' E
    38          | LVALUE '[' . E ']' '=' E
@@ -705,21 +705,21 @@ State 53
     F  ir ao estado 65
 
 
-State 54
+Estado 54
 
    35 CMD: CMD_INPUT ';' .
 
     $padrão  reduzir usando a regra 35 (CMD)
 
 
-State 55
+Estado 55
 
    30 CMD: SAIDA ';' .
 
     $padrão  reduzir usando a regra 30 (CMD)
 
 
-State 56
+Estado 56
 
    12 DECL: TIPO ID '[' _CTE_INTEGER . ']' '[' _CTE_INTEGER ']' ';'
    13     | TIPO ID '[' _CTE_INTEGER . ']' ';'
@@ -727,21 +727,21 @@ State 56
     ']'  deslocar, e ir ao estado 72
 
 
-State 57
+Estado 57
 
    19 ID: ID ',' _ID .
 
     $padrão  reduzir usando a regra 19 (ID)
 
 
-State 58
+Estado 58
 
    22 FUNCTION: '<' TIPO _FUNCTION _ID $@1 . '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
 
     '('  deslocar, e ir ao estado 73
 
 
-State 59
+Estado 59
 
    64 F: _ID .
    65  | _ID . '[' E ']' '[' E ']'
@@ -752,28 +752,28 @@ State 59
     $padrão  reduzir usando a regra 64 (F)
 
 
-State 60
+Estado 60
 
    62 F: _CTE_FLOAT .
 
     $padrão  reduzir usando a regra 62 (F)
 
 
-State 61
+Estado 61
 
    61 F: _CTE_STRING .
 
     $padrão  reduzir usando a regra 61 (F)
 
 
-State 62
+Estado 62
 
    63 F: _CTE_INTEGER .
 
     $padrão  reduzir usando a regra 63 (F)
 
 
-State 63
+Estado 63
 
    67 F: '(' . E ')'
 
@@ -787,7 +787,7 @@ State 63
     F  ir ao estado 65
 
 
-State 64
+Estado 64
 
    47 SAIDA: _PRINT '(' E . ')'
    49 E: E . '+' E
@@ -816,14 +816,14 @@ State 64
     ')'          deslocar, e ir ao estado 87
 
 
-State 65
+Estado 65
 
    60 E: F .
 
     $padrão  reduzir usando a regra 60 (E)
 
 
-State 66
+Estado 66
 
    48 SAIDA: _PRINTLN '(' E . ')'
    49 E: E . '+' E
@@ -852,14 +852,14 @@ State 66
     ')'          deslocar, e ir ao estado 88
 
 
-State 67
+Estado 67
 
    44 CMD_INPUT: _INPUT '(' LVALUE . ')'
 
     ')'  deslocar, e ir ao estado 89
 
 
-State 68
+Estado 68
 
    45 CMD_IF: '<' _IF '(' . E ')' '>' CMDS _END _IF '>'
    46       | '<' _IF '(' . E ')' '>' CMDS _ELSE CMDS _END _IF '>'
@@ -874,7 +874,7 @@ State 68
     F  ir ao estado 65
 
 
-State 69
+Estado 69
 
    42 CMD_FOR: '<' _FOR '(' . CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
    43        | '<' _FOR '(' . CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
@@ -885,7 +885,7 @@ State 69
     LVALUE     ir ao estado 92
 
 
-State 70
+Estado 70
 
    36 CMD_ATRIB: LVALUE '=' E .
    49 E: E . '+' E
@@ -915,7 +915,7 @@ State 70
     $padrão  reduzir usando a regra 36 (CMD_ATRIB)
 
 
-State 71
+Estado 71
 
    37 CMD_ATRIB: LVALUE '[' E . ']' '[' E ']' '=' E
    38          | LVALUE '[' E . ']' '=' E
@@ -945,7 +945,7 @@ State 71
     ']'          deslocar, e ir ao estado 93
 
 
-State 72
+Estado 72
 
    12 DECL: TIPO ID '[' _CTE_INTEGER ']' . '[' _CTE_INTEGER ']' ';'
    13     | TIPO ID '[' _CTE_INTEGER ']' . ';'
@@ -954,7 +954,7 @@ State 72
     '['  deslocar, e ir ao estado 95
 
 
-State 73
+Estado 73
 
    22 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' . ARGS ')' '>' FUNC _END _FUNCTION '>'
 
@@ -971,7 +971,7 @@ State 73
     IDS   ir ao estado 98
 
 
-State 74
+Estado 74
 
    65 F: _ID '[' . E ']' '[' E ']'
    66  | _ID '[' . E ']'
@@ -986,7 +986,7 @@ State 74
     F  ir ao estado 65
 
 
-State 75
+Estado 75
 
    49 E: E . '+' E
    50  | E . '-' E
@@ -1015,7 +1015,7 @@ State 75
     ')'          deslocar, e ir ao estado 100
 
 
-State 76
+Estado 76
 
    56 E: E _IGUALDADE . E
 
@@ -1029,7 +1029,7 @@ State 76
     F  ir ao estado 65
 
 
-State 77
+Estado 77
 
    57 E: E _DIFERENTE . E
 
@@ -1043,7 +1043,7 @@ State 77
     F  ir ao estado 65
 
 
-State 78
+Estado 78
 
    58 E: E _MAIORIGUAL . E
 
@@ -1057,7 +1057,7 @@ State 78
     F  ir ao estado 65
 
 
-State 79
+Estado 79
 
    59 E: E _MENORIGUAL . E
 
@@ -1071,7 +1071,7 @@ State 79
     F  ir ao estado 65
 
 
-State 80
+Estado 80
 
    55 E: E '<' . E
 
@@ -1085,7 +1085,7 @@ State 80
     F  ir ao estado 65
 
 
-State 81
+Estado 81
 
    54 E: E '>' . E
 
@@ -1099,7 +1099,7 @@ State 81
     F  ir ao estado 65
 
 
-State 82
+Estado 82
 
    49 E: E '+' . E
 
@@ -1113,7 +1113,7 @@ State 82
     F  ir ao estado 65
 
 
-State 83
+Estado 83
 
    50 E: E '-' . E
 
@@ -1127,7 +1127,7 @@ State 83
     F  ir ao estado 65
 
 
-State 84
+Estado 84
 
    51 E: E '*' . E
 
@@ -1141,7 +1141,7 @@ State 84
     F  ir ao estado 65
 
 
-State 85
+Estado 85
 
    52 E: E '/' . E
 
@@ -1155,7 +1155,7 @@ State 85
     F  ir ao estado 65
 
 
-State 86
+Estado 86
 
    53 E: E '%' . E
 
@@ -1169,28 +1169,28 @@ State 86
     F  ir ao estado 65
 
 
-State 87
+Estado 87
 
    47 SAIDA: _PRINT '(' E ')' .
 
     $padrão  reduzir usando a regra 47 (SAIDA)
 
 
-State 88
+Estado 88
 
    48 SAIDA: _PRINTLN '(' E ')' .
 
     $padrão  reduzir usando a regra 48 (SAIDA)
 
 
-State 89
+Estado 89
 
    44 CMD_INPUT: _INPUT '(' LVALUE ')' .
 
     $padrão  reduzir usando a regra 44 (CMD_INPUT)
 
 
-State 90
+Estado 90
 
    45 CMD_IF: '<' _IF '(' E . ')' '>' CMDS _END _IF '>'
    46       | '<' _IF '(' E . ')' '>' CMDS _ELSE CMDS _END _IF '>'
@@ -1220,7 +1220,7 @@ State 90
     ')'          deslocar, e ir ao estado 112
 
 
-State 91
+Estado 91
 
    42 CMD_FOR: '<' _FOR '(' CMD_ATRIB . ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
    43        | '<' _FOR '(' CMD_ATRIB . ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
@@ -1228,7 +1228,7 @@ State 91
     ';'  deslocar, e ir ao estado 113
 
 
-State 92
+Estado 92
 
    36 CMD_ATRIB: LVALUE . '=' E
    37          | LVALUE . '[' E ']' '[' E ']' '=' E
@@ -1238,7 +1238,7 @@ State 92
     '['  deslocar, e ir ao estado 53
 
 
-State 93
+Estado 93
 
    37 CMD_ATRIB: LVALUE '[' E ']' . '[' E ']' '=' E
    38          | LVALUE '[' E ']' . '=' E
@@ -1247,21 +1247,21 @@ State 93
     '['  deslocar, e ir ao estado 115
 
 
-State 94
+Estado 94
 
    13 DECL: TIPO ID '[' _CTE_INTEGER ']' ';' .
 
     $padrão  reduzir usando a regra 13 (DECL)
 
 
-State 95
+Estado 95
 
    12 DECL: TIPO ID '[' _CTE_INTEGER ']' '[' . _CTE_INTEGER ']' ';'
 
     _CTE_INTEGER  deslocar, e ir ao estado 116
 
 
-State 96
+Estado 96
 
    25 IDS: TIPO . _ID ',' IDS
    26    | TIPO . _ID
@@ -1269,21 +1269,21 @@ State 96
     _ID  deslocar, e ir ao estado 117
 
 
-State 97
+Estado 97
 
    22 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS . ')' '>' FUNC _END _FUNCTION '>'
 
     ')'  deslocar, e ir ao estado 118
 
 
-State 98
+Estado 98
 
    23 ARGS: IDS .
 
     $padrão  reduzir usando a regra 23 (ARGS)
 
 
-State 99
+Estado 99
 
    49 E: E . '+' E
    50  | E . '-' E
@@ -1313,14 +1313,14 @@ State 99
     ']'          deslocar, e ir ao estado 119
 
 
-State 100
+Estado 100
 
    67 F: '(' E ')' .
 
     $padrão  reduzir usando a regra 67 (F)
 
 
-State 101
+Estado 101
 
    49 E: E . '+' E
    50  | E . '-' E
@@ -1351,7 +1351,7 @@ State 101
     $padrão  reduzir usando a regra 56 (E)
 
 
-State 102
+Estado 102
 
    49 E: E . '+' E
    50  | E . '-' E
@@ -1382,7 +1382,7 @@ State 102
     $padrão  reduzir usando a regra 57 (E)
 
 
-State 103
+Estado 103
 
    49 E: E . '+' E
    50  | E . '-' E
@@ -1413,7 +1413,7 @@ State 103
     $padrão  reduzir usando a regra 58 (E)
 
 
-State 104
+Estado 104
 
    49 E: E . '+' E
    50  | E . '-' E
@@ -1444,7 +1444,7 @@ State 104
     $padrão  reduzir usando a regra 59 (E)
 
 
-State 105
+Estado 105
 
    49 E: E . '+' E
    50  | E . '-' E
@@ -1475,7 +1475,7 @@ State 105
     $padrão  reduzir usando a regra 55 (E)
 
 
-State 106
+Estado 106
 
    49 E: E . '+' E
    50  | E . '-' E
@@ -1506,7 +1506,7 @@ State 106
     $padrão  reduzir usando a regra 54 (E)
 
 
-State 107
+Estado 107
 
    49 E: E . '+' E
    49  | E '+' E .
@@ -1528,7 +1528,7 @@ State 107
     $padrão  reduzir usando a regra 49 (E)
 
 
-State 108
+Estado 108
 
    49 E: E . '+' E
    50  | E . '-' E
@@ -1550,7 +1550,7 @@ State 108
     $padrão  reduzir usando a regra 50 (E)
 
 
-State 109
+Estado 109
 
    49 E: E . '+' E
    50  | E . '-' E
@@ -1568,7 +1568,7 @@ State 109
     $padrão  reduzir usando a regra 51 (E)
 
 
-State 110
+Estado 110
 
    49 E: E . '+' E
    50  | E . '-' E
@@ -1586,7 +1586,7 @@ State 110
     $padrão  reduzir usando a regra 52 (E)
 
 
-State 111
+Estado 111
 
    49 E: E . '+' E
    50  | E . '-' E
@@ -1604,7 +1604,7 @@ State 111
     $padrão  reduzir usando a regra 53 (E)
 
 
-State 112
+Estado 112
 
    45 CMD_IF: '<' _IF '(' E ')' . '>' CMDS _END _IF '>'
    46       | '<' _IF '(' E ')' . '>' CMDS _ELSE CMDS _END _IF '>'
@@ -1612,7 +1612,7 @@ State 112
     '>'  deslocar, e ir ao estado 120
 
 
-State 113
+Estado 113
 
    42 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' . E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
    43        | '<' _FOR '(' CMD_ATRIB ';' . E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
@@ -1627,7 +1627,7 @@ State 113
     F  ir ao estado 65
 
 
-State 114
+Estado 114
 
    38 CMD_ATRIB: LVALUE '[' E ']' '=' . E
 
@@ -1641,7 +1641,7 @@ State 114
     F  ir ao estado 65
 
 
-State 115
+Estado 115
 
    37 CMD_ATRIB: LVALUE '[' E ']' '[' . E ']' '=' E
 
@@ -1655,14 +1655,14 @@ State 115
     F  ir ao estado 65
 
 
-State 116
+Estado 116
 
    12 DECL: TIPO ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER . ']' ';'
 
     ']'  deslocar, e ir ao estado 124
 
 
-State 117
+Estado 117
 
    25 IDS: TIPO _ID . ',' IDS
    26    | TIPO _ID .
@@ -1672,14 +1672,14 @@ State 117
     $padrão  reduzir usando a regra 26 (IDS)
 
 
-State 118
+Estado 118
 
    22 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' . '>' FUNC _END _FUNCTION '>'
 
     '>'  deslocar, e ir ao estado 126
 
 
-State 119
+Estado 119
 
    65 F: _ID '[' E ']' . '[' E ']'
    66  | _ID '[' E ']' .
@@ -1689,7 +1689,7 @@ State 119
     $padrão  reduzir usando a regra 66 (F)
 
 
-State 120
+Estado 120
 
    45 CMD_IF: '<' _IF '(' E ')' '>' . CMDS _END _IF '>'
    46       | '<' _IF '(' E ')' '>' . CMDS _ELSE CMDS _END _IF '>'
@@ -1713,7 +1713,7 @@ State 120
     SAIDA      ir ao estado 35
 
 
-State 121
+Estado 121
 
    42 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E . ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
    43        | '<' _FOR '(' CMD_ATRIB ';' E . ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
@@ -1743,7 +1743,7 @@ State 121
     ';'          deslocar, e ir ao estado 129
 
 
-State 122
+Estado 122
 
    38 CMD_ATRIB: LVALUE '[' E ']' '=' E .
    49 E: E . '+' E
@@ -1773,7 +1773,7 @@ State 122
     $padrão  reduzir usando a regra 38 (CMD_ATRIB)
 
 
-State 123
+Estado 123
 
    37 CMD_ATRIB: LVALUE '[' E ']' '[' E . ']' '=' E
    49 E: E . '+' E
@@ -1802,14 +1802,14 @@ State 123
     ']'          deslocar, e ir ao estado 130
 
 
-State 124
+Estado 124
 
    12 DECL: TIPO ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER ']' . ';'
 
     ';'  deslocar, e ir ao estado 131
 
 
-State 125
+Estado 125
 
    25 IDS: TIPO _ID ',' . IDS
 
@@ -1823,7 +1823,7 @@ State 125
     IDS   ir ao estado 132
 
 
-State 126
+Estado 126
 
    22 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' . FUNC _END _FUNCTION '>'
 
@@ -1833,7 +1833,7 @@ State 126
     FUNC_DECLS  ir ao estado 134
 
 
-State 127
+Estado 127
 
    65 F: _ID '[' E ']' '[' . E ']'
 
@@ -1847,7 +1847,7 @@ State 127
     F  ir ao estado 65
 
 
-State 128
+Estado 128
 
    45 CMD_IF: '<' _IF '(' E ')' '>' CMDS . _END _IF '>'
    46       | '<' _IF '(' E ')' '>' CMDS . _ELSE CMDS _END _IF '>'
@@ -1856,7 +1856,7 @@ State 128
     _END   deslocar, e ir ao estado 137
 
 
-State 129
+Estado 129
 
    42 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' . CMD_ATOM ')' '>' CMDS _END _FOR '>'
    43        | '<' _FOR '(' CMD_ATRIB ';' E ';' . CMD_ATRIB ')' '>' CMDS _END _FOR '>'
@@ -1868,35 +1868,35 @@ State 129
     LVALUE     ir ao estado 31
 
 
-State 130
+Estado 130
 
    37 CMD_ATRIB: LVALUE '[' E ']' '[' E ']' . '=' E
 
     '='  deslocar, e ir ao estado 140
 
 
-State 131
+Estado 131
 
    12 DECL: TIPO ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER ']' ';' .
 
     $padrão  reduzir usando a regra 12 (DECL)
 
 
-State 132
+Estado 132
 
    25 IDS: TIPO _ID ',' IDS .
 
     $padrão  reduzir usando a regra 25 (IDS)
 
 
-State 133
+Estado 133
 
    22 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC . _END _FUNCTION '>'
 
     _END  deslocar, e ir ao estado 141
 
 
-State 134
+Estado 134
 
     8 FUNC: FUNC_DECLS . CMDS
     9 FUNC_DECLS: FUNC_DECLS . DECL
@@ -1927,7 +1927,7 @@ State 134
     SAIDA      ir ao estado 35
 
 
-State 135
+Estado 135
 
    49 E: E . '+' E
    50  | E . '-' E
@@ -1956,7 +1956,7 @@ State 135
     ']'          deslocar, e ir ao estado 144
 
 
-State 136
+Estado 136
 
    46 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE . CMDS _END _IF '>'
 
@@ -1979,28 +1979,28 @@ State 136
     SAIDA      ir ao estado 35
 
 
-State 137
+Estado 137
 
    45 CMD_IF: '<' _IF '(' E ')' '>' CMDS _END . _IF '>'
 
     _IF  deslocar, e ir ao estado 146
 
 
-State 138
+Estado 138
 
    43 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB . ')' '>' CMDS _END _FOR '>'
 
     ')'  deslocar, e ir ao estado 147
 
 
-State 139
+Estado 139
 
    42 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM . ')' '>' CMDS _END _FOR '>'
 
     ')'  deslocar, e ir ao estado 148
 
 
-State 140
+Estado 140
 
    37 CMD_ATRIB: LVALUE '[' E ']' '[' E ']' '=' . E
 
@@ -2014,63 +2014,63 @@ State 140
     F  ir ao estado 65
 
 
-State 141
+Estado 141
 
    22 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END . _FUNCTION '>'
 
     _FUNCTION  deslocar, e ir ao estado 150
 
 
-State 142
+Estado 142
 
     9 FUNC_DECLS: FUNC_DECLS DECL .
 
     $padrão  reduzir usando a regra 9 (FUNC_DECLS)
 
 
-State 143
+Estado 143
 
     8 FUNC: FUNC_DECLS CMDS .
 
     $padrão  reduzir usando a regra 8 (FUNC)
 
 
-State 144
+Estado 144
 
    65 F: _ID '[' E ']' '[' E ']' .
 
     $padrão  reduzir usando a regra 65 (F)
 
 
-State 145
+Estado 145
 
    46 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE CMDS . _END _IF '>'
 
     _END  deslocar, e ir ao estado 151
 
 
-State 146
+Estado 146
 
    45 CMD_IF: '<' _IF '(' E ')' '>' CMDS _END _IF . '>'
 
     '>'  deslocar, e ir ao estado 152
 
 
-State 147
+Estado 147
 
    43 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' . '>' CMDS _END _FOR '>'
 
     '>'  deslocar, e ir ao estado 153
 
 
-State 148
+Estado 148
 
    42 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' . '>' CMDS _END _FOR '>'
 
     '>'  deslocar, e ir ao estado 154
 
 
-State 149
+Estado 149
 
    37 CMD_ATRIB: LVALUE '[' E ']' '[' E ']' '=' E .
    49 E: E . '+' E
@@ -2100,28 +2100,28 @@ State 149
     $padrão  reduzir usando a regra 37 (CMD_ATRIB)
 
 
-State 150
+Estado 150
 
    22 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION . '>'
 
     '>'  deslocar, e ir ao estado 155
 
 
-State 151
+Estado 151
 
    46 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE CMDS _END . _IF '>'
 
     _IF  deslocar, e ir ao estado 156
 
 
-State 152
+Estado 152
 
    45 CMD_IF: '<' _IF '(' E ')' '>' CMDS _END _IF '>' .
 
     $padrão  reduzir usando a regra 45 (CMD_IF)
 
 
-State 153
+Estado 153
 
    43 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' . CMDS _END _FOR '>'
 
@@ -2144,7 +2144,7 @@ State 153
     SAIDA      ir ao estado 35
 
 
-State 154
+Estado 154
 
    42 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' . CMDS _END _FOR '>'
 
@@ -2167,77 +2167,77 @@ State 154
     SAIDA      ir ao estado 35
 
 
-State 155
+Estado 155
 
    22 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>' .
 
     $padrão  reduzir usando a regra 22 (FUNCTION)
 
 
-State 156
+Estado 156
 
    46 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE CMDS _END _IF . '>'
 
     '>'  deslocar, e ir ao estado 159
 
 
-State 157
+Estado 157
 
    43 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS . _END _FOR '>'
 
     _END  deslocar, e ir ao estado 160
 
 
-State 158
+Estado 158
 
    42 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS . _END _FOR '>'
 
     _END  deslocar, e ir ao estado 161
 
 
-State 159
+Estado 159
 
    46 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE CMDS _END _IF '>' .
 
     $padrão  reduzir usando a regra 46 (CMD_IF)
 
 
-State 160
+Estado 160
 
    43 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END . _FOR '>'
 
     _FOR  deslocar, e ir ao estado 162
 
 
-State 161
+Estado 161
 
    42 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END . _FOR '>'
 
     _FOR  deslocar, e ir ao estado 163
 
 
-State 162
+Estado 162
 
    43 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR . '>'
 
     '>'  deslocar, e ir ao estado 164
 
 
-State 163
+Estado 163
 
    42 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR . '>'
 
     '>'  deslocar, e ir ao estado 165
 
 
-State 164
+Estado 164
 
    43 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>' .
 
     $padrão  reduzir usando a regra 43 (CMD_FOR)
 
 
-State 165
+Estado 165
 
    42 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>' .
 

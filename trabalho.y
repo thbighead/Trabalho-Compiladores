@@ -452,8 +452,8 @@ CMD_IF : '<'_IF '('E')' '>' CMDS _END _IF '>'             {gera_cmd_if( $$, $4, 
        | '<'_IF '('E')' '>' CMDS _ELSE CMDS  _END _IF '>' {gera_cmd_if( $$, $4, $7, $9.c);}
        ;    
     
-SAIDA : _PRINT '(' E ')'        { $$.c = "  printf( \"%"+ $3.t.fmt + "\", " + $3.v + " );\n"; }
-			| _PRINTLN '(' E ')'      { $$.c = "  printf( \"%"+ $3.t.fmt + "\\n\", " + $3.v + " );\n"; }
+SAIDA : _PRINT '(' E ')'        { $$.c = $3.c + "  printf( \"%"+ $3.t.fmt + "\", " + $3.v + " );\n"; }
+			| _PRINTLN '(' E ')'      { $$.c = $3.c + "  printf( \"%"+ $3.t.fmt + "\\n\", " + $3.v + " );\n"; }
       ;
    
 E : E '+' E     		 { gera_codigo_operador( $$, $1, $2, $3 ); }
