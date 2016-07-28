@@ -74,8 +74,14 @@ void declara_variavel( Atributo& ss,
     	if( tsl.find( s2.lst[i] ) != tsl.end() ) 
       	erro( "Variável já declarada: " + s2.lst[i] );
     	else {
-      	tsl[ s2.lst[i] ] = s1.t;
-      	ss.c += s1.t.decl + " " + s2.lst[i] + s3 + ";\n"; 
+        if(s1.t.nome==String.nome){
+          tsl[ s2.lst[i] ] = s1.t;
+      	  ss.c += s1.t.decl + " " + s2.lst[i]+ "["+toString(s1.t.dim[0]+1)+"]" + s3 + ";\n"; 
+        }
+        else{
+          tsl[ s2.lst[i] ] = s1.t;
+          ss.c += s1.t.decl + " " + s2.lst[i]+ s3 + ";\n"; 
+        }
     	}  
   	}
 	}
@@ -84,8 +90,14 @@ void declara_variavel( Atributo& ss,
     	if( ts.find( s2.lst[i] ) != ts.end() ) 
       	erro( "Variável já declarada: " + s2.lst[i] );
     	else {
-      	ts[ s2.lst[i] ] = s1.t;
-      	ss.c += s1.t.decl + " " + s2.lst[i] + s3 + ";\n"; 
+      	if(s1.t.nome==String.nome){
+          ts[ s2.lst[i] ] = s1.t;
+          ss.c += s1.t.decl + " " + s2.lst[i]+ "["+toString(s1.t.dim[0]+1)+"]" + s3 + ";\n"; 
+        }
+        else{
+          ts[ s2.lst[i] ] = s1.t;
+          ss.c += s1.t.decl + " " + s2.lst[i]+ s3 + ";\n"; 
+        }
     	}  
   	}
 	}
@@ -95,7 +107,12 @@ string declara_nvar_temp( Tipo t, int qtde ) {
   string aux = "";
    
   for( int i = 1; i <= qtde; i++ )
-    aux += t.decl + " t_" + t.nome + "_" + toString( i ) + ";\n";
+    if(t.nome!=String.nome){
+      aux += t.decl + " t_" + t.nome + "_" + toString( i ) + ";\n";
+    }
+    else{
+      aux += t.decl + " t_" + t.nome + "_" + toString( i )+"["+toString(t.dim[0]+1)+"]"+ ";\n";
+    }
     
   return aux;  
 }
@@ -117,13 +134,13 @@ string declara_var_temp( map< string, int >& temp ) {
 void gera_codigo_atribuicao( Atributo& ss, 
                              const Atributo& s1, 
                              const Atributo& s3 ) {
-  if( s1.t.nome == s3.t.nome || (s1.t.nome=="integer" && s3.t.nome=="float")|| (s1.t.nome=="float" && s3.t.nome=="double")
+  if( (s1.t.nome == s3.t.nome  || (s1.t.nome=="integer" && s3.t.nome=="float")|| (s1.t.nome=="float" && s3.t.nome=="double")
   || (s1.t.nome=="double" && s3.t.nome=="float")|| (s1.t.nome=="float" && s3.t.nome=="integer")|| (s1.t.nome=="integer" && s3.t.nome=="double")
-  || (s1.t.nome=="double" && s3.t.nome=="integer") )
+  || (s1.t.nome=="double" && s3.t.nome=="integer")) && s1.t.nome!=String.nome )
   {
     ss.c = s1.c + s3.c + "  " + s1.v + " = " + s3.v + ";\n";
   }
-  else if( s1.t.nome == s3.t.nome &&  s1.t.nome == "string" ) {
+  else if( s1.t.nome == s3.t.nome &&  s1.t.nome == String.nome) {
     ss.c = s1.c + s3.c + "  " 
            + "strncpy( " + s1.v + ", " + s3.v + ", " + 
            toString( s1.t.dim[0]) + " );\n";
@@ -195,9 +212,14 @@ void gera_codigo_operador( Atributo& ss, const Atributo& s1, const Atributo& s2,
   if( tro.find( s2.v ) != tro.end() ) {
     if( tro[s2.v].find( par( s1.t, s3.t ) ) != tro[s2.v].end() ) {
       ss.t = tro[s2.v][par( s1.t, s3.t )];
-      ss.v = gera_nome_var( ss.t );      
-      ss.c = s1.c + s3.c + "  " + ss.v + " = " + s1.v + s2.v + s3.v 
-             + ";\n";
+      ss.v = gera_nome_var( ss.t );
+      if(ss.t.nome==String.nome){
+        ss.c = s1.c + s3.c + "  " +"strncpy("+ ss.v +","+  s1.v +toString(s1.t.dim[0])+");\n"+ "  strncat("+ss.v+"," + s3.v + 
+        toString(s3.t.dim[0])+");\n";
+      }
+      else{
+        ss.c = s1.c + s3.c + "  " + ss.v + " = " + s1.v + s2.v + s3.v + ";\n";
+      }
     }
     else
       erro( "O operador '" + s2.v + "' não está definido para os tipos " + s1.t.nome + " e " + s3.t.nome + "." );
@@ -541,6 +563,7 @@ void yyerror( const char* st )
 
 int main( int argc, char* argv[] )
 {
+  String.dim.push_back(255);
   inicializa_tabela_de_resultado_de_operacoes();
   yyparse();
 }

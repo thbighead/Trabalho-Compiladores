@@ -1,7 +1,5 @@
-int i,j;
-int entrada;
-int linhas, colunas;
-int x,y[3][3];
+string str;
 
 <htpl>
+str="abcd"+"efgh";
 </htpl>
