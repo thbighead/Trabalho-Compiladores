@@ -1,6 +1,7 @@
 int i,j;
 int entrada;
+int linhas, colunas;
+int x,y[3][3];
 
 <htpl>
-int abobrinha;
 </htpl>

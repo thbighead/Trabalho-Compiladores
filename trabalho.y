@@ -383,10 +383,6 @@ FUNC_DECLS: FUNC_DECLS DECL {$$.c = $1.c + $2.c; }
 		      |
 		      ;
 
-MAIN_DECLS: MAIN_DECLS DECL {$$.c = $1.c + $2.c; }
-		      |
-		      ;
-
 DECL: TIPO ID ';'               
 		{ declara_variavel( $$, $1, $2,"" );}
     | TIPO ID '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'  ';'
@@ -418,7 +414,7 @@ IDS : TIPO _ID ',' IDS 	{$$.c=$1.t.decl + " " + $2.v+" , "+$4.c;}
     | TIPO _ID 					{$$.c= $1.t.decl + " " + $2.v;}
     ;      
    
-PRINCIPAL : MAIN_DECLS CMDS {$$.c=$1.c + $2.c;}
+PRINCIPAL : CMDS {$$=$1;}
           ;
           
 CMDS : CMD  CMDS {$$.c=$1.c+$2.c;}
