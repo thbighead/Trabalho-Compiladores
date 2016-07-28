@@ -1,8 +1,10 @@
-int x,y;
-int a,b[2][3];
-int c[5];
+
+int y[3][3];
 
 <htpl>
-x=2<=3;
-println(x);
+y[1][1] = 42;
+y[0][0] = 27;
+
+println(y[0][0]);
+println(y[1][1]);
 </htpl>

@@ -69,7 +69,7 @@ string gera_nome_var( Tipo t ) {
 void declara_variavel( Atributo& ss, 
                        const Atributo& s1, const Atributo& s2, const string s3) {
   ss.c = "";
-  /*if(escopo_local){
+  if(escopo_local){
   	for( int i = 0; i < s2.lst.size(); i++ ) {
     	if( tsl.find( s2.lst[i] ) != tsl.end() ) 
       	erro( "Variável já declarada: " + s2.lst[i] );
@@ -79,7 +79,7 @@ void declara_variavel( Atributo& ss,
     	}  
   	}
 	}
-	else{*/
+	else{
 		for( int i = 0; i < s2.lst.size(); i++ ) {
     	if( ts.find( s2.lst[i] ) != ts.end() ) 
       	erro( "Variável já declarada: " + s2.lst[i] );
@@ -88,7 +88,7 @@ void declara_variavel( Atributo& ss,
       	ss.c += s1.t.decl + " " + s2.lst[i] + s3 + ";\n"; 
     	}  
   	}
-	//}
+	}
 }
 
 string declara_nvar_temp( Tipo t, int qtde ) {
@@ -129,51 +129,60 @@ void gera_codigo_atribuicao( Atributo& ss,
 }
 
 void gera1Dim(const Atributo& s2, const Atributo& s4){
-	/*if(escopo_local){
+//comment
+	if(escopo_local){
     for( int i = 0; i < s2.lst.size(); i++ ) {
       tsl[s2.lst[i]].dim.push_back(toInt(s4.v));
     }
   }
-  else{*/
+  else{//comment
   	for( int i = 0; i < s2.lst.size(); i++ ) {
       ts[s2.lst[i]].dim.push_back(toInt(s4.v));
     }
-  //}
+  }//comment
 }
 
 void gera2Dim(const Atributo& s2, const Atributo& s4, const Atributo& s7){
-	/*if(escopo_local){
+//comment
+	if(escopo_local){
     for( int i = 0; i < s2.lst.size(); i++ ) {
       tsl[s2.lst[i]].dim.push_back(toInt(s4.v));
       tsl[s2.lst[i]].dim.push_back(toInt(s7.v));
     }
   }
-  else{*/
+  else{//comment
   	for( int i = 0; i < s2.lst.size(); i++ ) {
       ts[s2.lst[i]].dim.push_back(toInt(s4.v));
       ts[s2.lst[i]].dim.push_back(toInt(s7.v));
     }
-  //}
+  }//comment
 }
 
 void busca_tipo_da_variavel( Atributo& ss, const Atributo& s1 ) {
-	/*
+//comment
 	if(escopo_local){
-  	if(tsl.find( s1.v ) == tsl.end() )
+  	    if((tsl.find( s1.v ) == tsl.end()) && (ts.find( s1.v ) == ts.end()) ){
     	    erro( "Variável não declarada: " + s1.v );
-  	else {
-    	ss.t = tsl[ s1.v ];
-    	ss.v = s1.v;
-  	}
+        }
+  	    else {
+            if(tsl.find( s1.v ) == tsl.end()){
+                ss.t = ts[ s1.v ];
+            }
+            else{
+                ss.t = tsl[ s1.v ];
+            }            
+            ss.v = s1.v;
+  	    }
 	}
-	else{*/
-		if( ts.find( s1.v ) == ts.end() )
+	else{//comment
+		if( ts.find( s1.v ) == ts.end() ) {
     	    erro( "Variável não declarada: " + s1.v );
-  	else {
-    	ss.t = ts[ s1.v ];
-    	ss.v = s1.v;
-  	}
-	//}
+        }
+      	else {
+        	ss.t = ts[ s1.v ];
+        	ss.v = s1.v;
+      	}
+    }
 }
 
 string par( Tipo a, Tipo b ) {
@@ -197,13 +206,13 @@ void gera_codigo_operador( Atributo& ss, const Atributo& s1, const Atributo& s2,
 
 void gera_codigo_matrix(Atributo& ss, const Atributo& s1, const Atributo& s3, const Atributo& s6, const Atributo& s9){
 	string aux1, aux2, aux3, axu4; 
-	/*
+	//Comment
 	if(escopo_local){
-  	if( tsl.find( s1.v ) == tsl.end() )
+  	if( (tsl.find( s1.v ) == tsl.end()) && (ts.find( s1.v ) == ts.end()) )
     	erro( "Variável não declarada: " + s1.v );
   	else if( s1.t.nome == s9.t.nome ){
     	if((tsl[s1.v].dim[0]-1)<toInt(s3.v) || (tsl[s1.v].dim[1]-1)<toInt(s6.v)){
-      	erro("Segmentation Fault \n");
+      	erro("Acesso indevido ao Array\n");
     	}
     	aux1=gera_nome_var( Integer );
     	ss.c=ss.c+"  "+aux1+" = "+ s3.v + '*' + toString(tsl[s1.v].dim[1])+";\n";
@@ -215,12 +224,12 @@ void gera_codigo_matrix(Atributo& ss, const Atributo& s1, const Atributo& s3, co
     	erro("Tipo errado na atribuição");
   	}
 	}
-	else{*/
+	else{//Comment
 		if( ts.find( s1.v ) == ts.end() )
     	erro( "Variável não declarada: " + s1.v );
   	else if( s1.t.nome == s9.t.nome ){
     	if((ts[s1.v].dim[0]-1)<toInt(s3.v) || (ts[s1.v].dim[1]-1)<toInt(s6.v)){
-      	erro("Segmentation Fault \n");
+      	erro("Acesso indevido ao Array\n");
     	}
     	aux1=gera_nome_var( Integer );
     	ss.c=ss.c+"  "+aux1+" = "+ s3.v + '*' + toString(ts[s1.v].dim[1])+";\n";
@@ -231,17 +240,17 @@ void gera_codigo_matrix(Atributo& ss, const Atributo& s1, const Atributo& s3, co
   	else{
     	erro("Tipo errado na atribuição");
   	}
-	//}
+	}//Comment
 }
 
 void gera_codigo_vetor(Atributo& ss, const Atributo& s1, const Atributo& s3, const Atributo& s6){
-	/*
+	//comment
 	if(escopo_local){
-		if(tsl.find( s1.v ) == tsl.end())
+		if((tsl.find( s1.v ) == tsl.end()) && (ts.find( s1.v ) == ts.end()))
     	erro( "Variável não declarada: " + s1.v);
  		else if( s1.t.nome == s6.t.nome ){
    		if((tsl[s1.v].dim[0]-1)<toInt(s3.v)){
-     		erro("Segmentation Fault \n");
+     		erro("Acesso indevido ao Array\n");
     	}
     ss.c =s1.c + s3.c +ss.c+  "  " + s1.v + '[' + s3.v + ']' + " = " + s6.v + ";\n";    
   	}
@@ -249,19 +258,19 @@ void gera_codigo_vetor(Atributo& ss, const Atributo& s1, const Atributo& s3, con
     	erro("Tipo errado na atribuição");
   	}
 	}
-	else{*/
+	else{//comment
   	if(ts.find( s1.v ) == ts.end())
     	erro( "Variável não declarada: " + s1.v);
   	else if( s1.t.nome == s6.t.nome ){
     	if((ts[s1.v].dim[0]-1)<toInt(s3.v)){
-      	erro("Segmentation Fault \n");
+      	erro("Acesso indevido ao Array\n");
     	}
     	ss.c =s1.c + s3.c +ss.c+  "  " + s1.v + '[' + s3.v + ']' + " = " + s6.v + ";\n";    
   	}
   	else{
     	erro("Tipo errado na atribuição");
   	}
-	//}
+	}//comment
 }
 
 string gera_nome_label( string cmd ) {
@@ -305,18 +314,19 @@ void gera_codigo_atomico(Atributo& ss,const Atributo& s1, const Atributo& s2){
 		ss.c= ss.c + "  " + s1.v + " = " + aux + " + 1; \n";
 	}
 }
-/*
-void gera_codigo_funcao(Atributo& ss,const Atributo& s2, const Atributo& s4, const Atributo& s6, const Atributo& s9){
-	ss.c=s2.t.decl+" "+s4.v+" ("+ s6.c +"){\n  "+declara_var_temp(temp_local)+"  "+s9.c+"}\n";
+
+//comment
+void gera_codigo_funcao(Atributo& ss,const Atributo& s2, const Atributo& s4, const Atributo& s7, const Atributo& s10){
+	ss.c=s2.t.decl+" "+s4.v+" ("+ s7.c +"){\n  "+declara_var_temp(temp_local)+"  "+s10.c+"}\n";
 }
-*/
+
 
 void calcula_matrix( Atributo& ss, const Atributo& s1, const Atributo& s3, const Atributo& s6 ){
 	string aux1, aux2;
 	if(ts.find( s1.v ) == ts.end())
     	erro( "Variável não declarada: " + s1.v);
     	if((ts[s1.v].dim[0]-1)<toInt(s3.v)){
-      	erro("Segmentation Fault \n");
+      	erro("Acesso indevido ao Array\n");
     	}
     	ss.t=ts[s1.v];
     	aux1=gera_nome_var( ss.t );
@@ -365,11 +375,11 @@ MIOLO : DECL 		{$$=$1;}
       | FUNCTION 	{$$=$1;}
       ;     
 
-FUNC: DECLS CMDS  {$$.c=$1.c + $2.c;}
+FUNC: FUNC_DECLS CMDS  {$$.c=$1.c + $2.c;}
     ;
 
-DECLS: DECLS DECL 
-		 | DECL
+FUNC_DECLS: FUNC_DECLS DECL {$$.c = $1.c + $2.c;}
+		 |
 		 ;
 
 DECL: TIPO ID ';'               
@@ -392,8 +402,8 @@ ID: ID ',' _ID { $$.lst = $1.lst; $$.lst.push_back( $3.v ); }
   | _ID  { $$.lst.push_back( $1.v ); }
   ;
 
-FUNCTION: '<'TIPO _FUNCTION _ID /*{escopo_local=true; tsl.clear();}*/'('ARGS')''>' FUNC _END _FUNCTION'>' 
-				//{gera_codigo_funcao($$,$2, $4,$7,$10);	escopo_local=false; }
+FUNCTION: '<'TIPO _FUNCTION _ID {escopo_local=true; tsl.clear();}'('ARGS')''>' FUNC _END _FUNCTION'>' 
+				{gera_codigo_funcao($$,$2, $4,$7,$10);	escopo_local=false; tsl.clear(); }
 				;
 
 ARGS: IDS {$$=$1;}
