@@ -279,8 +279,8 @@ void gera_codigo_operador( Atributo& ss, const Atributo& s1, const Atributo& s2,
       ss.t = tro[s2.v][par( s1.t, s3.t )];
       ss.v = gera_nome_var( ss.t );
       if(ss.t.nome==String.nome){
-        ss.c = s1.c + s3.c + "  " +"strncpy("+ ss.v +","+  s1.v +toString(s1.t.dim[0])+");\n"+ "  strncat("+ss.v+"," + s3.v + 
-        toString(s3.t.dim[0])+");\n";
+        ss.c = s1.c + s3.c + "  " +"strncpy("+ ss.v +","+  s1.v +","+toString(s1.t.dim[0])+");\n"+ "  strncat("+ss.v+"," + s3.v + 
+        ","+toString(s3.t.dim[0])+");\n";
       }
       else{
         ss.c = s1.c + s3.c + "  " + ss.v + " = " + s1.v + s2.v + s3.v + ";\n";
@@ -425,8 +425,17 @@ void calcula_matrix( Atributo& ss, const Atributo& s1, const Atributo& s3, const
     	ss.v= s1.v + '[' + aux2 + ']';
 }
 
+int gera_codigo_final(string codigo){
+  FILE* arq;
 
-#line 430 "y.tab.c" /* yacc.c:339  */
+  arq=fopen("saida.cc","w");
+  fprintf(arq, "%s",codigo.c_str());
+  fclose(arq);
+  return 0;
+}
+
+
+#line 439 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -528,7 +537,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 532 "y.tab.c" /* yacc.c:358  */
+#line 541 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -828,13 +837,13 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   380,   380,   387,   390,   393,   394,   397,   398,   401,
-     404,   405,   408,   410,   412,   416,   417,   418,   419,   420,
-     423,   424,   427,   427,   431,   432,   435,   436,   439,   442,
-     443,   446,   447,   448,   449,   450,   451,   454,   455,   456,
-     459,   460,   463,   466,   467,   470,   473,   474,   477,   478,
-     481,   482,   483,   484,   485,   486,   487,   488,   489,   490,
-     491,   492,   495,   496,   497,   498,   499,   500,   501
+       0,   389,   389,   396,   399,   402,   403,   406,   407,   410,
+     413,   414,   417,   419,   421,   425,   426,   427,   428,   429,
+     432,   433,   436,   436,   440,   441,   444,   445,   448,   451,
+     452,   455,   456,   457,   458,   459,   460,   463,   464,   465,
+     468,   469,   472,   475,   476,   479,   482,   483,   486,   487,
+     490,   491,   492,   493,   494,   495,   496,   497,   498,   499,
+     500,   501,   504,   505,   506,   507,   508,   509,   510
 };
 #endif
 
@@ -1740,388 +1749,388 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 381 "trabalho.y" /* yacc.c:1646  */
-    { cout << "#include <stdlib.h>\n"
+#line 390 "trabalho.y" /* yacc.c:1646  */
+    { cout << gera_codigo_final( "#include <stdlib.h>\n"
                 "#include <string.h>\n" 
-                "#include <stdio.h>\n\n"<< declara_var_temp( temp_global ) << (yyvsp[-3]).c << "int main (){\n" <<(yyvsp[-1]).c<<"}"<<endl;
+                "#include <stdio.h>\n\n" + declara_var_temp( temp_global ) + (yyvsp[-3]).c +"int main (){\n" +(yyvsp[-1]).c+"}")<<endl;
   }
-#line 1749 "y.tab.c" /* yacc.c:1646  */
+#line 1758 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 393 "trabalho.y" /* yacc.c:1646  */
+#line 402 "trabalho.y" /* yacc.c:1646  */
     {(yyval).c = (yyvsp[-1]).c + (yyvsp[0]).c;}
-#line 1755 "y.tab.c" /* yacc.c:1646  */
+#line 1764 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 394 "trabalho.y" /* yacc.c:1646  */
+#line 403 "trabalho.y" /* yacc.c:1646  */
     {(yyval).c="";}
-#line 1761 "y.tab.c" /* yacc.c:1646  */
+#line 1770 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 397 "trabalho.y" /* yacc.c:1646  */
+#line 406 "trabalho.y" /* yacc.c:1646  */
     {(yyval)=(yyvsp[0]);}
-#line 1767 "y.tab.c" /* yacc.c:1646  */
+#line 1776 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 398 "trabalho.y" /* yacc.c:1646  */
+#line 407 "trabalho.y" /* yacc.c:1646  */
     {(yyval)=(yyvsp[0]);}
-#line 1773 "y.tab.c" /* yacc.c:1646  */
+#line 1782 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 401 "trabalho.y" /* yacc.c:1646  */
+#line 410 "trabalho.y" /* yacc.c:1646  */
     {(yyval).c=(yyvsp[-1]).c + (yyvsp[0]).c;}
-#line 1779 "y.tab.c" /* yacc.c:1646  */
+#line 1788 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 404 "trabalho.y" /* yacc.c:1646  */
+#line 413 "trabalho.y" /* yacc.c:1646  */
     {(yyval).c = (yyvsp[-1]).c + (yyvsp[0]).c; }
-#line 1785 "y.tab.c" /* yacc.c:1646  */
+#line 1794 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 409 "trabalho.y" /* yacc.c:1646  */
+#line 418 "trabalho.y" /* yacc.c:1646  */
     { declara_variavel( (yyval), (yyvsp[-2]), (yyvsp[-1]),"" );}
-#line 1791 "y.tab.c" /* yacc.c:1646  */
+#line 1800 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 411 "trabalho.y" /* yacc.c:1646  */
+#line 420 "trabalho.y" /* yacc.c:1646  */
     { declara_variavel( (yyval), (yyvsp[-8]), (yyvsp[-7]),'['+toString(toInt((yyvsp[-5]).v) *toInt((yyvsp[-2]).v))+']'); gera2Dim((yyvsp[-7]), (yyvsp[-5]), (yyvsp[-2])); }
-#line 1797 "y.tab.c" /* yacc.c:1646  */
+#line 1806 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 413 "trabalho.y" /* yacc.c:1646  */
+#line 422 "trabalho.y" /* yacc.c:1646  */
     { declara_variavel( (yyval), (yyvsp[-5]), (yyvsp[-4]),'['+(yyvsp[-2]).v+']'); gera1Dim((yyvsp[-4]), (yyvsp[-2]));}
-#line 1803 "y.tab.c" /* yacc.c:1646  */
+#line 1812 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 416 "trabalho.y" /* yacc.c:1646  */
+#line 425 "trabalho.y" /* yacc.c:1646  */
     { (yyval).t = Integer; }
-#line 1809 "y.tab.c" /* yacc.c:1646  */
+#line 1818 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 417 "trabalho.y" /* yacc.c:1646  */
+#line 426 "trabalho.y" /* yacc.c:1646  */
     { (yyval).t = Float; }
-#line 1815 "y.tab.c" /* yacc.c:1646  */
+#line 1824 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 418 "trabalho.y" /* yacc.c:1646  */
+#line 427 "trabalho.y" /* yacc.c:1646  */
     { (yyval).t = Double; }
-#line 1821 "y.tab.c" /* yacc.c:1646  */
+#line 1830 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 419 "trabalho.y" /* yacc.c:1646  */
+#line 428 "trabalho.y" /* yacc.c:1646  */
     { (yyval).t = Char; }
-#line 1827 "y.tab.c" /* yacc.c:1646  */
+#line 1836 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 420 "trabalho.y" /* yacc.c:1646  */
+#line 429 "trabalho.y" /* yacc.c:1646  */
     { (yyval).t = String; }
-#line 1833 "y.tab.c" /* yacc.c:1646  */
+#line 1842 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 423 "trabalho.y" /* yacc.c:1646  */
+#line 432 "trabalho.y" /* yacc.c:1646  */
     { (yyval).lst = (yyvsp[-2]).lst; (yyval).lst.push_back( (yyvsp[0]).v ); }
-#line 1839 "y.tab.c" /* yacc.c:1646  */
+#line 1848 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 424 "trabalho.y" /* yacc.c:1646  */
+#line 433 "trabalho.y" /* yacc.c:1646  */
     { (yyval).lst.push_back( (yyvsp[0]).v ); }
-#line 1845 "y.tab.c" /* yacc.c:1646  */
+#line 1854 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 427 "trabalho.y" /* yacc.c:1646  */
+#line 436 "trabalho.y" /* yacc.c:1646  */
     {escopo_local=true; tsl.clear();}
-#line 1851 "y.tab.c" /* yacc.c:1646  */
+#line 1860 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 428 "trabalho.y" /* yacc.c:1646  */
+#line 437 "trabalho.y" /* yacc.c:1646  */
     {gera_codigo_funcao((yyval),(yyvsp[-11]), (yyvsp[-9]),(yyvsp[-6]),(yyvsp[-3]));	escopo_local=false; tsl.clear(); }
-#line 1857 "y.tab.c" /* yacc.c:1646  */
+#line 1866 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 431 "trabalho.y" /* yacc.c:1646  */
+#line 440 "trabalho.y" /* yacc.c:1646  */
     {(yyval)=(yyvsp[0]);}
-#line 1863 "y.tab.c" /* yacc.c:1646  */
+#line 1872 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 432 "trabalho.y" /* yacc.c:1646  */
+#line 441 "trabalho.y" /* yacc.c:1646  */
     {(yyval).c="";}
-#line 1869 "y.tab.c" /* yacc.c:1646  */
+#line 1878 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 435 "trabalho.y" /* yacc.c:1646  */
+#line 444 "trabalho.y" /* yacc.c:1646  */
     {(yyval).c=(yyvsp[-3]).t.decl + " " + (yyvsp[-2]).v+" , "+(yyvsp[0]).c;}
-#line 1875 "y.tab.c" /* yacc.c:1646  */
+#line 1884 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 436 "trabalho.y" /* yacc.c:1646  */
+#line 445 "trabalho.y" /* yacc.c:1646  */
     {(yyval).c= (yyvsp[-1]).t.decl + " " + (yyvsp[0]).v;}
-#line 1881 "y.tab.c" /* yacc.c:1646  */
+#line 1890 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 439 "trabalho.y" /* yacc.c:1646  */
+#line 448 "trabalho.y" /* yacc.c:1646  */
     {(yyval)=(yyvsp[0]);}
-#line 1887 "y.tab.c" /* yacc.c:1646  */
+#line 1896 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 442 "trabalho.y" /* yacc.c:1646  */
+#line 451 "trabalho.y" /* yacc.c:1646  */
     {(yyval).c=(yyvsp[-1]).c+(yyvsp[0]).c;}
-#line 1893 "y.tab.c" /* yacc.c:1646  */
+#line 1902 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 443 "trabalho.y" /* yacc.c:1646  */
+#line 452 "trabalho.y" /* yacc.c:1646  */
     {(yyval).c="";}
-#line 1899 "y.tab.c" /* yacc.c:1646  */
+#line 1908 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 446 "trabalho.y" /* yacc.c:1646  */
+#line 455 "trabalho.y" /* yacc.c:1646  */
     {(yyval)=(yyvsp[-1]);}
-#line 1905 "y.tab.c" /* yacc.c:1646  */
+#line 1914 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 447 "trabalho.y" /* yacc.c:1646  */
+#line 456 "trabalho.y" /* yacc.c:1646  */
     {(yyval)=(yyvsp[0]);}
-#line 1911 "y.tab.c" /* yacc.c:1646  */
+#line 1920 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 448 "trabalho.y" /* yacc.c:1646  */
+#line 457 "trabalho.y" /* yacc.c:1646  */
     {(yyval)=(yyvsp[0]);}
-#line 1917 "y.tab.c" /* yacc.c:1646  */
+#line 1926 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 449 "trabalho.y" /* yacc.c:1646  */
+#line 458 "trabalho.y" /* yacc.c:1646  */
     {(yyval)=(yyvsp[-1]);}
-#line 1923 "y.tab.c" /* yacc.c:1646  */
+#line 1932 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 450 "trabalho.y" /* yacc.c:1646  */
+#line 459 "trabalho.y" /* yacc.c:1646  */
     {(yyval)=(yyvsp[-1]);}
-#line 1929 "y.tab.c" /* yacc.c:1646  */
+#line 1938 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 451 "trabalho.y" /* yacc.c:1646  */
+#line 460 "trabalho.y" /* yacc.c:1646  */
     {(yyval)=(yyvsp[-1]);}
-#line 1935 "y.tab.c" /* yacc.c:1646  */
+#line 1944 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 454 "trabalho.y" /* yacc.c:1646  */
+#line 463 "trabalho.y" /* yacc.c:1646  */
     {gera_codigo_atribuicao((yyval), (yyvsp[-2]), (yyvsp[0])); }
-#line 1941 "y.tab.c" /* yacc.c:1646  */
+#line 1950 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 455 "trabalho.y" /* yacc.c:1646  */
+#line 464 "trabalho.y" /* yacc.c:1646  */
     {gera_codigo_matrix((yyval),(yyvsp[-8]),(yyvsp[-6]),(yyvsp[-3]), (yyvsp[0]));}
-#line 1947 "y.tab.c" /* yacc.c:1646  */
+#line 1956 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 456 "trabalho.y" /* yacc.c:1646  */
+#line 465 "trabalho.y" /* yacc.c:1646  */
     {gera_codigo_vetor((yyval),(yyvsp[-5]),(yyvsp[-3]),(yyvsp[0]));}
-#line 1953 "y.tab.c" /* yacc.c:1646  */
+#line 1962 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 459 "trabalho.y" /* yacc.c:1646  */
+#line 468 "trabalho.y" /* yacc.c:1646  */
     {gera_codigo_atomico((yyval),(yyvsp[-1]),(yyvsp[0]));}
-#line 1959 "y.tab.c" /* yacc.c:1646  */
+#line 1968 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 460 "trabalho.y" /* yacc.c:1646  */
+#line 469 "trabalho.y" /* yacc.c:1646  */
     {gera_codigo_atomico((yyval),(yyvsp[-1]),(yyvsp[0]));}
-#line 1965 "y.tab.c" /* yacc.c:1646  */
+#line 1974 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 463 "trabalho.y" /* yacc.c:1646  */
+#line 472 "trabalho.y" /* yacc.c:1646  */
     { busca_tipo_da_variavel( (yyval), (yyvsp[0]) ); }
-#line 1971 "y.tab.c" /* yacc.c:1646  */
+#line 1980 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 466 "trabalho.y" /* yacc.c:1646  */
+#line 475 "trabalho.y" /* yacc.c:1646  */
     {gera_cmd_for((yyval),(yyvsp[-10]),(yyvsp[-8]),(yyvsp[-6]),(yyvsp[-3]));}
-#line 1977 "y.tab.c" /* yacc.c:1646  */
+#line 1986 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 467 "trabalho.y" /* yacc.c:1646  */
+#line 476 "trabalho.y" /* yacc.c:1646  */
     {gera_cmd_for((yyval),(yyvsp[-10]),(yyvsp[-8]),(yyvsp[-6]),(yyvsp[-3]));}
-#line 1983 "y.tab.c" /* yacc.c:1646  */
+#line 1992 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 470 "trabalho.y" /* yacc.c:1646  */
+#line 479 "trabalho.y" /* yacc.c:1646  */
     { (yyval).c = "  scanf(\"%" +(yyvsp[-1]).t.fmt + "\", &" + (yyvsp[-1]).v + ");\n" ;}
-#line 1989 "y.tab.c" /* yacc.c:1646  */
+#line 1998 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 473 "trabalho.y" /* yacc.c:1646  */
+#line 482 "trabalho.y" /* yacc.c:1646  */
     {gera_cmd_if( (yyval), (yyvsp[-6]), (yyvsp[-3]), "");}
-#line 1995 "y.tab.c" /* yacc.c:1646  */
+#line 2004 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 474 "trabalho.y" /* yacc.c:1646  */
+#line 483 "trabalho.y" /* yacc.c:1646  */
     {gera_cmd_if( (yyval), (yyvsp[-8]), (yyvsp[-5]), (yyvsp[-3]).c);}
-#line 2001 "y.tab.c" /* yacc.c:1646  */
+#line 2010 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 477 "trabalho.y" /* yacc.c:1646  */
+#line 486 "trabalho.y" /* yacc.c:1646  */
     { (yyval).c = (yyvsp[-1]).c + "  printf( \"%"+ (yyvsp[-1]).t.fmt + "\", " + (yyvsp[-1]).v + " );\n"; }
-#line 2007 "y.tab.c" /* yacc.c:1646  */
+#line 2016 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 478 "trabalho.y" /* yacc.c:1646  */
+#line 487 "trabalho.y" /* yacc.c:1646  */
     { (yyval).c = (yyvsp[-1]).c + "  printf( \"%"+ (yyvsp[-1]).t.fmt + "\\n\", " + (yyvsp[-1]).v + " );\n"; }
-#line 2013 "y.tab.c" /* yacc.c:1646  */
+#line 2022 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 481 "trabalho.y" /* yacc.c:1646  */
+#line 490 "trabalho.y" /* yacc.c:1646  */
     { gera_codigo_operador( (yyval), (yyvsp[-2]), (yyvsp[-1]), (yyvsp[0]) ); }
-#line 2019 "y.tab.c" /* yacc.c:1646  */
+#line 2028 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 482 "trabalho.y" /* yacc.c:1646  */
+#line 491 "trabalho.y" /* yacc.c:1646  */
     { gera_codigo_operador( (yyval), (yyvsp[-2]), (yyvsp[-1]), (yyvsp[0]) ); }
-#line 2025 "y.tab.c" /* yacc.c:1646  */
+#line 2034 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 483 "trabalho.y" /* yacc.c:1646  */
+#line 492 "trabalho.y" /* yacc.c:1646  */
     { gera_codigo_operador( (yyval), (yyvsp[-2]), (yyvsp[-1]), (yyvsp[0]) ); }
-#line 2031 "y.tab.c" /* yacc.c:1646  */
+#line 2040 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 484 "trabalho.y" /* yacc.c:1646  */
+#line 493 "trabalho.y" /* yacc.c:1646  */
     { gera_codigo_operador( (yyval), (yyvsp[-2]), (yyvsp[-1]), (yyvsp[0]) ); }
-#line 2037 "y.tab.c" /* yacc.c:1646  */
+#line 2046 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 485 "trabalho.y" /* yacc.c:1646  */
+#line 494 "trabalho.y" /* yacc.c:1646  */
     { gera_codigo_operador( (yyval), (yyvsp[-2]), (yyvsp[-1]), (yyvsp[0]) ); }
-#line 2043 "y.tab.c" /* yacc.c:1646  */
+#line 2052 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 486 "trabalho.y" /* yacc.c:1646  */
+#line 495 "trabalho.y" /* yacc.c:1646  */
     { gera_codigo_operador( (yyval), (yyvsp[-2]), (yyvsp[-1]), (yyvsp[0]) ); }
-#line 2049 "y.tab.c" /* yacc.c:1646  */
+#line 2058 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 487 "trabalho.y" /* yacc.c:1646  */
+#line 496 "trabalho.y" /* yacc.c:1646  */
     { gera_codigo_operador( (yyval), (yyvsp[-2]), (yyvsp[-1]), (yyvsp[0]) ); }
-#line 2055 "y.tab.c" /* yacc.c:1646  */
+#line 2064 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 488 "trabalho.y" /* yacc.c:1646  */
+#line 497 "trabalho.y" /* yacc.c:1646  */
     { gera_codigo_operador( (yyval), (yyvsp[-2]), (yyvsp[-1]), (yyvsp[0]) ); }
-#line 2061 "y.tab.c" /* yacc.c:1646  */
+#line 2070 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 489 "trabalho.y" /* yacc.c:1646  */
+#line 498 "trabalho.y" /* yacc.c:1646  */
     { gera_codigo_operador( (yyval), (yyvsp[-2]), (yyvsp[-1]), (yyvsp[0]) ); }
-#line 2067 "y.tab.c" /* yacc.c:1646  */
+#line 2076 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 490 "trabalho.y" /* yacc.c:1646  */
+#line 499 "trabalho.y" /* yacc.c:1646  */
     { gera_codigo_operador( (yyval), (yyvsp[-2]), (yyvsp[-1]), (yyvsp[0]) ); }
-#line 2073 "y.tab.c" /* yacc.c:1646  */
+#line 2082 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 491 "trabalho.y" /* yacc.c:1646  */
+#line 500 "trabalho.y" /* yacc.c:1646  */
     { gera_codigo_operador( (yyval), (yyvsp[-2]), (yyvsp[-1]), (yyvsp[0]) ); }
-#line 2079 "y.tab.c" /* yacc.c:1646  */
+#line 2088 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 495 "trabalho.y" /* yacc.c:1646  */
+#line 504 "trabalho.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); (yyval).t = String; }
-#line 2085 "y.tab.c" /* yacc.c:1646  */
+#line 2094 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 496 "trabalho.y" /* yacc.c:1646  */
+#line 505 "trabalho.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); (yyval).t = Float; }
-#line 2091 "y.tab.c" /* yacc.c:1646  */
+#line 2100 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 497 "trabalho.y" /* yacc.c:1646  */
+#line 506 "trabalho.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); (yyval).t = Integer; }
-#line 2097 "y.tab.c" /* yacc.c:1646  */
+#line 2106 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 498 "trabalho.y" /* yacc.c:1646  */
+#line 507 "trabalho.y" /* yacc.c:1646  */
     { busca_tipo_da_variavel( (yyval), (yyvsp[0]) );  }
-#line 2103 "y.tab.c" /* yacc.c:1646  */
+#line 2112 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 499 "trabalho.y" /* yacc.c:1646  */
+#line 508 "trabalho.y" /* yacc.c:1646  */
     { calcula_matrix( (yyval), (yyvsp[-6]), (yyvsp[-4]), (yyvsp[-1]) );  }
-#line 2109 "y.tab.c" /* yacc.c:1646  */
+#line 2118 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 500 "trabalho.y" /* yacc.c:1646  */
+#line 509 "trabalho.y" /* yacc.c:1646  */
     { (yyval).v = (yyvsp[-3]).v + "[" +(yyvsp[-1]).v +"]"+";\n";  }
-#line 2115 "y.tab.c" /* yacc.c:1646  */
+#line 2124 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 501 "trabalho.y" /* yacc.c:1646  */
+#line 510 "trabalho.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[-1]); }
-#line 2121 "y.tab.c" /* yacc.c:1646  */
+#line 2130 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2125 "y.tab.c" /* yacc.c:1646  */
+#line 2134 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2349,7 +2358,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 504 "trabalho.y" /* yacc.c:1906  */
+#line 513 "trabalho.y" /* yacc.c:1906  */
 
 
 #include "lex.yy.c"

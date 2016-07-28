@@ -214,8 +214,8 @@ void gera_codigo_operador( Atributo& ss, const Atributo& s1, const Atributo& s2,
       ss.t = tro[s2.v][par( s1.t, s3.t )];
       ss.v = gera_nome_var( ss.t );
       if(ss.t.nome==String.nome){
-        ss.c = s1.c + s3.c + "  " +"strncpy("+ ss.v +","+  s1.v +toString(s1.t.dim[0])+");\n"+ "  strncat("+ss.v+"," + s3.v + 
-        toString(s3.t.dim[0])+");\n";
+        ss.c = s1.c + s3.c + "  " +"strncpy("+ ss.v +","+  s1.v +","+toString(s1.t.dim[0])+");\n"+ "  strncat("+ss.v+"," + s3.v + 
+        ","+toString(s3.t.dim[0])+");\n";
       }
       else{
         ss.c = s1.c + s3.c + "  " + ss.v + " = " + s1.v + s2.v + s3.v + ";\n";
@@ -360,6 +360,15 @@ void calcula_matrix( Atributo& ss, const Atributo& s1, const Atributo& s3, const
     	ss.v= s1.v + '[' + aux2 + ']';
 }
 
+int gera_codigo_final(string codigo){
+  FILE* arq;
+
+  arq=fopen("saida.cc","w");
+  fprintf(arq, "%s",codigo.c_str());
+  fclose(arq);
+  return 0;
+}
+
 %}
 
 %token _ID _IF _ELSE _HTPL _IGUALDADE _BARRAHTPL _CTE_FLOAT _MAISMAIS _DIFERENTE
@@ -378,9 +387,9 @@ void calcula_matrix( Atributo& ss, const Atributo& s1, const Atributo& s3, const
 %%
 
 S : MIOLOS ABRE PRINCIPAL FECHA
-  { cout << "#include <stdlib.h>\n"
+  { cout << gera_codigo_final( "#include <stdlib.h>\n"
                 "#include <string.h>\n" 
-                "#include <stdio.h>\n\n"<< declara_var_temp( temp_global ) << $1.c << "int main (){\n" <<$3.c<<"}"<<endl;
+                "#include <stdio.h>\n\n" + declara_var_temp( temp_global ) + $1.c +"int main (){\n" +$3.c+"}")<<endl;
   }
   ;
    

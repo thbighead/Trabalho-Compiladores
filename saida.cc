@@ -1,20 +1,12 @@
-./trabalho < entrada2.htpl
-integernadainteger
-if ok!
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
-// variáveis temporárias 
-int t_integer_1;
+char t_string_1[256];
 
-int x;
-int y;
-int a[6];
-int b[6];
+char str[256];
 int main (){
-  t_integer_1 = 2+3;
-  x = t_integer_1;
-  printf( "%d", x );
-  printf( "%s", "Hello, World!\n" );
+  strncpy(t_string_1,"abcd",255);
+  strncat(t_string_1,"efgh",255);
+  strncpy( str, t_string_1, 255 );
 }
