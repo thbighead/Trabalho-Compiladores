@@ -402,10 +402,6 @@ TIPO: _INT      { $$.t = Integer; }
     | _STRING   { $$.t = String; }
     ;
 
-MAIN_ID: MAIN_ID ',' _ID { $$.lst = $1.lst; $$.lst.push_back( $3.v ); }
-  		 | _ID  { $$.lst.push_back( $1.v ); }
-       ;
-
 ID: ID ',' _ID { $$.lst = $1.lst; $$.lst.push_back( $3.v ); }
   | _ID  { $$.lst.push_back( $1.v ); }
   ;

@@ -19,142 +19,129 @@ Gramática
     9 FUNC_DECLS: FUNC_DECLS DECL
    10           | %empty
 
-   11 MAIN_DECLS: MAIN_DECLS DECLA
+   11 MAIN_DECLS: MAIN_DECLS DECL
    12           | %empty
 
    13 DECL: TIPO ID ';'
    14     | TIPO ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER ']' ';'
    15     | TIPO ID '[' _CTE_INTEGER ']' ';'
 
-   16 DECLA: MAIN_TIPO MAIN_ID ';'
-   17      | MAIN_TIPO MAIN_ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER ']' ';'
-   18      | MAIN_TIPO MAIN_ID '[' _CTE_INTEGER ']' ';'
+   16 TIPO: _INT
+   17     | _FLOAT
+   18     | _DOUBLE
+   19     | _CHAR
+   20     | _STRING
 
-   19 TIPO: _INT
-   20     | _FLOAT
-   21     | _DOUBLE
-   22     | _CHAR
-   23     | _STRING
+   21 ID: ID ',' _ID
+   22   | _ID
 
-   24 MAIN_TIPO: _INT
-   25          | _FLOAT
-   26          | _DOUBLE
-   27          | _CHAR
-   28          | _STRING
+   23 $@1: %empty
 
-   29 MAIN_ID: MAIN_ID ',' _ID
-   30        | _ID
+   24 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
 
-   31 ID: ID ',' _ID
-   32   | _ID
+   25 ARGS: IDS
+   26     | %empty
 
-   33 $@1: %empty
+   27 IDS: TIPO _ID ',' IDS
+   28    | TIPO _ID
 
-   34 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
+   29 PRINCIPAL: MAIN_DECLS CMDS
 
-   35 ARGS: IDS
-   36     | %empty
+   30 CMDS: CMD CMDS
+   31     | %empty
 
-   37 IDS: TIPO _ID ',' IDS
-   38    | TIPO _ID
+   32 CMD: SAIDA ';'
+   33    | CMD_IF
+   34    | CMD_FOR
+   35    | CMD_ATRIB ';'
+   36    | CMD_ATOM ';'
+   37    | CMD_INPUT ';'
 
-   39 PRINCIPAL: MAIN_DECLS CMDS
+   38 CMD_ATRIB: LVALUE '=' E
+   39          | LVALUE '[' E ']' '[' E ']' '=' E
+   40          | LVALUE '[' E ']' '=' E
 
-   40 CMDS: CMD CMDS
-   41     | %empty
+   41 CMD_ATOM: LVALUE _MAISMAIS
+   42         | LVALUE _MENOSMENOS
 
-   42 CMD: SAIDA ';'
-   43    | CMD_IF
-   44    | CMD_FOR
-   45    | CMD_ATRIB ';'
-   46    | CMD_ATOM ';'
-   47    | CMD_INPUT ';'
+   43 LVALUE: _ID
 
-   48 CMD_ATRIB: LVALUE '=' E
-   49          | LVALUE '[' E ']' '[' E ']' '=' E
-   50          | LVALUE '[' E ']' '=' E
+   44 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
+   45        | '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
 
-   51 CMD_ATOM: LVALUE _MAISMAIS
-   52         | LVALUE _MENOSMENOS
+   46 CMD_INPUT: _INPUT '(' LVALUE ')'
 
-   53 LVALUE: _ID
+   47 CMD_IF: '<' _IF '(' E ')' '>' CMDS _END _IF '>'
+   48       | '<' _IF '(' E ')' '>' CMDS _ELSE CMDS _END _IF '>'
 
-   54 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
-   55        | '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
+   49 SAIDA: _PRINT '(' E ')'
+   50      | _PRINTLN '(' E ')'
 
-   56 CMD_INPUT: _INPUT '(' LVALUE ')'
+   51 E: E '+' E
+   52  | E '-' E
+   53  | E '*' E
+   54  | E '/' E
+   55  | E '%' E
+   56  | E '>' E
+   57  | E '<' E
+   58  | E _IGUALDADE E
+   59  | E _DIFERENTE E
+   60  | E _MAIORIGUAL E
+   61  | E _MENORIGUAL E
+   62  | F
 
-   57 CMD_IF: '<' _IF '(' E ')' '>' CMDS _END _IF '>'
-   58       | '<' _IF '(' E ')' '>' CMDS _ELSE CMDS _END _IF '>'
-
-   59 SAIDA: _PRINT '(' E ')'
-   60      | _PRINTLN '(' E ')'
-
-   61 E: E '+' E
-   62  | E '-' E
-   63  | E '*' E
-   64  | E '/' E
-   65  | E '%' E
-   66  | E '>' E
-   67  | E '<' E
-   68  | E _IGUALDADE E
-   69  | E _DIFERENTE E
-   70  | E _MAIORIGUAL E
-   71  | E _MENORIGUAL E
-   72  | F
-
-   73 F: _CTE_STRING
-   74  | _CTE_FLOAT
-   75  | _CTE_INTEGER
-   76  | _ID
-   77  | _ID '[' E ']' '[' E ']'
-   78  | _ID '[' E ']'
-   79  | '(' E ')'
+   63 F: _CTE_STRING
+   64  | _CTE_FLOAT
+   65  | _CTE_INTEGER
+   66  | _ID
+   67  | _ID '[' E ']' '[' E ']'
+   68  | _ID '[' E ']'
+   69  | '(' E ')'
 
 
 Terminais, com as regras onde eles aparecem
 
 $end (0) 0
-'%' (37) 65
-'(' (40) 34 54 55 56 57 58 59 60 79
-')' (41) 34 54 55 56 57 58 59 60 79
-'*' (42) 63
-'+' (43) 61
-',' (44) 29 31 37
-'-' (45) 62
-'/' (47) 64
-';' (59) 13 14 15 16 17 18 42 45 46 47 54 55
-'<' (60) 34 54 55 57 58 67
-'=' (61) 48 49 50
-'>' (62) 34 54 55 57 58 66
-'[' (91) 14 15 17 18 49 50 77 78
-']' (93) 14 15 17 18 49 50 77 78
+'%' (37) 55
+'(' (40) 24 44 45 46 47 48 49 50 69
+')' (41) 24 44 45 46 47 48 49 50 69
+'*' (42) 53
+'+' (43) 51
+',' (44) 21 27
+'-' (45) 52
+'/' (47) 54
+';' (59) 13 14 15 32 35 36 37 44 45
+'<' (60) 24 44 45 47 48 57
+'=' (61) 38 39 40
+'>' (62) 24 44 45 47 48 56
+'[' (91) 14 15 39 40 67 68
+']' (93) 14 15 39 40 67 68
 error (256)
-_ID (258) 29 30 31 32 34 37 38 53 76 77 78
-_IF (259) 57 58
-_ELSE (260) 58
+_ID (258) 21 22 24 27 28 43 66 67 68
+_IF (259) 47 48
+_ELSE (260) 48
 _HTPL (261) 2
-_IGUALDADE (262) 68
+_IGUALDADE (262) 58
 _BARRAHTPL (263) 3
-_CTE_FLOAT (264) 74
-_MAISMAIS (265) 51
-_DIFERENTE (266) 69
-_FOR (267) 54 55
-_FUNCTION (268) 34
-_PRINT (269) 59
-_INT (270) 19 24
-_FLOAT (271) 20 25
-_DOUBLE (272) 21 26
-_CHAR (273) 22 27
-_END (274) 34 54 55 57 58
-_MENOSMENOS (275) 52
-_MAIORIGUAL (276) 70
-_STRING (277) 23 28
-_MENORIGUAL (278) 71
-_PRINTLN (279) 60
-_INPUT (280) 56
-_CTE_STRING (281) 73
-_CTE_INTEGER (282) 14 15 17 18 75
+_CTE_FLOAT (264) 64
+_MAISMAIS (265) 41
+_DIFERENTE (266) 59
+_FOR (267) 44 45
+_FUNCTION (268) 24
+_PRINT (269) 49
+_INT (270) 16
+_FLOAT (271) 17
+_DOUBLE (272) 18
+_CHAR (273) 19
+_END (274) 24 44 45 47 48
+_MENOSMENOS (275) 42
+_MAIORIGUAL (276) 60
+_STRING (277) 20
+_MENORIGUAL (278) 61
+_PRINTLN (279) 50
+_INPUT (280) 46
+_CTE_STRING (281) 63
+_CTE_INTEGER (282) 14 15 65
 
 
 Não terminais com as regras onde eles aparecem
@@ -172,57 +159,51 @@ MIOLOS (46)
 MIOLO (47)
     à esquerda: 6 7, à direita: 4
 FUNC (48)
-    à esquerda: 8, à direita: 34
+    à esquerda: 8, à direita: 24
 FUNC_DECLS (49)
     à esquerda: 9 10, à direita: 8 9
 MAIN_DECLS (50)
-    à esquerda: 11 12, à direita: 11 39
+    à esquerda: 11 12, à direita: 11 29
 DECL (51)
-    à esquerda: 13 14 15, à direita: 6 9
-DECLA (52)
-    à esquerda: 16 17 18, à direita: 11
-TIPO (53)
-    à esquerda: 19 20 21 22 23, à direita: 13 14 15 34 37 38
-MAIN_TIPO (54)
-    à esquerda: 24 25 26 27 28, à direita: 16 17 18
-MAIN_ID (55)
-    à esquerda: 29 30, à direita: 16 17 18 29
-ID (56)
-    à esquerda: 31 32, à direita: 13 14 15 31
-FUNCTION (57)
-    à esquerda: 34, à direita: 7
-$@1 (58)
-    à esquerda: 33, à direita: 34
-ARGS (59)
-    à esquerda: 35 36, à direita: 34
-IDS (60)
-    à esquerda: 37 38, à direita: 35 37
-PRINCIPAL (61)
-    à esquerda: 39, à direita: 1
-CMDS (62)
-    à esquerda: 40 41, à direita: 8 39 40 54 55 57 58
-CMD (63)
-    à esquerda: 42 43 44 45 46 47, à direita: 40
-CMD_ATRIB (64)
-    à esquerda: 48 49 50, à direita: 45 54 55
-CMD_ATOM (65)
-    à esquerda: 51 52, à direita: 46 54
-LVALUE (66)
-    à esquerda: 53, à direita: 48 49 50 51 52 56
-CMD_FOR (67)
-    à esquerda: 54 55, à direita: 44
-CMD_INPUT (68)
-    à esquerda: 56, à direita: 47
-CMD_IF (69)
-    à esquerda: 57 58, à direita: 43
-SAIDA (70)
-    à esquerda: 59 60, à direita: 42
-E (71)
-    à esquerda: 61 62 63 64 65 66 67 68 69 70 71 72, à direita: 48
-    49 50 54 55 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 77 78
-    79
-F (72)
-    à esquerda: 73 74 75 76 77 78 79, à direita: 72
+    à esquerda: 13 14 15, à direita: 6 9 11
+TIPO (52)
+    à esquerda: 16 17 18 19 20, à direita: 13 14 15 24 27 28
+ID (53)
+    à esquerda: 21 22, à direita: 13 14 15 21
+FUNCTION (54)
+    à esquerda: 24, à direita: 7
+$@1 (55)
+    à esquerda: 23, à direita: 24
+ARGS (56)
+    à esquerda: 25 26, à direita: 24
+IDS (57)
+    à esquerda: 27 28, à direita: 25 27
+PRINCIPAL (58)
+    à esquerda: 29, à direita: 1
+CMDS (59)
+    à esquerda: 30 31, à direita: 8 29 30 44 45 47 48
+CMD (60)
+    à esquerda: 32 33 34 35 36 37, à direita: 30
+CMD_ATRIB (61)
+    à esquerda: 38 39 40, à direita: 35 44 45
+CMD_ATOM (62)
+    à esquerda: 41 42, à direita: 36 44
+LVALUE (63)
+    à esquerda: 43, à direita: 38 39 40 41 42 46
+CMD_FOR (64)
+    à esquerda: 44 45, à direita: 34
+CMD_INPUT (65)
+    à esquerda: 46, à direita: 37
+CMD_IF (66)
+    à esquerda: 47 48, à direita: 33
+SAIDA (67)
+    à esquerda: 49 50, à direita: 32
+E (68)
+    à esquerda: 51 52 53 54 55 56 57 58 59 60 61 62, à direita: 38
+    39 40 44 45 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 67 68
+    69
+F (69)
+    à esquerda: 63 64 65 66 67 68 69, à direita: 62
 
 
 Estado 0
@@ -248,42 +229,42 @@ Estado 0
 
 Estado 1
 
-   19 TIPO: _INT .
+   16 TIPO: _INT .
 
-    $padrão  reduzir usando a regra 19 (TIPO)
+    $padrão  reduzir usando a regra 16 (TIPO)
 
 
 Estado 2
 
-   20 TIPO: _FLOAT .
+   17 TIPO: _FLOAT .
 
-    $padrão  reduzir usando a regra 20 (TIPO)
+    $padrão  reduzir usando a regra 17 (TIPO)
 
 
 Estado 3
 
-   21 TIPO: _DOUBLE .
+   18 TIPO: _DOUBLE .
 
-    $padrão  reduzir usando a regra 21 (TIPO)
+    $padrão  reduzir usando a regra 18 (TIPO)
 
 
 Estado 4
 
-   22 TIPO: _CHAR .
+   19 TIPO: _CHAR .
 
-    $padrão  reduzir usando a regra 22 (TIPO)
+    $padrão  reduzir usando a regra 19 (TIPO)
 
 
 Estado 5
 
-   23 TIPO: _STRING .
+   20 TIPO: _STRING .
 
-    $padrão  reduzir usando a regra 23 (TIPO)
+    $padrão  reduzir usando a regra 20 (TIPO)
 
 
 Estado 6
 
-   34 FUNCTION: '<' . TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
+   24 FUNCTION: '<' . TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
 
     _INT     deslocar, e ir ao estado 1
     _FLOAT   deslocar, e ir ao estado 2
@@ -357,7 +338,7 @@ Estado 12
 
 Estado 13
 
-   34 FUNCTION: '<' TIPO . _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
+   24 FUNCTION: '<' TIPO . _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
 
     _FUNCTION  deslocar, e ir ao estado 20
 
@@ -395,9 +376,9 @@ Estado 17
 
 Estado 18
 
-   32 ID: _ID .
+   22 ID: _ID .
 
-    $padrão  reduzir usando a regra 32 (ID)
+    $padrão  reduzir usando a regra 22 (ID)
 
 
 Estado 19
@@ -405,7 +386,7 @@ Estado 19
    13 DECL: TIPO ID . ';'
    14     | TIPO ID . '[' _CTE_INTEGER ']' '[' _CTE_INTEGER ']' ';'
    15     | TIPO ID . '[' _CTE_INTEGER ']' ';'
-   31 ID: ID . ',' _ID
+   21 ID: ID . ',' _ID
 
     ';'  deslocar, e ir ao estado 23
     '['  deslocar, e ir ao estado 24
@@ -414,49 +395,49 @@ Estado 19
 
 Estado 20
 
-   34 FUNCTION: '<' TIPO _FUNCTION . _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
+   24 FUNCTION: '<' TIPO _FUNCTION . _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
 
     _ID  deslocar, e ir ao estado 26
 
 
 Estado 21
 
-   11 MAIN_DECLS: MAIN_DECLS . DECLA
-   39 PRINCIPAL: MAIN_DECLS . CMDS
+   11 MAIN_DECLS: MAIN_DECLS . DECL
+   29 PRINCIPAL: MAIN_DECLS . CMDS
 
     _ID       deslocar, e ir ao estado 27
     _PRINT    deslocar, e ir ao estado 28
-    _INT      deslocar, e ir ao estado 29
-    _FLOAT    deslocar, e ir ao estado 30
-    _DOUBLE   deslocar, e ir ao estado 31
-    _CHAR     deslocar, e ir ao estado 32
-    _STRING   deslocar, e ir ao estado 33
-    _PRINTLN  deslocar, e ir ao estado 34
-    _INPUT    deslocar, e ir ao estado 35
-    '<'       deslocar, e ir ao estado 36
+    _INT      deslocar, e ir ao estado 1
+    _FLOAT    deslocar, e ir ao estado 2
+    _DOUBLE   deslocar, e ir ao estado 3
+    _CHAR     deslocar, e ir ao estado 4
+    _STRING   deslocar, e ir ao estado 5
+    _PRINTLN  deslocar, e ir ao estado 29
+    _INPUT    deslocar, e ir ao estado 30
+    '<'       deslocar, e ir ao estado 31
 
-    $padrão  reduzir usando a regra 41 (CMDS)
+    $padrão  reduzir usando a regra 31 (CMDS)
 
-    DECLA      ir ao estado 37
-    MAIN_TIPO  ir ao estado 38
-    CMDS       ir ao estado 39
-    CMD        ir ao estado 40
-    CMD_ATRIB  ir ao estado 41
-    CMD_ATOM   ir ao estado 42
-    LVALUE     ir ao estado 43
-    CMD_FOR    ir ao estado 44
-    CMD_INPUT  ir ao estado 45
-    CMD_IF     ir ao estado 46
-    SAIDA      ir ao estado 47
+    DECL       ir ao estado 32
+    TIPO       ir ao estado 11
+    CMDS       ir ao estado 33
+    CMD        ir ao estado 34
+    CMD_ATRIB  ir ao estado 35
+    CMD_ATOM   ir ao estado 36
+    LVALUE     ir ao estado 37
+    CMD_FOR    ir ao estado 38
+    CMD_INPUT  ir ao estado 39
+    CMD_IF     ir ao estado 40
+    SAIDA      ir ao estado 41
 
 
 Estado 22
 
     1 S: MIOLOS ABRE PRINCIPAL . FECHA
 
-    _BARRAHTPL  deslocar, e ir ao estado 48
+    _BARRAHTPL  deslocar, e ir ao estado 42
 
-    FECHA  ir ao estado 49
+    FECHA  ir ao estado 43
 
 
 Estado 23
@@ -471,401 +452,336 @@ Estado 24
    14 DECL: TIPO ID '[' . _CTE_INTEGER ']' '[' _CTE_INTEGER ']' ';'
    15     | TIPO ID '[' . _CTE_INTEGER ']' ';'
 
-    _CTE_INTEGER  deslocar, e ir ao estado 50
+    _CTE_INTEGER  deslocar, e ir ao estado 44
 
 
 Estado 25
 
-   31 ID: ID ',' . _ID
+   21 ID: ID ',' . _ID
 
-    _ID  deslocar, e ir ao estado 51
+    _ID  deslocar, e ir ao estado 45
 
 
 Estado 26
 
-   34 FUNCTION: '<' TIPO _FUNCTION _ID . $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
+   24 FUNCTION: '<' TIPO _FUNCTION _ID . $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
 
-    $padrão  reduzir usando a regra 33 ($@1)
+    $padrão  reduzir usando a regra 23 ($@1)
 
-    $@1  ir ao estado 52
+    $@1  ir ao estado 46
 
 
 Estado 27
 
-   53 LVALUE: _ID .
+   43 LVALUE: _ID .
 
-    $padrão  reduzir usando a regra 53 (LVALUE)
+    $padrão  reduzir usando a regra 43 (LVALUE)
 
 
 Estado 28
 
-   59 SAIDA: _PRINT . '(' E ')'
+   49 SAIDA: _PRINT . '(' E ')'
 
-    '('  deslocar, e ir ao estado 53
+    '('  deslocar, e ir ao estado 47
 
 
 Estado 29
 
-   24 MAIN_TIPO: _INT .
+   50 SAIDA: _PRINTLN . '(' E ')'
 
-    $padrão  reduzir usando a regra 24 (MAIN_TIPO)
+    '('  deslocar, e ir ao estado 48
 
 
 Estado 30
 
-   25 MAIN_TIPO: _FLOAT .
+   46 CMD_INPUT: _INPUT . '(' LVALUE ')'
 
-    $padrão  reduzir usando a regra 25 (MAIN_TIPO)
+    '('  deslocar, e ir ao estado 49
 
 
 Estado 31
 
-   26 MAIN_TIPO: _DOUBLE .
+   44 CMD_FOR: '<' . _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
+   45        | '<' . _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
+   47 CMD_IF: '<' . _IF '(' E ')' '>' CMDS _END _IF '>'
+   48       | '<' . _IF '(' E ')' '>' CMDS _ELSE CMDS _END _IF '>'
 
-    $padrão  reduzir usando a regra 26 (MAIN_TIPO)
+    _IF   deslocar, e ir ao estado 50
+    _FOR  deslocar, e ir ao estado 51
 
 
 Estado 32
 
-   27 MAIN_TIPO: _CHAR .
-
-    $padrão  reduzir usando a regra 27 (MAIN_TIPO)
-
-
-Estado 33
-
-   28 MAIN_TIPO: _STRING .
-
-    $padrão  reduzir usando a regra 28 (MAIN_TIPO)
-
-
-Estado 34
-
-   60 SAIDA: _PRINTLN . '(' E ')'
-
-    '('  deslocar, e ir ao estado 54
-
-
-Estado 35
-
-   56 CMD_INPUT: _INPUT . '(' LVALUE ')'
-
-    '('  deslocar, e ir ao estado 55
-
-
-Estado 36
-
-   54 CMD_FOR: '<' . _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
-   55        | '<' . _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
-   57 CMD_IF: '<' . _IF '(' E ')' '>' CMDS _END _IF '>'
-   58       | '<' . _IF '(' E ')' '>' CMDS _ELSE CMDS _END _IF '>'
-
-    _IF   deslocar, e ir ao estado 56
-    _FOR  deslocar, e ir ao estado 57
-
-
-Estado 37
-
-   11 MAIN_DECLS: MAIN_DECLS DECLA .
+   11 MAIN_DECLS: MAIN_DECLS DECL .
 
     $padrão  reduzir usando a regra 11 (MAIN_DECLS)
 
 
+Estado 33
+
+   29 PRINCIPAL: MAIN_DECLS CMDS .
+
+    $padrão  reduzir usando a regra 29 (PRINCIPAL)
+
+
+Estado 34
+
+   30 CMDS: CMD . CMDS
+
+    _ID       deslocar, e ir ao estado 27
+    _PRINT    deslocar, e ir ao estado 28
+    _PRINTLN  deslocar, e ir ao estado 29
+    _INPUT    deslocar, e ir ao estado 30
+    '<'       deslocar, e ir ao estado 31
+
+    $padrão  reduzir usando a regra 31 (CMDS)
+
+    CMDS       ir ao estado 52
+    CMD        ir ao estado 34
+    CMD_ATRIB  ir ao estado 35
+    CMD_ATOM   ir ao estado 36
+    LVALUE     ir ao estado 37
+    CMD_FOR    ir ao estado 38
+    CMD_INPUT  ir ao estado 39
+    CMD_IF     ir ao estado 40
+    SAIDA      ir ao estado 41
+
+
+Estado 35
+
+   35 CMD: CMD_ATRIB . ';'
+
+    ';'  deslocar, e ir ao estado 53
+
+
+Estado 36
+
+   36 CMD: CMD_ATOM . ';'
+
+    ';'  deslocar, e ir ao estado 54
+
+
+Estado 37
+
+   38 CMD_ATRIB: LVALUE . '=' E
+   39          | LVALUE . '[' E ']' '[' E ']' '=' E
+   40          | LVALUE . '[' E ']' '=' E
+   41 CMD_ATOM: LVALUE . _MAISMAIS
+   42         | LVALUE . _MENOSMENOS
+
+    _MAISMAIS    deslocar, e ir ao estado 55
+    _MENOSMENOS  deslocar, e ir ao estado 56
+    '='          deslocar, e ir ao estado 57
+    '['          deslocar, e ir ao estado 58
+
+
 Estado 38
 
-   16 DECLA: MAIN_TIPO . MAIN_ID ';'
-   17      | MAIN_TIPO . MAIN_ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER ']' ';'
-   18      | MAIN_TIPO . MAIN_ID '[' _CTE_INTEGER ']' ';'
+   34 CMD: CMD_FOR .
 
-    _ID  deslocar, e ir ao estado 58
-
-    MAIN_ID  ir ao estado 59
+    $padrão  reduzir usando a regra 34 (CMD)
 
 
 Estado 39
 
-   39 PRINCIPAL: MAIN_DECLS CMDS .
+   37 CMD: CMD_INPUT . ';'
 
-    $padrão  reduzir usando a regra 39 (PRINCIPAL)
+    ';'  deslocar, e ir ao estado 59
 
 
 Estado 40
 
-   40 CMDS: CMD . CMDS
+   33 CMD: CMD_IF .
 
-    _ID       deslocar, e ir ao estado 27
-    _PRINT    deslocar, e ir ao estado 28
-    _PRINTLN  deslocar, e ir ao estado 34
-    _INPUT    deslocar, e ir ao estado 35
-    '<'       deslocar, e ir ao estado 36
-
-    $padrão  reduzir usando a regra 41 (CMDS)
-
-    CMDS       ir ao estado 60
-    CMD        ir ao estado 40
-    CMD_ATRIB  ir ao estado 41
-    CMD_ATOM   ir ao estado 42
-    LVALUE     ir ao estado 43
-    CMD_FOR    ir ao estado 44
-    CMD_INPUT  ir ao estado 45
-    CMD_IF     ir ao estado 46
-    SAIDA      ir ao estado 47
+    $padrão  reduzir usando a regra 33 (CMD)
 
 
 Estado 41
 
-   45 CMD: CMD_ATRIB . ';'
+   32 CMD: SAIDA . ';'
 
-    ';'  deslocar, e ir ao estado 61
+    ';'  deslocar, e ir ao estado 60
 
 
 Estado 42
-
-   46 CMD: CMD_ATOM . ';'
-
-    ';'  deslocar, e ir ao estado 62
-
-
-Estado 43
-
-   48 CMD_ATRIB: LVALUE . '=' E
-   49          | LVALUE . '[' E ']' '[' E ']' '=' E
-   50          | LVALUE . '[' E ']' '=' E
-   51 CMD_ATOM: LVALUE . _MAISMAIS
-   52         | LVALUE . _MENOSMENOS
-
-    _MAISMAIS    deslocar, e ir ao estado 63
-    _MENOSMENOS  deslocar, e ir ao estado 64
-    '='          deslocar, e ir ao estado 65
-    '['          deslocar, e ir ao estado 66
-
-
-Estado 44
-
-   44 CMD: CMD_FOR .
-
-    $padrão  reduzir usando a regra 44 (CMD)
-
-
-Estado 45
-
-   47 CMD: CMD_INPUT . ';'
-
-    ';'  deslocar, e ir ao estado 67
-
-
-Estado 46
-
-   43 CMD: CMD_IF .
-
-    $padrão  reduzir usando a regra 43 (CMD)
-
-
-Estado 47
-
-   42 CMD: SAIDA . ';'
-
-    ';'  deslocar, e ir ao estado 68
-
-
-Estado 48
 
     3 FECHA: _BARRAHTPL .
 
     $padrão  reduzir usando a regra 3 (FECHA)
 
 
-Estado 49
+Estado 43
 
     1 S: MIOLOS ABRE PRINCIPAL FECHA .
 
     $padrão  reduzir usando a regra 1 (S)
 
 
-Estado 50
+Estado 44
 
    14 DECL: TIPO ID '[' _CTE_INTEGER . ']' '[' _CTE_INTEGER ']' ';'
    15     | TIPO ID '[' _CTE_INTEGER . ']' ';'
 
-    ']'  deslocar, e ir ao estado 69
+    ']'  deslocar, e ir ao estado 61
+
+
+Estado 45
+
+   21 ID: ID ',' _ID .
+
+    $padrão  reduzir usando a regra 21 (ID)
+
+
+Estado 46
+
+   24 FUNCTION: '<' TIPO _FUNCTION _ID $@1 . '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
+
+    '('  deslocar, e ir ao estado 62
+
+
+Estado 47
+
+   49 SAIDA: _PRINT '(' . E ')'
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 68
+    F  ir ao estado 69
+
+
+Estado 48
+
+   50 SAIDA: _PRINTLN '(' . E ')'
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 70
+    F  ir ao estado 69
+
+
+Estado 49
+
+   46 CMD_INPUT: _INPUT '(' . LVALUE ')'
+
+    _ID  deslocar, e ir ao estado 27
+
+    LVALUE  ir ao estado 71
+
+
+Estado 50
+
+   47 CMD_IF: '<' _IF . '(' E ')' '>' CMDS _END _IF '>'
+   48       | '<' _IF . '(' E ')' '>' CMDS _ELSE CMDS _END _IF '>'
+
+    '('  deslocar, e ir ao estado 72
 
 
 Estado 51
 
-   31 ID: ID ',' _ID .
+   44 CMD_FOR: '<' _FOR . '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
+   45        | '<' _FOR . '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
 
-    $padrão  reduzir usando a regra 31 (ID)
+    '('  deslocar, e ir ao estado 73
 
 
 Estado 52
 
-   34 FUNCTION: '<' TIPO _FUNCTION _ID $@1 . '(' ARGS ')' '>' FUNC _END _FUNCTION '>'
+   30 CMDS: CMD CMDS .
 
-    '('  deslocar, e ir ao estado 70
+    $padrão  reduzir usando a regra 30 (CMDS)
 
 
 Estado 53
 
-   59 SAIDA: _PRINT '(' . E ')'
+   35 CMD: CMD_ATRIB ';' .
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 76
-    F  ir ao estado 77
+    $padrão  reduzir usando a regra 35 (CMD)
 
 
 Estado 54
 
-   60 SAIDA: _PRINTLN '(' . E ')'
+   36 CMD: CMD_ATOM ';' .
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 78
-    F  ir ao estado 77
+    $padrão  reduzir usando a regra 36 (CMD)
 
 
 Estado 55
 
-   56 CMD_INPUT: _INPUT '(' . LVALUE ')'
+   41 CMD_ATOM: LVALUE _MAISMAIS .
 
-    _ID  deslocar, e ir ao estado 27
-
-    LVALUE  ir ao estado 79
+    $padrão  reduzir usando a regra 41 (CMD_ATOM)
 
 
 Estado 56
 
-   57 CMD_IF: '<' _IF . '(' E ')' '>' CMDS _END _IF '>'
-   58       | '<' _IF . '(' E ')' '>' CMDS _ELSE CMDS _END _IF '>'
+   42 CMD_ATOM: LVALUE _MENOSMENOS .
 
-    '('  deslocar, e ir ao estado 80
+    $padrão  reduzir usando a regra 42 (CMD_ATOM)
 
 
 Estado 57
 
-   54 CMD_FOR: '<' _FOR . '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
-   55        | '<' _FOR . '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
+   38 CMD_ATRIB: LVALUE '=' . E
 
-    '('  deslocar, e ir ao estado 81
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 74
+    F  ir ao estado 69
 
 
 Estado 58
 
-   30 MAIN_ID: _ID .
+   39 CMD_ATRIB: LVALUE '[' . E ']' '[' E ']' '=' E
+   40          | LVALUE '[' . E ']' '=' E
 
-    $padrão  reduzir usando a regra 30 (MAIN_ID)
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 75
+    F  ir ao estado 69
 
 
 Estado 59
 
-   16 DECLA: MAIN_TIPO MAIN_ID . ';'
-   17      | MAIN_TIPO MAIN_ID . '[' _CTE_INTEGER ']' '[' _CTE_INTEGER ']' ';'
-   18      | MAIN_TIPO MAIN_ID . '[' _CTE_INTEGER ']' ';'
-   29 MAIN_ID: MAIN_ID . ',' _ID
+   37 CMD: CMD_INPUT ';' .
 
-    ';'  deslocar, e ir ao estado 82
-    '['  deslocar, e ir ao estado 83
-    ','  deslocar, e ir ao estado 84
+    $padrão  reduzir usando a regra 37 (CMD)
 
 
 Estado 60
 
-   40 CMDS: CMD CMDS .
+   32 CMD: SAIDA ';' .
 
-    $padrão  reduzir usando a regra 40 (CMDS)
+    $padrão  reduzir usando a regra 32 (CMD)
 
 
 Estado 61
 
-   45 CMD: CMD_ATRIB ';' .
+   14 DECL: TIPO ID '[' _CTE_INTEGER ']' . '[' _CTE_INTEGER ']' ';'
+   15     | TIPO ID '[' _CTE_INTEGER ']' . ';'
 
-    $padrão  reduzir usando a regra 45 (CMD)
+    ';'  deslocar, e ir ao estado 76
+    '['  deslocar, e ir ao estado 77
 
 
 Estado 62
 
-   46 CMD: CMD_ATOM ';' .
-
-    $padrão  reduzir usando a regra 46 (CMD)
-
-
-Estado 63
-
-   51 CMD_ATOM: LVALUE _MAISMAIS .
-
-    $padrão  reduzir usando a regra 51 (CMD_ATOM)
-
-
-Estado 64
-
-   52 CMD_ATOM: LVALUE _MENOSMENOS .
-
-    $padrão  reduzir usando a regra 52 (CMD_ATOM)
-
-
-Estado 65
-
-   48 CMD_ATRIB: LVALUE '=' . E
-
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 85
-    F  ir ao estado 77
-
-
-Estado 66
-
-   49 CMD_ATRIB: LVALUE '[' . E ']' '[' E ']' '=' E
-   50          | LVALUE '[' . E ']' '=' E
-
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 86
-    F  ir ao estado 77
-
-
-Estado 67
-
-   47 CMD: CMD_INPUT ';' .
-
-    $padrão  reduzir usando a regra 47 (CMD)
-
-
-Estado 68
-
-   42 CMD: SAIDA ';' .
-
-    $padrão  reduzir usando a regra 42 (CMD)
-
-
-Estado 69
-
-   14 DECL: TIPO ID '[' _CTE_INTEGER ']' . '[' _CTE_INTEGER ']' ';'
-   15     | TIPO ID '[' _CTE_INTEGER ']' . ';'
-
-    ';'  deslocar, e ir ao estado 87
-    '['  deslocar, e ir ao estado 88
-
-
-Estado 70
-
-   34 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' . ARGS ')' '>' FUNC _END _FUNCTION '>'
+   24 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' . ARGS ')' '>' FUNC _END _FUNCTION '>'
 
     _INT     deslocar, e ir ao estado 1
     _FLOAT   deslocar, e ir ao estado 2
@@ -873,647 +789,703 @@ Estado 70
     _CHAR    deslocar, e ir ao estado 4
     _STRING  deslocar, e ir ao estado 5
 
-    $padrão  reduzir usando a regra 36 (ARGS)
+    $padrão  reduzir usando a regra 26 (ARGS)
 
-    TIPO  ir ao estado 89
-    ARGS  ir ao estado 90
-    IDS   ir ao estado 91
+    TIPO  ir ao estado 78
+    ARGS  ir ao estado 79
+    IDS   ir ao estado 80
+
+
+Estado 63
+
+   66 F: _ID .
+   67  | _ID . '[' E ']' '[' E ']'
+   68  | _ID . '[' E ']'
+
+    '['  deslocar, e ir ao estado 81
+
+    $padrão  reduzir usando a regra 66 (F)
+
+
+Estado 64
+
+   64 F: _CTE_FLOAT .
+
+    $padrão  reduzir usando a regra 64 (F)
+
+
+Estado 65
+
+   63 F: _CTE_STRING .
+
+    $padrão  reduzir usando a regra 63 (F)
+
+
+Estado 66
+
+   65 F: _CTE_INTEGER .
+
+    $padrão  reduzir usando a regra 65 (F)
+
+
+Estado 67
+
+   69 F: '(' . E ')'
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 82
+    F  ir ao estado 69
+
+
+Estado 68
+
+   49 SAIDA: _PRINT '(' E . ')'
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
+
+    _IGUALDADE   deslocar, e ir ao estado 83
+    _DIFERENTE   deslocar, e ir ao estado 84
+    _MAIORIGUAL  deslocar, e ir ao estado 85
+    _MENORIGUAL  deslocar, e ir ao estado 86
+    '<'          deslocar, e ir ao estado 87
+    '>'          deslocar, e ir ao estado 88
+    '+'          deslocar, e ir ao estado 89
+    '-'          deslocar, e ir ao estado 90
+    '*'          deslocar, e ir ao estado 91
+    '/'          deslocar, e ir ao estado 92
+    '%'          deslocar, e ir ao estado 93
+    ')'          deslocar, e ir ao estado 94
+
+
+Estado 69
+
+   62 E: F .
+
+    $padrão  reduzir usando a regra 62 (E)
+
+
+Estado 70
+
+   50 SAIDA: _PRINTLN '(' E . ')'
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
+
+    _IGUALDADE   deslocar, e ir ao estado 83
+    _DIFERENTE   deslocar, e ir ao estado 84
+    _MAIORIGUAL  deslocar, e ir ao estado 85
+    _MENORIGUAL  deslocar, e ir ao estado 86
+    '<'          deslocar, e ir ao estado 87
+    '>'          deslocar, e ir ao estado 88
+    '+'          deslocar, e ir ao estado 89
+    '-'          deslocar, e ir ao estado 90
+    '*'          deslocar, e ir ao estado 91
+    '/'          deslocar, e ir ao estado 92
+    '%'          deslocar, e ir ao estado 93
+    ')'          deslocar, e ir ao estado 95
 
 
 Estado 71
 
-   76 F: _ID .
-   77  | _ID . '[' E ']' '[' E ']'
-   78  | _ID . '[' E ']'
+   46 CMD_INPUT: _INPUT '(' LVALUE . ')'
 
-    '['  deslocar, e ir ao estado 92
-
-    $padrão  reduzir usando a regra 76 (F)
+    ')'  deslocar, e ir ao estado 96
 
 
 Estado 72
 
-   74 F: _CTE_FLOAT .
+   47 CMD_IF: '<' _IF '(' . E ')' '>' CMDS _END _IF '>'
+   48       | '<' _IF '(' . E ')' '>' CMDS _ELSE CMDS _END _IF '>'
 
-    $padrão  reduzir usando a regra 74 (F)
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 97
+    F  ir ao estado 69
 
 
 Estado 73
 
-   73 F: _CTE_STRING .
+   44 CMD_FOR: '<' _FOR '(' . CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
+   45        | '<' _FOR '(' . CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
 
-    $padrão  reduzir usando a regra 73 (F)
+    _ID  deslocar, e ir ao estado 27
+
+    CMD_ATRIB  ir ao estado 98
+    LVALUE     ir ao estado 99
 
 
 Estado 74
 
-   75 F: _CTE_INTEGER .
+   38 CMD_ATRIB: LVALUE '=' E .
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
 
-    $padrão  reduzir usando a regra 75 (F)
+    _IGUALDADE   deslocar, e ir ao estado 83
+    _DIFERENTE   deslocar, e ir ao estado 84
+    _MAIORIGUAL  deslocar, e ir ao estado 85
+    _MENORIGUAL  deslocar, e ir ao estado 86
+    '<'          deslocar, e ir ao estado 87
+    '>'          deslocar, e ir ao estado 88
+    '+'          deslocar, e ir ao estado 89
+    '-'          deslocar, e ir ao estado 90
+    '*'          deslocar, e ir ao estado 91
+    '/'          deslocar, e ir ao estado 92
+    '%'          deslocar, e ir ao estado 93
+
+    $padrão  reduzir usando a regra 38 (CMD_ATRIB)
 
 
 Estado 75
 
-   79 F: '(' . E ')'
+   39 CMD_ATRIB: LVALUE '[' E . ']' '[' E ']' '=' E
+   40          | LVALUE '[' E . ']' '=' E
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 93
-    F  ir ao estado 77
+    _IGUALDADE   deslocar, e ir ao estado 83
+    _DIFERENTE   deslocar, e ir ao estado 84
+    _MAIORIGUAL  deslocar, e ir ao estado 85
+    _MENORIGUAL  deslocar, e ir ao estado 86
+    '<'          deslocar, e ir ao estado 87
+    '>'          deslocar, e ir ao estado 88
+    '+'          deslocar, e ir ao estado 89
+    '-'          deslocar, e ir ao estado 90
+    '*'          deslocar, e ir ao estado 91
+    '/'          deslocar, e ir ao estado 92
+    '%'          deslocar, e ir ao estado 93
+    ']'          deslocar, e ir ao estado 100
 
 
 Estado 76
-
-   59 SAIDA: _PRINT '(' E . ')'
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    _IGUALDADE   deslocar, e ir ao estado 94
-    _DIFERENTE   deslocar, e ir ao estado 95
-    _MAIORIGUAL  deslocar, e ir ao estado 96
-    _MENORIGUAL  deslocar, e ir ao estado 97
-    '<'          deslocar, e ir ao estado 98
-    '>'          deslocar, e ir ao estado 99
-    '+'          deslocar, e ir ao estado 100
-    '-'          deslocar, e ir ao estado 101
-    '*'          deslocar, e ir ao estado 102
-    '/'          deslocar, e ir ao estado 103
-    '%'          deslocar, e ir ao estado 104
-    ')'          deslocar, e ir ao estado 105
-
-
-Estado 77
-
-   72 E: F .
-
-    $padrão  reduzir usando a regra 72 (E)
-
-
-Estado 78
-
-   60 SAIDA: _PRINTLN '(' E . ')'
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    _IGUALDADE   deslocar, e ir ao estado 94
-    _DIFERENTE   deslocar, e ir ao estado 95
-    _MAIORIGUAL  deslocar, e ir ao estado 96
-    _MENORIGUAL  deslocar, e ir ao estado 97
-    '<'          deslocar, e ir ao estado 98
-    '>'          deslocar, e ir ao estado 99
-    '+'          deslocar, e ir ao estado 100
-    '-'          deslocar, e ir ao estado 101
-    '*'          deslocar, e ir ao estado 102
-    '/'          deslocar, e ir ao estado 103
-    '%'          deslocar, e ir ao estado 104
-    ')'          deslocar, e ir ao estado 106
-
-
-Estado 79
-
-   56 CMD_INPUT: _INPUT '(' LVALUE . ')'
-
-    ')'  deslocar, e ir ao estado 107
-
-
-Estado 80
-
-   57 CMD_IF: '<' _IF '(' . E ')' '>' CMDS _END _IF '>'
-   58       | '<' _IF '(' . E ')' '>' CMDS _ELSE CMDS _END _IF '>'
-
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 108
-    F  ir ao estado 77
-
-
-Estado 81
-
-   54 CMD_FOR: '<' _FOR '(' . CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
-   55        | '<' _FOR '(' . CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
-
-    _ID  deslocar, e ir ao estado 27
-
-    CMD_ATRIB  ir ao estado 109
-    LVALUE     ir ao estado 110
-
-
-Estado 82
-
-   16 DECLA: MAIN_TIPO MAIN_ID ';' .
-
-    $padrão  reduzir usando a regra 16 (DECLA)
-
-
-Estado 83
-
-   17 DECLA: MAIN_TIPO MAIN_ID '[' . _CTE_INTEGER ']' '[' _CTE_INTEGER ']' ';'
-   18      | MAIN_TIPO MAIN_ID '[' . _CTE_INTEGER ']' ';'
-
-    _CTE_INTEGER  deslocar, e ir ao estado 111
-
-
-Estado 84
-
-   29 MAIN_ID: MAIN_ID ',' . _ID
-
-    _ID  deslocar, e ir ao estado 112
-
-
-Estado 85
-
-   48 CMD_ATRIB: LVALUE '=' E .
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    _IGUALDADE   deslocar, e ir ao estado 94
-    _DIFERENTE   deslocar, e ir ao estado 95
-    _MAIORIGUAL  deslocar, e ir ao estado 96
-    _MENORIGUAL  deslocar, e ir ao estado 97
-    '<'          deslocar, e ir ao estado 98
-    '>'          deslocar, e ir ao estado 99
-    '+'          deslocar, e ir ao estado 100
-    '-'          deslocar, e ir ao estado 101
-    '*'          deslocar, e ir ao estado 102
-    '/'          deslocar, e ir ao estado 103
-    '%'          deslocar, e ir ao estado 104
-
-    $padrão  reduzir usando a regra 48 (CMD_ATRIB)
-
-
-Estado 86
-
-   49 CMD_ATRIB: LVALUE '[' E . ']' '[' E ']' '=' E
-   50          | LVALUE '[' E . ']' '=' E
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    _IGUALDADE   deslocar, e ir ao estado 94
-    _DIFERENTE   deslocar, e ir ao estado 95
-    _MAIORIGUAL  deslocar, e ir ao estado 96
-    _MENORIGUAL  deslocar, e ir ao estado 97
-    '<'          deslocar, e ir ao estado 98
-    '>'          deslocar, e ir ao estado 99
-    '+'          deslocar, e ir ao estado 100
-    '-'          deslocar, e ir ao estado 101
-    '*'          deslocar, e ir ao estado 102
-    '/'          deslocar, e ir ao estado 103
-    '%'          deslocar, e ir ao estado 104
-    ']'          deslocar, e ir ao estado 113
-
-
-Estado 87
 
    15 DECL: TIPO ID '[' _CTE_INTEGER ']' ';' .
 
     $padrão  reduzir usando a regra 15 (DECL)
 
 
-Estado 88
+Estado 77
 
    14 DECL: TIPO ID '[' _CTE_INTEGER ']' '[' . _CTE_INTEGER ']' ';'
 
-    _CTE_INTEGER  deslocar, e ir ao estado 114
+    _CTE_INTEGER  deslocar, e ir ao estado 101
+
+
+Estado 78
+
+   27 IDS: TIPO . _ID ',' IDS
+   28    | TIPO . _ID
+
+    _ID  deslocar, e ir ao estado 102
+
+
+Estado 79
+
+   24 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS . ')' '>' FUNC _END _FUNCTION '>'
+
+    ')'  deslocar, e ir ao estado 103
+
+
+Estado 80
+
+   25 ARGS: IDS .
+
+    $padrão  reduzir usando a regra 25 (ARGS)
+
+
+Estado 81
+
+   67 F: _ID '[' . E ']' '[' E ']'
+   68  | _ID '[' . E ']'
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 104
+    F  ir ao estado 69
+
+
+Estado 82
+
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
+   69 F: '(' E . ')'
+
+    _IGUALDADE   deslocar, e ir ao estado 83
+    _DIFERENTE   deslocar, e ir ao estado 84
+    _MAIORIGUAL  deslocar, e ir ao estado 85
+    _MENORIGUAL  deslocar, e ir ao estado 86
+    '<'          deslocar, e ir ao estado 87
+    '>'          deslocar, e ir ao estado 88
+    '+'          deslocar, e ir ao estado 89
+    '-'          deslocar, e ir ao estado 90
+    '*'          deslocar, e ir ao estado 91
+    '/'          deslocar, e ir ao estado 92
+    '%'          deslocar, e ir ao estado 93
+    ')'          deslocar, e ir ao estado 105
+
+
+Estado 83
+
+   58 E: E _IGUALDADE . E
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 106
+    F  ir ao estado 69
+
+
+Estado 84
+
+   59 E: E _DIFERENTE . E
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 107
+    F  ir ao estado 69
+
+
+Estado 85
+
+   60 E: E _MAIORIGUAL . E
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 108
+    F  ir ao estado 69
+
+
+Estado 86
+
+   61 E: E _MENORIGUAL . E
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 109
+    F  ir ao estado 69
+
+
+Estado 87
+
+   57 E: E '<' . E
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 110
+    F  ir ao estado 69
+
+
+Estado 88
+
+   56 E: E '>' . E
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 111
+    F  ir ao estado 69
 
 
 Estado 89
 
-   37 IDS: TIPO . _ID ',' IDS
-   38    | TIPO . _ID
+   51 E: E '+' . E
 
-    _ID  deslocar, e ir ao estado 115
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 112
+    F  ir ao estado 69
 
 
 Estado 90
 
-   34 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS . ')' '>' FUNC _END _FUNCTION '>'
+   52 E: E '-' . E
 
-    ')'  deslocar, e ir ao estado 116
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 113
+    F  ir ao estado 69
 
 
 Estado 91
 
-   35 ARGS: IDS .
+   53 E: E '*' . E
 
-    $padrão  reduzir usando a regra 35 (ARGS)
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 114
+    F  ir ao estado 69
 
 
 Estado 92
 
-   77 F: _ID '[' . E ']' '[' E ']'
-   78  | _ID '[' . E ']'
+   54 E: E '/' . E
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
 
-    E  ir ao estado 117
-    F  ir ao estado 77
+    E  ir ao estado 115
+    F  ir ao estado 69
 
 
 Estado 93
 
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-   79 F: '(' E . ')'
+   55 E: E '%' . E
 
-    _IGUALDADE   deslocar, e ir ao estado 94
-    _DIFERENTE   deslocar, e ir ao estado 95
-    _MAIORIGUAL  deslocar, e ir ao estado 96
-    _MENORIGUAL  deslocar, e ir ao estado 97
-    '<'          deslocar, e ir ao estado 98
-    '>'          deslocar, e ir ao estado 99
-    '+'          deslocar, e ir ao estado 100
-    '-'          deslocar, e ir ao estado 101
-    '*'          deslocar, e ir ao estado 102
-    '/'          deslocar, e ir ao estado 103
-    '%'          deslocar, e ir ao estado 104
-    ')'          deslocar, e ir ao estado 118
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 116
+    F  ir ao estado 69
 
 
 Estado 94
 
-   68 E: E _IGUALDADE . E
+   49 SAIDA: _PRINT '(' E ')' .
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 119
-    F  ir ao estado 77
+    $padrão  reduzir usando a regra 49 (SAIDA)
 
 
 Estado 95
 
-   69 E: E _DIFERENTE . E
+   50 SAIDA: _PRINTLN '(' E ')' .
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 120
-    F  ir ao estado 77
+    $padrão  reduzir usando a regra 50 (SAIDA)
 
 
 Estado 96
 
-   70 E: E _MAIORIGUAL . E
+   46 CMD_INPUT: _INPUT '(' LVALUE ')' .
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 121
-    F  ir ao estado 77
+    $padrão  reduzir usando a regra 46 (CMD_INPUT)
 
 
 Estado 97
 
-   71 E: E _MENORIGUAL . E
+   47 CMD_IF: '<' _IF '(' E . ')' '>' CMDS _END _IF '>'
+   48       | '<' _IF '(' E . ')' '>' CMDS _ELSE CMDS _END _IF '>'
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 122
-    F  ir ao estado 77
+    _IGUALDADE   deslocar, e ir ao estado 83
+    _DIFERENTE   deslocar, e ir ao estado 84
+    _MAIORIGUAL  deslocar, e ir ao estado 85
+    _MENORIGUAL  deslocar, e ir ao estado 86
+    '<'          deslocar, e ir ao estado 87
+    '>'          deslocar, e ir ao estado 88
+    '+'          deslocar, e ir ao estado 89
+    '-'          deslocar, e ir ao estado 90
+    '*'          deslocar, e ir ao estado 91
+    '/'          deslocar, e ir ao estado 92
+    '%'          deslocar, e ir ao estado 93
+    ')'          deslocar, e ir ao estado 117
 
 
 Estado 98
 
-   67 E: E '<' . E
+   44 CMD_FOR: '<' _FOR '(' CMD_ATRIB . ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
+   45        | '<' _FOR '(' CMD_ATRIB . ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 123
-    F  ir ao estado 77
+    ';'  deslocar, e ir ao estado 118
 
 
 Estado 99
 
-   66 E: E '>' . E
+   38 CMD_ATRIB: LVALUE . '=' E
+   39          | LVALUE . '[' E ']' '[' E ']' '=' E
+   40          | LVALUE . '[' E ']' '=' E
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 124
-    F  ir ao estado 77
+    '='  deslocar, e ir ao estado 57
+    '['  deslocar, e ir ao estado 58
 
 
 Estado 100
 
-   61 E: E '+' . E
+   39 CMD_ATRIB: LVALUE '[' E ']' . '[' E ']' '=' E
+   40          | LVALUE '[' E ']' . '=' E
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 125
-    F  ir ao estado 77
+    '='  deslocar, e ir ao estado 119
+    '['  deslocar, e ir ao estado 120
 
 
 Estado 101
 
-   62 E: E '-' . E
+   14 DECL: TIPO ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER . ']' ';'
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 126
-    F  ir ao estado 77
+    ']'  deslocar, e ir ao estado 121
 
 
 Estado 102
 
-   63 E: E '*' . E
+   27 IDS: TIPO _ID . ',' IDS
+   28    | TIPO _ID .
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
+    ','  deslocar, e ir ao estado 122
 
-    E  ir ao estado 127
-    F  ir ao estado 77
+    $padrão  reduzir usando a regra 28 (IDS)
 
 
 Estado 103
 
-   64 E: E '/' . E
+   24 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' . '>' FUNC _END _FUNCTION '>'
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 128
-    F  ir ao estado 77
+    '>'  deslocar, e ir ao estado 123
 
 
 Estado 104
 
-   65 E: E '%' . E
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
+   67 F: _ID '[' E . ']' '[' E ']'
+   68  | _ID '[' E . ']'
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 129
-    F  ir ao estado 77
+    _IGUALDADE   deslocar, e ir ao estado 83
+    _DIFERENTE   deslocar, e ir ao estado 84
+    _MAIORIGUAL  deslocar, e ir ao estado 85
+    _MENORIGUAL  deslocar, e ir ao estado 86
+    '<'          deslocar, e ir ao estado 87
+    '>'          deslocar, e ir ao estado 88
+    '+'          deslocar, e ir ao estado 89
+    '-'          deslocar, e ir ao estado 90
+    '*'          deslocar, e ir ao estado 91
+    '/'          deslocar, e ir ao estado 92
+    '%'          deslocar, e ir ao estado 93
+    ']'          deslocar, e ir ao estado 124
 
 
 Estado 105
 
-   59 SAIDA: _PRINT '(' E ')' .
+   69 F: '(' E ')' .
 
-    $padrão  reduzir usando a regra 59 (SAIDA)
+    $padrão  reduzir usando a regra 69 (F)
 
 
 Estado 106
 
-   60 SAIDA: _PRINTLN '(' E ')' .
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   58  | E _IGUALDADE E .
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
 
-    $padrão  reduzir usando a regra 60 (SAIDA)
+    '+'  deslocar, e ir ao estado 89
+    '-'  deslocar, e ir ao estado 90
+    '*'  deslocar, e ir ao estado 91
+    '/'  deslocar, e ir ao estado 92
+    '%'  deslocar, e ir ao estado 93
+
+    _IGUALDADE   erro (não associativo)
+    _DIFERENTE   erro (não associativo)
+    _MAIORIGUAL  erro (não associativo)
+    _MENORIGUAL  erro (não associativo)
+    '<'          erro (não associativo)
+    '>'          erro (não associativo)
+
+    $padrão  reduzir usando a regra 58 (E)
 
 
 Estado 107
 
-   56 CMD_INPUT: _INPUT '(' LVALUE ')' .
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   59  | E _DIFERENTE E .
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
 
-    $padrão  reduzir usando a regra 56 (CMD_INPUT)
+    '+'  deslocar, e ir ao estado 89
+    '-'  deslocar, e ir ao estado 90
+    '*'  deslocar, e ir ao estado 91
+    '/'  deslocar, e ir ao estado 92
+    '%'  deslocar, e ir ao estado 93
+
+    _IGUALDADE   erro (não associativo)
+    _DIFERENTE   erro (não associativo)
+    _MAIORIGUAL  erro (não associativo)
+    _MENORIGUAL  erro (não associativo)
+    '<'          erro (não associativo)
+    '>'          erro (não associativo)
+
+    $padrão  reduzir usando a regra 59 (E)
 
 
 Estado 108
 
-   57 CMD_IF: '<' _IF '(' E . ')' '>' CMDS _END _IF '>'
-   58       | '<' _IF '(' E . ')' '>' CMDS _ELSE CMDS _END _IF '>'
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   60  | E _MAIORIGUAL E .
+   61  | E . _MENORIGUAL E
 
-    _IGUALDADE   deslocar, e ir ao estado 94
-    _DIFERENTE   deslocar, e ir ao estado 95
-    _MAIORIGUAL  deslocar, e ir ao estado 96
-    _MENORIGUAL  deslocar, e ir ao estado 97
-    '<'          deslocar, e ir ao estado 98
-    '>'          deslocar, e ir ao estado 99
-    '+'          deslocar, e ir ao estado 100
-    '-'          deslocar, e ir ao estado 101
-    '*'          deslocar, e ir ao estado 102
-    '/'          deslocar, e ir ao estado 103
-    '%'          deslocar, e ir ao estado 104
-    ')'          deslocar, e ir ao estado 130
+    '+'  deslocar, e ir ao estado 89
+    '-'  deslocar, e ir ao estado 90
+    '*'  deslocar, e ir ao estado 91
+    '/'  deslocar, e ir ao estado 92
+    '%'  deslocar, e ir ao estado 93
+
+    _IGUALDADE   erro (não associativo)
+    _DIFERENTE   erro (não associativo)
+    _MAIORIGUAL  erro (não associativo)
+    _MENORIGUAL  erro (não associativo)
+    '<'          erro (não associativo)
+    '>'          erro (não associativo)
+
+    $padrão  reduzir usando a regra 60 (E)
 
 
 Estado 109
 
-   54 CMD_FOR: '<' _FOR '(' CMD_ATRIB . ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
-   55        | '<' _FOR '(' CMD_ATRIB . ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
+   61  | E _MENORIGUAL E .
 
-    ';'  deslocar, e ir ao estado 131
-
-
-Estado 110
-
-   48 CMD_ATRIB: LVALUE . '=' E
-   49          | LVALUE . '[' E ']' '[' E ']' '=' E
-   50          | LVALUE . '[' E ']' '=' E
-
-    '='  deslocar, e ir ao estado 65
-    '['  deslocar, e ir ao estado 66
-
-
-Estado 111
-
-   17 DECLA: MAIN_TIPO MAIN_ID '[' _CTE_INTEGER . ']' '[' _CTE_INTEGER ']' ';'
-   18      | MAIN_TIPO MAIN_ID '[' _CTE_INTEGER . ']' ';'
-
-    ']'  deslocar, e ir ao estado 132
-
-
-Estado 112
-
-   29 MAIN_ID: MAIN_ID ',' _ID .
-
-    $padrão  reduzir usando a regra 29 (MAIN_ID)
-
-
-Estado 113
-
-   49 CMD_ATRIB: LVALUE '[' E ']' . '[' E ']' '=' E
-   50          | LVALUE '[' E ']' . '=' E
-
-    '='  deslocar, e ir ao estado 133
-    '['  deslocar, e ir ao estado 134
-
-
-Estado 114
-
-   14 DECL: TIPO ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER . ']' ';'
-
-    ']'  deslocar, e ir ao estado 135
-
-
-Estado 115
-
-   37 IDS: TIPO _ID . ',' IDS
-   38    | TIPO _ID .
-
-    ','  deslocar, e ir ao estado 136
-
-    $padrão  reduzir usando a regra 38 (IDS)
-
-
-Estado 116
-
-   34 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' . '>' FUNC _END _FUNCTION '>'
-
-    '>'  deslocar, e ir ao estado 137
-
-
-Estado 117
-
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-   77 F: _ID '[' E . ']' '[' E ']'
-   78  | _ID '[' E . ']'
-
-    _IGUALDADE   deslocar, e ir ao estado 94
-    _DIFERENTE   deslocar, e ir ao estado 95
-    _MAIORIGUAL  deslocar, e ir ao estado 96
-    _MENORIGUAL  deslocar, e ir ao estado 97
-    '<'          deslocar, e ir ao estado 98
-    '>'          deslocar, e ir ao estado 99
-    '+'          deslocar, e ir ao estado 100
-    '-'          deslocar, e ir ao estado 101
-    '*'          deslocar, e ir ao estado 102
-    '/'          deslocar, e ir ao estado 103
-    '%'          deslocar, e ir ao estado 104
-    ']'          deslocar, e ir ao estado 138
-
-
-Estado 118
-
-   79 F: '(' E ')' .
-
-    $padrão  reduzir usando a regra 79 (F)
-
-
-Estado 119
-
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   68  | E _IGUALDADE E .
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    '+'  deslocar, e ir ao estado 100
-    '-'  deslocar, e ir ao estado 101
-    '*'  deslocar, e ir ao estado 102
-    '/'  deslocar, e ir ao estado 103
-    '%'  deslocar, e ir ao estado 104
+    '+'  deslocar, e ir ao estado 89
+    '-'  deslocar, e ir ao estado 90
+    '*'  deslocar, e ir ao estado 91
+    '/'  deslocar, e ir ao estado 92
+    '%'  deslocar, e ir ao estado 93
 
     _IGUALDADE   erro (não associativo)
     _DIFERENTE   erro (não associativo)
@@ -1521,333 +1493,231 @@ Estado 119
     _MENORIGUAL  erro (não associativo)
     '<'          erro (não associativo)
     '>'          erro (não associativo)
-
-    $padrão  reduzir usando a regra 68 (E)
-
-
-Estado 120
-
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   69  | E _DIFERENTE E .
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    '+'  deslocar, e ir ao estado 100
-    '-'  deslocar, e ir ao estado 101
-    '*'  deslocar, e ir ao estado 102
-    '/'  deslocar, e ir ao estado 103
-    '%'  deslocar, e ir ao estado 104
-
-    _IGUALDADE   erro (não associativo)
-    _DIFERENTE   erro (não associativo)
-    _MAIORIGUAL  erro (não associativo)
-    _MENORIGUAL  erro (não associativo)
-    '<'          erro (não associativo)
-    '>'          erro (não associativo)
-
-    $padrão  reduzir usando a regra 69 (E)
-
-
-Estado 121
-
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   70  | E _MAIORIGUAL E .
-   71  | E . _MENORIGUAL E
-
-    '+'  deslocar, e ir ao estado 100
-    '-'  deslocar, e ir ao estado 101
-    '*'  deslocar, e ir ao estado 102
-    '/'  deslocar, e ir ao estado 103
-    '%'  deslocar, e ir ao estado 104
-
-    _IGUALDADE   erro (não associativo)
-    _DIFERENTE   erro (não associativo)
-    _MAIORIGUAL  erro (não associativo)
-    _MENORIGUAL  erro (não associativo)
-    '<'          erro (não associativo)
-    '>'          erro (não associativo)
-
-    $padrão  reduzir usando a regra 70 (E)
-
-
-Estado 122
-
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-   71  | E _MENORIGUAL E .
-
-    '+'  deslocar, e ir ao estado 100
-    '-'  deslocar, e ir ao estado 101
-    '*'  deslocar, e ir ao estado 102
-    '/'  deslocar, e ir ao estado 103
-    '%'  deslocar, e ir ao estado 104
-
-    _IGUALDADE   erro (não associativo)
-    _DIFERENTE   erro (não associativo)
-    _MAIORIGUAL  erro (não associativo)
-    _MENORIGUAL  erro (não associativo)
-    '<'          erro (não associativo)
-    '>'          erro (não associativo)
-
-    $padrão  reduzir usando a regra 71 (E)
-
-
-Estado 123
-
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   67  | E '<' E .
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    '+'  deslocar, e ir ao estado 100
-    '-'  deslocar, e ir ao estado 101
-    '*'  deslocar, e ir ao estado 102
-    '/'  deslocar, e ir ao estado 103
-    '%'  deslocar, e ir ao estado 104
-
-    _IGUALDADE   erro (não associativo)
-    _DIFERENTE   erro (não associativo)
-    _MAIORIGUAL  erro (não associativo)
-    _MENORIGUAL  erro (não associativo)
-    '<'          erro (não associativo)
-    '>'          erro (não associativo)
-
-    $padrão  reduzir usando a regra 67 (E)
-
-
-Estado 124
-
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   66  | E '>' E .
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    '+'  deslocar, e ir ao estado 100
-    '-'  deslocar, e ir ao estado 101
-    '*'  deslocar, e ir ao estado 102
-    '/'  deslocar, e ir ao estado 103
-    '%'  deslocar, e ir ao estado 104
-
-    _IGUALDADE   erro (não associativo)
-    _DIFERENTE   erro (não associativo)
-    _MAIORIGUAL  erro (não associativo)
-    _MENORIGUAL  erro (não associativo)
-    '<'          erro (não associativo)
-    '>'          erro (não associativo)
-
-    $padrão  reduzir usando a regra 66 (E)
-
-
-Estado 125
-
-   61 E: E . '+' E
-   61  | E '+' E .
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    '*'  deslocar, e ir ao estado 102
-    '/'  deslocar, e ir ao estado 103
-    '%'  deslocar, e ir ao estado 104
 
     $padrão  reduzir usando a regra 61 (E)
 
 
-Estado 126
+Estado 110
 
-   61 E: E . '+' E
-   62  | E . '-' E
-   62  | E '-' E .
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   57  | E '<' E .
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
 
-    '*'  deslocar, e ir ao estado 102
-    '/'  deslocar, e ir ao estado 103
-    '%'  deslocar, e ir ao estado 104
+    '+'  deslocar, e ir ao estado 89
+    '-'  deslocar, e ir ao estado 90
+    '*'  deslocar, e ir ao estado 91
+    '/'  deslocar, e ir ao estado 92
+    '%'  deslocar, e ir ao estado 93
 
-    $padrão  reduzir usando a regra 62 (E)
+    _IGUALDADE   erro (não associativo)
+    _DIFERENTE   erro (não associativo)
+    _MAIORIGUAL  erro (não associativo)
+    _MENORIGUAL  erro (não associativo)
+    '<'          erro (não associativo)
+    '>'          erro (não associativo)
 
-
-Estado 127
-
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   63  | E '*' E .
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    $padrão  reduzir usando a regra 63 (E)
+    $padrão  reduzir usando a regra 57 (E)
 
 
-Estado 128
+Estado 111
 
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   64  | E '/' E .
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   56  | E '>' E .
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
 
-    $padrão  reduzir usando a regra 64 (E)
+    '+'  deslocar, e ir ao estado 89
+    '-'  deslocar, e ir ao estado 90
+    '*'  deslocar, e ir ao estado 91
+    '/'  deslocar, e ir ao estado 92
+    '%'  deslocar, e ir ao estado 93
 
+    _IGUALDADE   erro (não associativo)
+    _DIFERENTE   erro (não associativo)
+    _MAIORIGUAL  erro (não associativo)
+    _MENORIGUAL  erro (não associativo)
+    '<'          erro (não associativo)
+    '>'          erro (não associativo)
 
-Estado 129
-
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   65  | E '%' E .
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    $padrão  reduzir usando a regra 65 (E)
+    $padrão  reduzir usando a regra 56 (E)
 
 
-Estado 130
+Estado 112
 
-   57 CMD_IF: '<' _IF '(' E ')' . '>' CMDS _END _IF '>'
-   58       | '<' _IF '(' E ')' . '>' CMDS _ELSE CMDS _END _IF '>'
+   51 E: E . '+' E
+   51  | E '+' E .
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
 
-    '>'  deslocar, e ir ao estado 139
+    '*'  deslocar, e ir ao estado 91
+    '/'  deslocar, e ir ao estado 92
+    '%'  deslocar, e ir ao estado 93
 
-
-Estado 131
-
-   54 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' . E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
-   55        | '<' _FOR '(' CMD_ATRIB ';' . E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
-
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 140
-    F  ir ao estado 77
-
-
-Estado 132
-
-   17 DECLA: MAIN_TIPO MAIN_ID '[' _CTE_INTEGER ']' . '[' _CTE_INTEGER ']' ';'
-   18      | MAIN_TIPO MAIN_ID '[' _CTE_INTEGER ']' . ';'
-
-    ';'  deslocar, e ir ao estado 141
-    '['  deslocar, e ir ao estado 142
+    $padrão  reduzir usando a regra 51 (E)
 
 
-Estado 133
+Estado 113
 
-   50 CMD_ATRIB: LVALUE '[' E ']' '=' . E
+   51 E: E . '+' E
+   52  | E . '-' E
+   52  | E '-' E .
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
+    '*'  deslocar, e ir ao estado 91
+    '/'  deslocar, e ir ao estado 92
+    '%'  deslocar, e ir ao estado 93
 
-    E  ir ao estado 143
-    F  ir ao estado 77
-
-
-Estado 134
-
-   49 CMD_ATRIB: LVALUE '[' E ']' '[' . E ']' '=' E
-
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 144
-    F  ir ao estado 77
+    $padrão  reduzir usando a regra 52 (E)
 
 
-Estado 135
+Estado 114
+
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   53  | E '*' E .
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
+
+    $padrão  reduzir usando a regra 53 (E)
+
+
+Estado 115
+
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   54  | E '/' E .
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
+
+    $padrão  reduzir usando a regra 54 (E)
+
+
+Estado 116
+
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   55  | E '%' E .
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
+
+    $padrão  reduzir usando a regra 55 (E)
+
+
+Estado 117
+
+   47 CMD_IF: '<' _IF '(' E ')' . '>' CMDS _END _IF '>'
+   48       | '<' _IF '(' E ')' . '>' CMDS _ELSE CMDS _END _IF '>'
+
+    '>'  deslocar, e ir ao estado 125
+
+
+Estado 118
+
+   44 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' . E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
+   45        | '<' _FOR '(' CMD_ATRIB ';' . E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 126
+    F  ir ao estado 69
+
+
+Estado 119
+
+   40 CMD_ATRIB: LVALUE '[' E ']' '=' . E
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 127
+    F  ir ao estado 69
+
+
+Estado 120
+
+   39 CMD_ATRIB: LVALUE '[' E ']' '[' . E ']' '=' E
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 128
+    F  ir ao estado 69
+
+
+Estado 121
 
    14 DECL: TIPO ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER ']' . ';'
 
-    ';'  deslocar, e ir ao estado 145
+    ';'  deslocar, e ir ao estado 129
 
 
-Estado 136
+Estado 122
 
-   37 IDS: TIPO _ID ',' . IDS
+   27 IDS: TIPO _ID ',' . IDS
 
     _INT     deslocar, e ir ao estado 1
     _FLOAT   deslocar, e ir ao estado 2
@@ -1855,179 +1725,165 @@ Estado 136
     _CHAR    deslocar, e ir ao estado 4
     _STRING  deslocar, e ir ao estado 5
 
-    TIPO  ir ao estado 89
-    IDS   ir ao estado 146
+    TIPO  ir ao estado 78
+    IDS   ir ao estado 130
 
 
-Estado 137
+Estado 123
 
-   34 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' . FUNC _END _FUNCTION '>'
+   24 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' . FUNC _END _FUNCTION '>'
 
     $padrão  reduzir usando a regra 10 (FUNC_DECLS)
 
-    FUNC        ir ao estado 147
-    FUNC_DECLS  ir ao estado 148
+    FUNC        ir ao estado 131
+    FUNC_DECLS  ir ao estado 132
 
 
-Estado 138
+Estado 124
 
-   77 F: _ID '[' E ']' . '[' E ']'
-   78  | _ID '[' E ']' .
+   67 F: _ID '[' E ']' . '[' E ']'
+   68  | _ID '[' E ']' .
 
-    '['  deslocar, e ir ao estado 149
+    '['  deslocar, e ir ao estado 133
 
-    $padrão  reduzir usando a regra 78 (F)
+    $padrão  reduzir usando a regra 68 (F)
 
 
-Estado 139
+Estado 125
 
-   57 CMD_IF: '<' _IF '(' E ')' '>' . CMDS _END _IF '>'
-   58       | '<' _IF '(' E ')' '>' . CMDS _ELSE CMDS _END _IF '>'
+   47 CMD_IF: '<' _IF '(' E ')' '>' . CMDS _END _IF '>'
+   48       | '<' _IF '(' E ')' '>' . CMDS _ELSE CMDS _END _IF '>'
 
     _ID       deslocar, e ir ao estado 27
     _PRINT    deslocar, e ir ao estado 28
-    _PRINTLN  deslocar, e ir ao estado 34
-    _INPUT    deslocar, e ir ao estado 35
-    '<'       deslocar, e ir ao estado 36
+    _PRINTLN  deslocar, e ir ao estado 29
+    _INPUT    deslocar, e ir ao estado 30
+    '<'       deslocar, e ir ao estado 31
 
-    $padrão  reduzir usando a regra 41 (CMDS)
+    $padrão  reduzir usando a regra 31 (CMDS)
 
-    CMDS       ir ao estado 150
-    CMD        ir ao estado 40
-    CMD_ATRIB  ir ao estado 41
-    CMD_ATOM   ir ao estado 42
-    LVALUE     ir ao estado 43
-    CMD_FOR    ir ao estado 44
-    CMD_INPUT  ir ao estado 45
-    CMD_IF     ir ao estado 46
-    SAIDA      ir ao estado 47
-
-
-Estado 140
-
-   54 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E . ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
-   55        | '<' _FOR '(' CMD_ATRIB ';' E . ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    _IGUALDADE   deslocar, e ir ao estado 94
-    _DIFERENTE   deslocar, e ir ao estado 95
-    _MAIORIGUAL  deslocar, e ir ao estado 96
-    _MENORIGUAL  deslocar, e ir ao estado 97
-    '<'          deslocar, e ir ao estado 98
-    '>'          deslocar, e ir ao estado 99
-    '+'          deslocar, e ir ao estado 100
-    '-'          deslocar, e ir ao estado 101
-    '*'          deslocar, e ir ao estado 102
-    '/'          deslocar, e ir ao estado 103
-    '%'          deslocar, e ir ao estado 104
-    ';'          deslocar, e ir ao estado 151
+    CMDS       ir ao estado 134
+    CMD        ir ao estado 34
+    CMD_ATRIB  ir ao estado 35
+    CMD_ATOM   ir ao estado 36
+    LVALUE     ir ao estado 37
+    CMD_FOR    ir ao estado 38
+    CMD_INPUT  ir ao estado 39
+    CMD_IF     ir ao estado 40
+    SAIDA      ir ao estado 41
 
 
-Estado 141
+Estado 126
 
-   18 DECLA: MAIN_TIPO MAIN_ID '[' _CTE_INTEGER ']' ';' .
+   44 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E . ';' CMD_ATOM ')' '>' CMDS _END _FOR '>'
+   45        | '<' _FOR '(' CMD_ATRIB ';' E . ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>'
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
 
-    $padrão  reduzir usando a regra 18 (DECLA)
-
-
-Estado 142
-
-   17 DECLA: MAIN_TIPO MAIN_ID '[' _CTE_INTEGER ']' '[' . _CTE_INTEGER ']' ';'
-
-    _CTE_INTEGER  deslocar, e ir ao estado 152
-
-
-Estado 143
-
-   50 CMD_ATRIB: LVALUE '[' E ']' '=' E .
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    _IGUALDADE   deslocar, e ir ao estado 94
-    _DIFERENTE   deslocar, e ir ao estado 95
-    _MAIORIGUAL  deslocar, e ir ao estado 96
-    _MENORIGUAL  deslocar, e ir ao estado 97
-    '<'          deslocar, e ir ao estado 98
-    '>'          deslocar, e ir ao estado 99
-    '+'          deslocar, e ir ao estado 100
-    '-'          deslocar, e ir ao estado 101
-    '*'          deslocar, e ir ao estado 102
-    '/'          deslocar, e ir ao estado 103
-    '%'          deslocar, e ir ao estado 104
-
-    $padrão  reduzir usando a regra 50 (CMD_ATRIB)
+    _IGUALDADE   deslocar, e ir ao estado 83
+    _DIFERENTE   deslocar, e ir ao estado 84
+    _MAIORIGUAL  deslocar, e ir ao estado 85
+    _MENORIGUAL  deslocar, e ir ao estado 86
+    '<'          deslocar, e ir ao estado 87
+    '>'          deslocar, e ir ao estado 88
+    '+'          deslocar, e ir ao estado 89
+    '-'          deslocar, e ir ao estado 90
+    '*'          deslocar, e ir ao estado 91
+    '/'          deslocar, e ir ao estado 92
+    '%'          deslocar, e ir ao estado 93
+    ';'          deslocar, e ir ao estado 135
 
 
-Estado 144
+Estado 127
 
-   49 CMD_ATRIB: LVALUE '[' E ']' '[' E . ']' '=' E
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
+   40 CMD_ATRIB: LVALUE '[' E ']' '=' E .
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
 
-    _IGUALDADE   deslocar, e ir ao estado 94
-    _DIFERENTE   deslocar, e ir ao estado 95
-    _MAIORIGUAL  deslocar, e ir ao estado 96
-    _MENORIGUAL  deslocar, e ir ao estado 97
-    '<'          deslocar, e ir ao estado 98
-    '>'          deslocar, e ir ao estado 99
-    '+'          deslocar, e ir ao estado 100
-    '-'          deslocar, e ir ao estado 101
-    '*'          deslocar, e ir ao estado 102
-    '/'          deslocar, e ir ao estado 103
-    '%'          deslocar, e ir ao estado 104
-    ']'          deslocar, e ir ao estado 153
+    _IGUALDADE   deslocar, e ir ao estado 83
+    _DIFERENTE   deslocar, e ir ao estado 84
+    _MAIORIGUAL  deslocar, e ir ao estado 85
+    _MENORIGUAL  deslocar, e ir ao estado 86
+    '<'          deslocar, e ir ao estado 87
+    '>'          deslocar, e ir ao estado 88
+    '+'          deslocar, e ir ao estado 89
+    '-'          deslocar, e ir ao estado 90
+    '*'          deslocar, e ir ao estado 91
+    '/'          deslocar, e ir ao estado 92
+    '%'          deslocar, e ir ao estado 93
+
+    $padrão  reduzir usando a regra 40 (CMD_ATRIB)
 
 
-Estado 145
+Estado 128
+
+   39 CMD_ATRIB: LVALUE '[' E ']' '[' E . ']' '=' E
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
+
+    _IGUALDADE   deslocar, e ir ao estado 83
+    _DIFERENTE   deslocar, e ir ao estado 84
+    _MAIORIGUAL  deslocar, e ir ao estado 85
+    _MENORIGUAL  deslocar, e ir ao estado 86
+    '<'          deslocar, e ir ao estado 87
+    '>'          deslocar, e ir ao estado 88
+    '+'          deslocar, e ir ao estado 89
+    '-'          deslocar, e ir ao estado 90
+    '*'          deslocar, e ir ao estado 91
+    '/'          deslocar, e ir ao estado 92
+    '%'          deslocar, e ir ao estado 93
+    ']'          deslocar, e ir ao estado 136
+
+
+Estado 129
 
    14 DECL: TIPO ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER ']' ';' .
 
     $padrão  reduzir usando a regra 14 (DECL)
 
 
-Estado 146
+Estado 130
 
-   37 IDS: TIPO _ID ',' IDS .
+   27 IDS: TIPO _ID ',' IDS .
 
-    $padrão  reduzir usando a regra 37 (IDS)
-
-
-Estado 147
-
-   34 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC . _END _FUNCTION '>'
-
-    _END  deslocar, e ir ao estado 154
+    $padrão  reduzir usando a regra 27 (IDS)
 
 
-Estado 148
+Estado 131
+
+   24 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC . _END _FUNCTION '>'
+
+    _END  deslocar, e ir ao estado 137
+
+
+Estado 132
 
     8 FUNC: FUNC_DECLS . CMDS
     9 FUNC_DECLS: FUNC_DECLS . DECL
@@ -2039,400 +1895,379 @@ Estado 148
     _DOUBLE   deslocar, e ir ao estado 3
     _CHAR     deslocar, e ir ao estado 4
     _STRING   deslocar, e ir ao estado 5
-    _PRINTLN  deslocar, e ir ao estado 34
-    _INPUT    deslocar, e ir ao estado 35
-    '<'       deslocar, e ir ao estado 36
+    _PRINTLN  deslocar, e ir ao estado 29
+    _INPUT    deslocar, e ir ao estado 30
+    '<'       deslocar, e ir ao estado 31
 
-    $padrão  reduzir usando a regra 41 (CMDS)
+    $padrão  reduzir usando a regra 31 (CMDS)
 
-    DECL       ir ao estado 155
+    DECL       ir ao estado 138
     TIPO       ir ao estado 11
-    CMDS       ir ao estado 156
-    CMD        ir ao estado 40
-    CMD_ATRIB  ir ao estado 41
-    CMD_ATOM   ir ao estado 42
-    LVALUE     ir ao estado 43
-    CMD_FOR    ir ao estado 44
-    CMD_INPUT  ir ao estado 45
-    CMD_IF     ir ao estado 46
-    SAIDA      ir ao estado 47
+    CMDS       ir ao estado 139
+    CMD        ir ao estado 34
+    CMD_ATRIB  ir ao estado 35
+    CMD_ATOM   ir ao estado 36
+    LVALUE     ir ao estado 37
+    CMD_FOR    ir ao estado 38
+    CMD_INPUT  ir ao estado 39
+    CMD_IF     ir ao estado 40
+    SAIDA      ir ao estado 41
 
 
-Estado 149
+Estado 133
 
-   77 F: _ID '[' E ']' '[' . E ']'
+   67 F: _ID '[' E ']' '[' . E ']'
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
 
-    E  ir ao estado 157
-    F  ir ao estado 77
-
-
-Estado 150
-
-   57 CMD_IF: '<' _IF '(' E ')' '>' CMDS . _END _IF '>'
-   58       | '<' _IF '(' E ')' '>' CMDS . _ELSE CMDS _END _IF '>'
-
-    _ELSE  deslocar, e ir ao estado 158
-    _END   deslocar, e ir ao estado 159
+    E  ir ao estado 140
+    F  ir ao estado 69
 
 
-Estado 151
+Estado 134
 
-   54 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' . CMD_ATOM ')' '>' CMDS _END _FOR '>'
-   55        | '<' _FOR '(' CMD_ATRIB ';' E ';' . CMD_ATRIB ')' '>' CMDS _END _FOR '>'
+   47 CMD_IF: '<' _IF '(' E ')' '>' CMDS . _END _IF '>'
+   48       | '<' _IF '(' E ')' '>' CMDS . _ELSE CMDS _END _IF '>'
+
+    _ELSE  deslocar, e ir ao estado 141
+    _END   deslocar, e ir ao estado 142
+
+
+Estado 135
+
+   44 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' . CMD_ATOM ')' '>' CMDS _END _FOR '>'
+   45        | '<' _FOR '(' CMD_ATRIB ';' E ';' . CMD_ATRIB ')' '>' CMDS _END _FOR '>'
 
     _ID  deslocar, e ir ao estado 27
 
-    CMD_ATRIB  ir ao estado 160
-    CMD_ATOM   ir ao estado 161
-    LVALUE     ir ao estado 43
+    CMD_ATRIB  ir ao estado 143
+    CMD_ATOM   ir ao estado 144
+    LVALUE     ir ao estado 37
 
 
-Estado 152
+Estado 136
 
-   17 DECLA: MAIN_TIPO MAIN_ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER . ']' ';'
+   39 CMD_ATRIB: LVALUE '[' E ']' '[' E ']' . '=' E
 
-    ']'  deslocar, e ir ao estado 162
-
-
-Estado 153
-
-   49 CMD_ATRIB: LVALUE '[' E ']' '[' E ']' . '=' E
-
-    '='  deslocar, e ir ao estado 163
+    '='  deslocar, e ir ao estado 145
 
 
-Estado 154
+Estado 137
 
-   34 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END . _FUNCTION '>'
+   24 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END . _FUNCTION '>'
 
-    _FUNCTION  deslocar, e ir ao estado 164
+    _FUNCTION  deslocar, e ir ao estado 146
 
 
-Estado 155
+Estado 138
 
     9 FUNC_DECLS: FUNC_DECLS DECL .
 
     $padrão  reduzir usando a regra 9 (FUNC_DECLS)
 
 
-Estado 156
+Estado 139
 
     8 FUNC: FUNC_DECLS CMDS .
 
     $padrão  reduzir usando a regra 8 (FUNC)
 
 
+Estado 140
+
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
+   67 F: _ID '[' E ']' '[' E . ']'
+
+    _IGUALDADE   deslocar, e ir ao estado 83
+    _DIFERENTE   deslocar, e ir ao estado 84
+    _MAIORIGUAL  deslocar, e ir ao estado 85
+    _MENORIGUAL  deslocar, e ir ao estado 86
+    '<'          deslocar, e ir ao estado 87
+    '>'          deslocar, e ir ao estado 88
+    '+'          deslocar, e ir ao estado 89
+    '-'          deslocar, e ir ao estado 90
+    '*'          deslocar, e ir ao estado 91
+    '/'          deslocar, e ir ao estado 92
+    '%'          deslocar, e ir ao estado 93
+    ']'          deslocar, e ir ao estado 147
+
+
+Estado 141
+
+   48 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE . CMDS _END _IF '>'
+
+    _ID       deslocar, e ir ao estado 27
+    _PRINT    deslocar, e ir ao estado 28
+    _PRINTLN  deslocar, e ir ao estado 29
+    _INPUT    deslocar, e ir ao estado 30
+    '<'       deslocar, e ir ao estado 31
+
+    $padrão  reduzir usando a regra 31 (CMDS)
+
+    CMDS       ir ao estado 148
+    CMD        ir ao estado 34
+    CMD_ATRIB  ir ao estado 35
+    CMD_ATOM   ir ao estado 36
+    LVALUE     ir ao estado 37
+    CMD_FOR    ir ao estado 38
+    CMD_INPUT  ir ao estado 39
+    CMD_IF     ir ao estado 40
+    SAIDA      ir ao estado 41
+
+
+Estado 142
+
+   47 CMD_IF: '<' _IF '(' E ')' '>' CMDS _END . _IF '>'
+
+    _IF  deslocar, e ir ao estado 149
+
+
+Estado 143
+
+   45 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB . ')' '>' CMDS _END _FOR '>'
+
+    ')'  deslocar, e ir ao estado 150
+
+
+Estado 144
+
+   44 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM . ')' '>' CMDS _END _FOR '>'
+
+    ')'  deslocar, e ir ao estado 151
+
+
+Estado 145
+
+   39 CMD_ATRIB: LVALUE '[' E ']' '[' E ']' '=' . E
+
+    _ID           deslocar, e ir ao estado 63
+    _CTE_FLOAT    deslocar, e ir ao estado 64
+    _CTE_STRING   deslocar, e ir ao estado 65
+    _CTE_INTEGER  deslocar, e ir ao estado 66
+    '('           deslocar, e ir ao estado 67
+
+    E  ir ao estado 152
+    F  ir ao estado 69
+
+
+Estado 146
+
+   24 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION . '>'
+
+    '>'  deslocar, e ir ao estado 153
+
+
+Estado 147
+
+   67 F: _ID '[' E ']' '[' E ']' .
+
+    $padrão  reduzir usando a regra 67 (F)
+
+
+Estado 148
+
+   48 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE CMDS . _END _IF '>'
+
+    _END  deslocar, e ir ao estado 154
+
+
+Estado 149
+
+   47 CMD_IF: '<' _IF '(' E ')' '>' CMDS _END _IF . '>'
+
+    '>'  deslocar, e ir ao estado 155
+
+
+Estado 150
+
+   45 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' . '>' CMDS _END _FOR '>'
+
+    '>'  deslocar, e ir ao estado 156
+
+
+Estado 151
+
+   44 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' . '>' CMDS _END _FOR '>'
+
+    '>'  deslocar, e ir ao estado 157
+
+
+Estado 152
+
+   39 CMD_ATRIB: LVALUE '[' E ']' '[' E ']' '=' E .
+   51 E: E . '+' E
+   52  | E . '-' E
+   53  | E . '*' E
+   54  | E . '/' E
+   55  | E . '%' E
+   56  | E . '>' E
+   57  | E . '<' E
+   58  | E . _IGUALDADE E
+   59  | E . _DIFERENTE E
+   60  | E . _MAIORIGUAL E
+   61  | E . _MENORIGUAL E
+
+    _IGUALDADE   deslocar, e ir ao estado 83
+    _DIFERENTE   deslocar, e ir ao estado 84
+    _MAIORIGUAL  deslocar, e ir ao estado 85
+    _MENORIGUAL  deslocar, e ir ao estado 86
+    '<'          deslocar, e ir ao estado 87
+    '>'          deslocar, e ir ao estado 88
+    '+'          deslocar, e ir ao estado 89
+    '-'          deslocar, e ir ao estado 90
+    '*'          deslocar, e ir ao estado 91
+    '/'          deslocar, e ir ao estado 92
+    '%'          deslocar, e ir ao estado 93
+
+    $padrão  reduzir usando a regra 39 (CMD_ATRIB)
+
+
+Estado 153
+
+   24 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>' .
+
+    $padrão  reduzir usando a regra 24 (FUNCTION)
+
+
+Estado 154
+
+   48 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE CMDS _END . _IF '>'
+
+    _IF  deslocar, e ir ao estado 158
+
+
+Estado 155
+
+   47 CMD_IF: '<' _IF '(' E ')' '>' CMDS _END _IF '>' .
+
+    $padrão  reduzir usando a regra 47 (CMD_IF)
+
+
+Estado 156
+
+   45 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' . CMDS _END _FOR '>'
+
+    _ID       deslocar, e ir ao estado 27
+    _PRINT    deslocar, e ir ao estado 28
+    _PRINTLN  deslocar, e ir ao estado 29
+    _INPUT    deslocar, e ir ao estado 30
+    '<'       deslocar, e ir ao estado 31
+
+    $padrão  reduzir usando a regra 31 (CMDS)
+
+    CMDS       ir ao estado 159
+    CMD        ir ao estado 34
+    CMD_ATRIB  ir ao estado 35
+    CMD_ATOM   ir ao estado 36
+    LVALUE     ir ao estado 37
+    CMD_FOR    ir ao estado 38
+    CMD_INPUT  ir ao estado 39
+    CMD_IF     ir ao estado 40
+    SAIDA      ir ao estado 41
+
+
 Estado 157
 
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-   77 F: _ID '[' E ']' '[' E . ']'
+   44 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' . CMDS _END _FOR '>'
 
-    _IGUALDADE   deslocar, e ir ao estado 94
-    _DIFERENTE   deslocar, e ir ao estado 95
-    _MAIORIGUAL  deslocar, e ir ao estado 96
-    _MENORIGUAL  deslocar, e ir ao estado 97
-    '<'          deslocar, e ir ao estado 98
-    '>'          deslocar, e ir ao estado 99
-    '+'          deslocar, e ir ao estado 100
-    '-'          deslocar, e ir ao estado 101
-    '*'          deslocar, e ir ao estado 102
-    '/'          deslocar, e ir ao estado 103
-    '%'          deslocar, e ir ao estado 104
-    ']'          deslocar, e ir ao estado 165
+    _ID       deslocar, e ir ao estado 27
+    _PRINT    deslocar, e ir ao estado 28
+    _PRINTLN  deslocar, e ir ao estado 29
+    _INPUT    deslocar, e ir ao estado 30
+    '<'       deslocar, e ir ao estado 31
+
+    $padrão  reduzir usando a regra 31 (CMDS)
+
+    CMDS       ir ao estado 160
+    CMD        ir ao estado 34
+    CMD_ATRIB  ir ao estado 35
+    CMD_ATOM   ir ao estado 36
+    LVALUE     ir ao estado 37
+    CMD_FOR    ir ao estado 38
+    CMD_INPUT  ir ao estado 39
+    CMD_IF     ir ao estado 40
+    SAIDA      ir ao estado 41
 
 
 Estado 158
 
-   58 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE . CMDS _END _IF '>'
+   48 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE CMDS _END _IF . '>'
 
-    _ID       deslocar, e ir ao estado 27
-    _PRINT    deslocar, e ir ao estado 28
-    _PRINTLN  deslocar, e ir ao estado 34
-    _INPUT    deslocar, e ir ao estado 35
-    '<'       deslocar, e ir ao estado 36
-
-    $padrão  reduzir usando a regra 41 (CMDS)
-
-    CMDS       ir ao estado 166
-    CMD        ir ao estado 40
-    CMD_ATRIB  ir ao estado 41
-    CMD_ATOM   ir ao estado 42
-    LVALUE     ir ao estado 43
-    CMD_FOR    ir ao estado 44
-    CMD_INPUT  ir ao estado 45
-    CMD_IF     ir ao estado 46
-    SAIDA      ir ao estado 47
+    '>'  deslocar, e ir ao estado 161
 
 
 Estado 159
 
-   57 CMD_IF: '<' _IF '(' E ')' '>' CMDS _END . _IF '>'
+   45 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS . _END _FOR '>'
 
-    _IF  deslocar, e ir ao estado 167
+    _END  deslocar, e ir ao estado 162
 
 
 Estado 160
 
-   55 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB . ')' '>' CMDS _END _FOR '>'
+   44 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS . _END _FOR '>'
 
-    ')'  deslocar, e ir ao estado 168
+    _END  deslocar, e ir ao estado 163
 
 
 Estado 161
 
-   54 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM . ')' '>' CMDS _END _FOR '>'
+   48 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE CMDS _END _IF '>' .
 
-    ')'  deslocar, e ir ao estado 169
+    $padrão  reduzir usando a regra 48 (CMD_IF)
 
 
 Estado 162
 
-   17 DECLA: MAIN_TIPO MAIN_ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER ']' . ';'
+   45 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END . _FOR '>'
 
-    ';'  deslocar, e ir ao estado 170
+    _FOR  deslocar, e ir ao estado 164
 
 
 Estado 163
 
-   49 CMD_ATRIB: LVALUE '[' E ']' '[' E ']' '=' . E
+   44 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END . _FOR '>'
 
-    _ID           deslocar, e ir ao estado 71
-    _CTE_FLOAT    deslocar, e ir ao estado 72
-    _CTE_STRING   deslocar, e ir ao estado 73
-    _CTE_INTEGER  deslocar, e ir ao estado 74
-    '('           deslocar, e ir ao estado 75
-
-    E  ir ao estado 171
-    F  ir ao estado 77
+    _FOR  deslocar, e ir ao estado 165
 
 
 Estado 164
 
-   34 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION . '>'
+   45 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR . '>'
 
-    '>'  deslocar, e ir ao estado 172
+    '>'  deslocar, e ir ao estado 166
 
 
 Estado 165
 
-   77 F: _ID '[' E ']' '[' E ']' .
+   44 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR . '>'
 
-    $padrão  reduzir usando a regra 77 (F)
+    '>'  deslocar, e ir ao estado 167
 
 
 Estado 166
 
-   58 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE CMDS . _END _IF '>'
+   45 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>' .
 
-    _END  deslocar, e ir ao estado 173
+    $padrão  reduzir usando a regra 45 (CMD_FOR)
 
 
 Estado 167
 
-   57 CMD_IF: '<' _IF '(' E ')' '>' CMDS _END _IF . '>'
+   44 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>' .
 
-    '>'  deslocar, e ir ao estado 174
-
-
-Estado 168
-
-   55 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' . '>' CMDS _END _FOR '>'
-
-    '>'  deslocar, e ir ao estado 175
-
-
-Estado 169
-
-   54 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' . '>' CMDS _END _FOR '>'
-
-    '>'  deslocar, e ir ao estado 176
-
-
-Estado 170
-
-   17 DECLA: MAIN_TIPO MAIN_ID '[' _CTE_INTEGER ']' '[' _CTE_INTEGER ']' ';' .
-
-    $padrão  reduzir usando a regra 17 (DECLA)
-
-
-Estado 171
-
-   49 CMD_ATRIB: LVALUE '[' E ']' '[' E ']' '=' E .
-   61 E: E . '+' E
-   62  | E . '-' E
-   63  | E . '*' E
-   64  | E . '/' E
-   65  | E . '%' E
-   66  | E . '>' E
-   67  | E . '<' E
-   68  | E . _IGUALDADE E
-   69  | E . _DIFERENTE E
-   70  | E . _MAIORIGUAL E
-   71  | E . _MENORIGUAL E
-
-    _IGUALDADE   deslocar, e ir ao estado 94
-    _DIFERENTE   deslocar, e ir ao estado 95
-    _MAIORIGUAL  deslocar, e ir ao estado 96
-    _MENORIGUAL  deslocar, e ir ao estado 97
-    '<'          deslocar, e ir ao estado 98
-    '>'          deslocar, e ir ao estado 99
-    '+'          deslocar, e ir ao estado 100
-    '-'          deslocar, e ir ao estado 101
-    '*'          deslocar, e ir ao estado 102
-    '/'          deslocar, e ir ao estado 103
-    '%'          deslocar, e ir ao estado 104
-
-    $padrão  reduzir usando a regra 49 (CMD_ATRIB)
-
-
-Estado 172
-
-   34 FUNCTION: '<' TIPO _FUNCTION _ID $@1 '(' ARGS ')' '>' FUNC _END _FUNCTION '>' .
-
-    $padrão  reduzir usando a regra 34 (FUNCTION)
-
-
-Estado 173
-
-   58 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE CMDS _END . _IF '>'
-
-    _IF  deslocar, e ir ao estado 177
-
-
-Estado 174
-
-   57 CMD_IF: '<' _IF '(' E ')' '>' CMDS _END _IF '>' .
-
-    $padrão  reduzir usando a regra 57 (CMD_IF)
-
-
-Estado 175
-
-   55 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' . CMDS _END _FOR '>'
-
-    _ID       deslocar, e ir ao estado 27
-    _PRINT    deslocar, e ir ao estado 28
-    _PRINTLN  deslocar, e ir ao estado 34
-    _INPUT    deslocar, e ir ao estado 35
-    '<'       deslocar, e ir ao estado 36
-
-    $padrão  reduzir usando a regra 41 (CMDS)
-
-    CMDS       ir ao estado 178
-    CMD        ir ao estado 40
-    CMD_ATRIB  ir ao estado 41
-    CMD_ATOM   ir ao estado 42
-    LVALUE     ir ao estado 43
-    CMD_FOR    ir ao estado 44
-    CMD_INPUT  ir ao estado 45
-    CMD_IF     ir ao estado 46
-    SAIDA      ir ao estado 47
-
-
-Estado 176
-
-   54 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' . CMDS _END _FOR '>'
-
-    _ID       deslocar, e ir ao estado 27
-    _PRINT    deslocar, e ir ao estado 28
-    _PRINTLN  deslocar, e ir ao estado 34
-    _INPUT    deslocar, e ir ao estado 35
-    '<'       deslocar, e ir ao estado 36
-
-    $padrão  reduzir usando a regra 41 (CMDS)
-
-    CMDS       ir ao estado 179
-    CMD        ir ao estado 40
-    CMD_ATRIB  ir ao estado 41
-    CMD_ATOM   ir ao estado 42
-    LVALUE     ir ao estado 43
-    CMD_FOR    ir ao estado 44
-    CMD_INPUT  ir ao estado 45
-    CMD_IF     ir ao estado 46
-    SAIDA      ir ao estado 47
-
-
-Estado 177
-
-   58 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE CMDS _END _IF . '>'
-
-    '>'  deslocar, e ir ao estado 180
-
-
-Estado 178
-
-   55 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS . _END _FOR '>'
-
-    _END  deslocar, e ir ao estado 181
-
-
-Estado 179
-
-   54 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS . _END _FOR '>'
-
-    _END  deslocar, e ir ao estado 182
-
-
-Estado 180
-
-   58 CMD_IF: '<' _IF '(' E ')' '>' CMDS _ELSE CMDS _END _IF '>' .
-
-    $padrão  reduzir usando a regra 58 (CMD_IF)
-
-
-Estado 181
-
-   55 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END . _FOR '>'
-
-    _FOR  deslocar, e ir ao estado 183
-
-
-Estado 182
-
-   54 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END . _FOR '>'
-
-    _FOR  deslocar, e ir ao estado 184
-
-
-Estado 183
-
-   55 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR . '>'
-
-    '>'  deslocar, e ir ao estado 185
-
-
-Estado 184
-
-   54 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR . '>'
-
-    '>'  deslocar, e ir ao estado 186
-
-
-Estado 185
-
-   55 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATRIB ')' '>' CMDS _END _FOR '>' .
-
-    $padrão  reduzir usando a regra 55 (CMD_FOR)
-
-
-Estado 186
-
-   54 CMD_FOR: '<' _FOR '(' CMD_ATRIB ';' E ';' CMD_ATOM ')' '>' CMDS _END _FOR '>' .
-
-    $padrão  reduzir usando a regra 54 (CMD_FOR)
+    $padrão  reduzir usando a regra 44 (CMD_FOR)
