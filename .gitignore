@@ -133,6 +133,7 @@ bin-release/
 .model
 
 saida
+trabalho
 y.tab.c
 lex.yy.c
 *.cc
