@@ -9,9 +9,9 @@
 using namespace std;
 
 struct Tipo {
-  string nome;  // O nome na sua linguagem
-  string decl;  // A declaração correspondente em c-assembly
-  string fmt;   // O formato para "printf"
+  string nome;  
+  string decl;  
+  string fmt;   
   vector<int> dim;
 };
 
@@ -74,8 +74,14 @@ void declara_variavel( Atributo& ss,
     	if( tsl.find( s2.lst[i] ) != tsl.end() ) 
       	erro( "Variável já declarada: " + s2.lst[i] );
     	else {
-      	tsl[ s2.lst[i] ] = s1.t;
-      	ss.c += s1.t.decl + " " + s2.lst[i] + s3 + ";\n"; 
+        if(s1.t.nome==String.nome){
+          tsl[ s2.lst[i] ] = s1.t;
+      	  ss.c += s1.t.decl + " " + s2.lst[i]+ "["+toString(s1.t.dim[0]+1)+"]" + s3 + ";\n"; 
+        }
+        else{
+          tsl[ s2.lst[i] ] = s1.t;
+          ss.c += s1.t.decl + " " + s2.lst[i]+ s3 + ";\n"; 
+        }
     	}  
   	}
 	}
@@ -84,8 +90,14 @@ void declara_variavel( Atributo& ss,
     	if( ts.find( s2.lst[i] ) != ts.end() ) 
       	erro( "Variável já declarada: " + s2.lst[i] );
     	else {
-      	ts[ s2.lst[i] ] = s1.t;
-      	ss.c += s1.t.decl + " " + s2.lst[i] + s3 + ";\n"; 
+      	if(s1.t.nome==String.nome){
+          ts[ s2.lst[i] ] = s1.t;
+          ss.c += s1.t.decl + " " + s2.lst[i]+ "["+toString(s1.t.dim[0]+1)+"]" + s3 + ";\n"; 
+        }
+        else{
+          ts[ s2.lst[i] ] = s1.t;
+          ss.c += s1.t.decl + " " + s2.lst[i]+ s3 + ";\n"; 
+        }
     	}  
   	}
 	}
@@ -95,7 +107,12 @@ string declara_nvar_temp( Tipo t, int qtde ) {
   string aux = "";
    
   for( int i = 1; i <= qtde; i++ )
-    aux += t.decl + " t_" + t.nome + "_" + toString( i ) + ";\n";
+    if(t.nome!=String.nome){
+      aux += t.decl + " t_" + t.nome + "_" + toString( i ) + ";\n";
+    }
+    else{
+      aux += t.decl + " t_" + t.nome + "_" + toString( i )+"["+toString(t.dim[0]+1)+"]"+ ";\n";
+    }
     
   return aux;  
 }
@@ -117,11 +134,13 @@ string declara_var_temp( map< string, int >& temp ) {
 void gera_codigo_atribuicao( Atributo& ss, 
                              const Atributo& s1, 
                              const Atributo& s3 ) {
-  if( s1.t.nome == s3.t.nome )
+  if( (s1.t.nome == s3.t.nome  || (s1.t.nome=="integer" && s3.t.nome=="float")|| (s1.t.nome=="float" && s3.t.nome=="double")
+  || (s1.t.nome=="double" && s3.t.nome=="float")|| (s1.t.nome=="float" && s3.t.nome=="integer")|| (s1.t.nome=="integer" && s3.t.nome=="double")
+  || (s1.t.nome=="double" && s3.t.nome=="integer")) && s1.t.nome!=String.nome )
   {
     ss.c = s1.c + s3.c + "  " + s1.v + " = " + s3.v + ";\n";
   }
-  else if( s1.t.nome == s3.t.nome &&  s1.t.nome == "string" ) {
+  else if( s1.t.nome == s3.t.nome &&  s1.t.nome == String.nome) {
     ss.c = s1.c + s3.c + "  " 
            + "strncpy( " + s1.v + ", " + s3.v + ", " + 
            toString( s1.t.dim[0]) + " );\n";
@@ -193,9 +212,14 @@ void gera_codigo_operador( Atributo& ss, const Atributo& s1, const Atributo& s2,
   if( tro.find( s2.v ) != tro.end() ) {
     if( tro[s2.v].find( par( s1.t, s3.t ) ) != tro[s2.v].end() ) {
       ss.t = tro[s2.v][par( s1.t, s3.t )];
-      ss.v = gera_nome_var( ss.t );      
-      ss.c = s1.c + s3.c + "  " + ss.v + " = " + s1.v + s2.v + s3.v 
-             + ";\n";
+      ss.v = gera_nome_var( ss.t );
+      if(ss.t.nome==String.nome){
+        ss.c = s1.c + s3.c + "  " +"strncpy("+ ss.v +","+  s1.v +","+toString(s1.t.dim[0])+");\n"+ "  strncat("+ss.v+"," + s3.v + 
+        ","+toString(s3.t.dim[0])+");\n";
+      }
+      else{
+        ss.c = s1.c + s3.c + "  " + ss.v + " = " + s1.v + s2.v + s3.v + ";\n";
+      }
     }
     else
       erro( "O operador '" + s2.v + "' não está definido para os tipos " + s1.t.nome + " e " + s3.t.nome + "." );
@@ -315,7 +339,6 @@ void gera_codigo_atomico(Atributo& ss,const Atributo& s1, const Atributo& s2){
 	}
 }
 
-//comment
 void gera_codigo_funcao(Atributo& ss,const Atributo& s2, const Atributo& s4, const Atributo& s7, const Atributo& s10){
 	ss.c=s2.t.decl+" "+s4.v+" ("+ s7.c +"){\n  "+declara_var_temp(temp_local)+"  "+s10.c+"}\n";
 }
@@ -337,6 +360,24 @@ void calcula_matrix( Atributo& ss, const Atributo& s1, const Atributo& s3, const
     	ss.v= s1.v + '[' + aux2 + ']';
 }
 
+int gera_codigo_final(string codigo){
+  FILE* arq;
+
+  arq=fopen("saida.cc","w");
+  fprintf(arq, "%s",codigo.c_str());
+  fclose(arq);
+  return 0;
+}
+
+void gera_input(Atributo& ss, const Atributo& s3){
+    if(s3.t.nome == "string"){
+        ss.c = "  scanf(\"%" +s3.t.fmt + "\", " + s3.v + ");\n" ;
+    }
+    else{
+        ss.c = "  scanf(\"%" +s3.t.fmt + "\", &" + s3.v + ");\n" ;
+    }
+}
+
 %}
 
 %token _ID _IF _ELSE _HTPL _IGUALDADE _BARRAHTPL _CTE_FLOAT _MAISMAIS _DIFERENTE
@@ -355,9 +396,9 @@ void calcula_matrix( Atributo& ss, const Atributo& s1, const Atributo& s3, const
 %%
 
 S : MIOLOS ABRE PRINCIPAL FECHA
-  { cout << "#include <stdlib.h>\n"
+  { cout << gera_codigo_final( "#include <stdlib.h>\n"
                 "#include <string.h>\n" 
-                "#include <stdio.h>\n\n"<< declara_var_temp( temp_global ) << $1.c << "int main (){\n" <<$3.c<<"}"<<endl;
+                "#include <stdio.h>\n\n" + declara_var_temp( temp_global ) + $1.c +"int main (){\n" +$3.c+"}")<<endl;
   }
   ;
    
@@ -378,18 +419,17 @@ MIOLO : DECL 		{$$=$1;}
 FUNC: FUNC_DECLS CMDS  {$$.c=$1.c + $2.c;}
     ;
 
-FUNC_DECLS: FUNC_DECLS DECL {$$.c = $1.c + $2.c;}
-		 |
-		 ;
+FUNC_DECLS: FUNC_DECLS DECL {$$.c = $1.c + $2.c; }
+		      |
+		      ;
 
 DECL: TIPO ID ';'               
-		{ declara_variavel( $$, $1, $2,"" ); }
+		{ declara_variavel( $$, $1, $2,"" );}
     | TIPO ID '[' _CTE_INTEGER ']''[' _CTE_INTEGER ']'  ';'
-    { declara_variavel( $$, $1, $2,'['+toString(toInt($4.v) *toInt($7.v))+']'); gera2Dim($2, $4, $7);}
+    { declara_variavel( $$, $1, $2,'['+toString(toInt($4.v) *toInt($7.v))+']'); gera2Dim($2, $4, $7); }
     | TIPO ID '[' _CTE_INTEGER ']' ';'
     { declara_variavel( $$, $1, $2,'['+$4.v+']'); gera1Dim($2, $4);}
     ;
-
 
 TIPO: _INT      { $$.t = Integer; }
     | _FLOAT    { $$.t = Float; }
@@ -414,7 +454,7 @@ IDS : TIPO _ID ',' IDS 	{$$.c=$1.t.decl + " " + $2.v+" , "+$4.c;}
     | TIPO _ID 					{$$.c= $1.t.decl + " " + $2.v;}
     ;      
    
-PRINCIPAL : CMDS {$$.c=$1.c;}
+PRINCIPAL : CMDS {$$=$1;}
           ;
           
 CMDS : CMD  CMDS {$$.c=$1.c+$2.c;}
@@ -445,15 +485,15 @@ CMD_FOR : '<'_FOR '('CMD_ATRIB';' E ';' CMD_ATOM ')''>' CMDS _END _FOR'>' {gera_
 				| '<'_FOR '('CMD_ATRIB';' E ';' CMD_ATRIB ')''>' CMDS _END _FOR'>' {gera_cmd_for($$,$4,$6,$8,$11);}
         ;    
 
-CMD_INPUT : _INPUT '(' LVALUE ')'		{ $$.c = "  scanf(\"%" +$3.t.fmt + "\", &" + $3.v + ");\n" ;}
+CMD_INPUT : _INPUT '(' LVALUE ')'		{ gera_input( $$, $3);}
 					;
 
 CMD_IF : '<'_IF '('E')' '>' CMDS _END _IF '>'             {gera_cmd_if( $$, $4, $7, "");}
        | '<'_IF '('E')' '>' CMDS _ELSE CMDS  _END _IF '>' {gera_cmd_if( $$, $4, $7, $9.c);}
        ;    
     
-SAIDA : _PRINT '(' E ')'        { $$.c = "  printf( \"%"+ $3.t.fmt + "\", " + $3.v + " );\n"; }
-			| _PRINTLN '(' E ')'      { $$.c = "  printf( \"%"+ $3.t.fmt + "\\n\", " + $3.v + " );\n"; }
+SAIDA : _PRINT '(' E ')'        { $$.c = $3.c + "  printf( \"%"+ $3.t.fmt + "\", " + $3.v + " );\n"; }
+			| _PRINTLN '(' E ')'      { $$.c = $3.c + "  printf( \"%"+ $3.t.fmt + "\\n\", " + $3.v + " );\n"; }
       ;
    
 E : E '+' E     		 { gera_codigo_operador( $$, $1, $2, $3 ); }
@@ -541,6 +581,7 @@ void yyerror( const char* st )
 
 int main( int argc, char* argv[] )
 {
+  String.dim.push_back(255);
   inicializa_tabela_de_resultado_de_operacoes();
   yyparse();
 }

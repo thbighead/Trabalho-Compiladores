@@ -369,6 +369,15 @@ int gera_codigo_final(string codigo){
   return 0;
 }
 
+void gera_input(Atributo& ss, const Atributo& s3){
+    if(s3.t.nome == "string"){
+        ss.c = "  scanf(\"%" +s3.t.fmt + "\", " + s3.v + ");\n" ;
+    }
+    else{
+        ss.c = "  scanf(\"%" +s3.t.fmt + "\", &" + s3.v + ");\n" ;
+    }
+}
+
 %}
 
 %token _ID _IF _ELSE _HTPL _IGUALDADE _BARRAHTPL _CTE_FLOAT _MAISMAIS _DIFERENTE
@@ -476,7 +485,7 @@ CMD_FOR : '<'_FOR '('CMD_ATRIB';' E ';' CMD_ATOM ')''>' CMDS _END _FOR'>' {gera_
 				| '<'_FOR '('CMD_ATRIB';' E ';' CMD_ATRIB ')''>' CMDS _END _FOR'>' {gera_cmd_for($$,$4,$6,$8,$11);}
         ;    
 
-CMD_INPUT : _INPUT '(' LVALUE ')'		{ $$.c = "  scanf(\"%" +$3.t.fmt + "\", &" + $3.v + ");\n" ;}
+CMD_INPUT : _INPUT '(' LVALUE ')'		{ gera_input( $$, $3);}
 					;
 
 CMD_IF : '<'_IF '('E')' '>' CMDS _END _IF '>'             {gera_cmd_if( $$, $4, $7, "");}

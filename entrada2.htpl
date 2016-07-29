@@ -1,5 +1,6 @@
 string str;
 
 <htpl>
-str="abcd"+"efgh";
+input(str);
+println(str);
 </htpl>
