@@ -1,5 +1,5 @@
-all: trabalho entrada.htpl
-	./trabalho < entrada.htpl
+all: trabalho MatrizTransposta.htpl
+	./trabalho < MatrizTransposta.htpl
 
 lex.yy.c: trabalho.lex
 	lex trabalho.lex
