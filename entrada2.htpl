@@ -1,6 +1,0 @@
-string str;
-
-<htpl>
-input(str);
-println(str);
-</htpl>

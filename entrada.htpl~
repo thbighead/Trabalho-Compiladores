@@ -1,5 +1,0 @@
-<htpl>
-    println("------------------------------------------------------------------");
-    println("Oi, professor! Para testar nossos codigos, coloque o nome deles no make, ou simplesmente substitua esse codigo aqui por um deles.");
-    println("------------------------------------------------------------------");
-</htpl>
